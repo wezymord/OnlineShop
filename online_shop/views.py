@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .forms import LoginForm
 from .models import Products
 
 class ProductsList(View):
