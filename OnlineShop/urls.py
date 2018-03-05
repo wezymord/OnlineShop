@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
-from online_shop.views import ProductsList
+from online_shop.views import ProductsList, AccountOrders
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url('index/', ProductsList.as_view(), name='index'),
+    url('account_orders/', AccountOrders.as_view(), name='account_orders'),
 
 ]
