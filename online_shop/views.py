@@ -23,3 +23,8 @@ class AccountOrders(View):
         pass
         return render(request, 'account-orders.html')
 
+
+class OrdersBasket(View):
+    def get(self, request):
+        pass
+        return render(request, 'cart.html')
