@@ -25,5 +25,12 @@ class AccountOrders(View):
 
 class OrdersBasket(View):
     def get(self, request):
-        pass
+        products = Products.objects.filter(available=True)
+
+        images = []
+        for product in products:
+            images.append(product.image_urls)
+        ctx = {
+            'images': images
+        }
         return render(request, 'cart.html')
