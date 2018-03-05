@@ -3,7 +3,7 @@ from .models import Products, Users, Orders
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'stock', 'available', 'image_urls', 'description']
+    list_display = ['name', 'price', 'stock', 'available', 'description']
     list_filter = ['available']
     list_editable = ['price', 'stock', 'available']
 admin.site.register(Products, ProductAdmin)

@@ -8,14 +8,14 @@ class ProductsList(View):
     def get(self, request):
         products =  Products.objects.filter(available=True)
 
-        images = []
-        for product in products:
-            images.append(product.image_urls)
-        ctx = {
-            'images': images
-        }
+        # images = []
+        # for product in products:
+        #     images.append(product.image_urls)
+        # ctx = {
+        #     'images': images
+        # }
 
-        return render(request, 'index.html', ctx)
+        return render(request, 'index.html')
 
 class AccountOrders(View):
     def get(self, request):
