@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Products, Users, Orders
+from .models import Products, Users, Orders, Photos
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -7,6 +7,21 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['available']
     list_editable = ['price', 'stock', 'available']
 admin.site.register(Products, ProductAdmin)
+
+
+def products_name(obj):
+    products = []
+    for product in obj.products.all():
+        products.append(product.name)
+        print(product.name)
+    return ' - '.join(products)
+
+
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ['image_urls', products_name]
+    list_filter = ['image_urls']
+admin.site.register(Photos, PhotoAdmin)
+
 
 
 class UserAdmin(admin.ModelAdmin):
