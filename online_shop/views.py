@@ -9,7 +9,7 @@ class ProductsList(View):
         products = Products.objects.all()
         photos = []
         for product in products:
-            for url in product.photo.all():                    # dodawać co 3 zdjęcie?
+            for url in product.photo.all():
                 photos.append(url.image_urls)
         ctx = {
             'photos': photos,
@@ -41,3 +41,13 @@ class ProductDetails(View):
             'photos': photos
         }
         return render(request, 'shop-single.html', ctx)
+
+
+class ShowAllProducts(View):
+    def get(self, request):
+        products = Products.objects.all()
+
+        ctx = {
+            'products': products
+        }
+        return render(request, 'shop-grid-ns.html', ctx)
