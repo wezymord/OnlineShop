@@ -29,34 +29,28 @@
           <!-- Poduct Gallery-->
           <div class="col-md-6">
             <div class="product-gallery"><span class="product-badge text-danger">30% Off</span>
-              <div class="gallery-wrapper">
-                <div class="gallery-item active"><a href="img/shop/single/01.jpg" data-hash="one" data-size="1000x667"></a></div>
-                <div class="gallery-item"><a href="img/shop/single/02.jpg" data-hash="two" data-size="1000x667"></a></div>
-                <div class="gallery-item"><a href="img/shop/single/03.jpg" data-hash="three" data-size="1000x667"></a></div>
-                <div class="gallery-item"><a href="img/shop/single/04.jpg" data-hash="four" data-size="1000x667"></a></div>
-                <div class="gallery-item"><a href="img/shop/single/05.jpg" data-hash="five" data-size="1000x667"></a></div>
+{#              <div class="gallery-wrapper">#}
+{#                <div class="gallery-item active"><a href="img/shop/single/01.jpg" data-hash="one" data-size="1000x667"></a></div>#}     {# lupa - powiekszenie zdj #}
+{#                <div class="gallery-item"><a href="img/shop/single/02.jpg" data-hash="two" data-size="1000x667"></a></div>#}
+{#                <div class="gallery-item"><a href="img/shop/single/03.jpg" data-hash="three" data-size="1000x667"></a></div>#}
+{#                <div class="gallery-item"><a href="img/shop/single/04.jpg" data-hash="four" data-size="1000x667"></a></div>#}
+{#                <div class="gallery-item"><a href="img/shop/single/05.jpg" data-hash="five" data-size="1000x667"></a></div>#}
+{#              </div>#}
+
+
+             <div class="product-carousel owl-carousel">
+                {%  for photo in photos %}
+                    <div data-hash="{{ photo.id }}"><img src={{ photo.image_urls }} alt="Product"></div>
+                {% endfor %}
               </div>
-              <div class="product-carousel owl-carousel">
 
-                  {% for photo in photos %}
-
-                <div data-hash="one"><img src={{ photo.image_urls }} alt="Product"></div>
-
-                  {% endfor %}
-
-
-                <div data-hash="two"><img src="{% static 'img/shop/single/02.jpg' %}" alt="Product"></div>
-                <div data-hash="three"><img src="{% static 'img/shop/single/03.jpg' %}" alt="Product"></div>
-                <div data-hash="four"><img src="{% static 'img/shop/single/04.jpg' %}" alt="Product"></div>
-                <div data-hash="five"><img src="{% static 'img/shop/single/05.jpg' %}" alt="Product"></div>
-              </div>
               <ul class="product-thumbnails">
-                <li class="active"><a href="#one"><img src="{% static 'img/shop/single/th01.jpg' %}" alt="Product"></a></li>
-                <li><a href="#two"><img src="{% static 'img/shop/single/th02.jpg' %}" alt="Product"></a></li>
-                <li><a href="#three"><img src="{% static 'img/shop/single/th03.jpg' %}" alt="Product"></a></li>
-                <li><a href="#four"><img src="{% static 'img/shop/single/th04.jpg' %}" alt="Product"></a></li>
-                <li><a href="#five"><img src="{% static 'img/shop/single/th05.jpg' %}" alt="Product"></a></li>
+                  {%  for photo in photos %}
+                      <li class="active"><a href="#{{ photo.id }}"><img src={{ photo.image_urls }} alt="Product"></a></li>
+                  {% endfor %}
               </ul>
+
+
             </div>
           </div>
           <!-- Product Info-->
