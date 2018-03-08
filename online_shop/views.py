@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import Product, Photo
 
+
+
 class ProductsList(View):
     def get(self, request):
         products = Product.objects.all()
