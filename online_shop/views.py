@@ -25,7 +25,7 @@ class ProductsList(View):
 #         return render(request, 'account-orders.html')
 
 
-class OrdersBasket(View):
+class OrdersCart(View):
     def get(self, request):
         pass
         return render(request, 'cart.html')
