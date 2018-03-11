@@ -23,7 +23,7 @@ urlpatterns = [
     url('main_page/', RequestPostAjax.as_view(), name='main_page'),
     url('show_all_products/', ShowAllProducts.as_view(), name='show_all_products'),
     url('product_details/(?P<product_id>\d+)', ProductDetails.as_view(), name='product_details'),
-    url('cart/', Basket.as_view(), name='cart'),
+    url('basket/', Basket.as_view(), name='basket'),
     # url('index/', ProductsList.as_view(), name='index'),
     # url('account_orders/', AccountOrders.as_view(), name='account_orders'),
 

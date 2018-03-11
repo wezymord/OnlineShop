@@ -70,11 +70,11 @@ class Basket(View):
             'products': products
         }
 
-        return render(request, 'cart.html', ctx)
+        return render(request, 'basket.html', ctx)
 
     def post(self, request):
         pass
-        return render(request, 'cart.html')
+        return render(request, 'basket.html')
 
 
 class ProductDetails(View):
