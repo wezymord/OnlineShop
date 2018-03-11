@@ -52,29 +52,24 @@ class RequestPostAjax(View):
             products.append(request.POST.get('id'))
             request.session['basket'] = products
 
-        ctx = {
-            'product': product
-        }
-        return render(request, 'index.html', ctx)
 
+        return render(request, 'index.html')
 
 class Basket(View):
     def get(self, request):
-        # request.session.clear()
-        products_id = request.session['basket']
-        products = []
-        for id in products_id:
-            products.append(Product.objects.get(pk=id))
+        if request.session.items():
+            products_id = request.session['basket']
+            products = []
+            for id in products_id:
+                products.append(Product.objects.get(pk=id))
 
-        ctx = {
-            'products': products
-        }
+            ctx = {
+                'products': products
+            }
 
-        return render(request, 'basket.html', ctx)
-
-    def post(self, request):
-        pass
-        return render(request, 'basket.html')
+            return render(request, 'basket.html', ctx)
+        else:
+            return render(request, 'basket.html')
 
 
 class ProductDetails(View):
@@ -97,3 +92,8 @@ class ShowAllProducts(View):
             'products': products
         }
         return render(request, 'shop-grid-ns.html', ctx)
+
+class ClearBasket(View):
+    def get(self, request):
+        request.session.clear()
+        return redirect('/basket')
