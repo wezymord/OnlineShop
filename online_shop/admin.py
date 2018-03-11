@@ -5,7 +5,7 @@ from .models import Product, User, Order, Photo
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'stock', 'available', 'description']
     list_filter = ['available']
-    list_editable = ['price', 'stock', 'available']
+    list_editable = ['price', 'stock', 'available', 'description']
 admin.site.register(Product, ProductAdmin)
 
 
@@ -18,7 +18,6 @@ def products_name(obj):
 
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ['image_urls', products_name]
-    list_filter = ['image_urls']
 admin.site.register(Photo, PhotoAdmin)
 
 

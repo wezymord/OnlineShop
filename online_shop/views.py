@@ -5,8 +5,33 @@ from django.shortcuts import redirect
 from .models import Product, Photo
 
 
+# class ProductsList(View):
+#     def get(self, request):
+#         products = Product.objects.all()
+#         photos = []
+#         for product in products:
+#             for url in product.photo.all():
+#                 photos.append(url.image_urls)
+#         ctx = {
+#             'photos': photos,
+#             'products': products
+#         }
+#
+#         return render(request, 'index.html', ctx)
+#
+#     def post(self, request):
+#         product_id = ''
+#         if request.method == 'POST':
+#             product_id += request.POST.get('id')
+#
+#         return redirect('/add_to_basket/{}'.format(product_id))
 
-class ProductsList(View):
+# class AccountOrders(View):
+#     def get(self, request):
+#         pass
+#         return render(request, 'account-orders.html')
+
+class RequestPostAjax(View):
     def get(self, request):
         products = Product.objects.all()
         photos = []
@@ -20,15 +45,34 @@ class ProductsList(View):
 
         return render(request, 'index.html', ctx)
 
+    def post(self, request):
+        products = request.session.get('basket', [])
 
-# class AccountOrders(View):
-#     def get(self, request):
-#         pass
-#         return render(request, 'account-orders.html')
+        if request.method == 'POST':
+            products.append(request.POST.get('id'))
+            request.session['basket'] = products
+
+        ctx = {
+            'product': product
+        }
+        return render(request, 'index.html', ctx)
 
 
-class OrdersCart(View):
+class Basket(View):
     def get(self, request):
+        # request.session.clear()
+        products_id = request.session['basket']
+        products = []
+        for id in products_id:
+            products.append(Product.objects.get(pk=id))
+
+        ctx = {
+            'products': products
+        }
+
+        return render(request, 'cart.html', ctx)
+
+    def post(self, request):
         pass
         return render(request, 'cart.html')
 

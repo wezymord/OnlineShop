@@ -146,18 +146,19 @@
                 <h3 class="text-center mb-30">Featured Products</h3>
                 <div class="owl-carousel" data-owl-carousel="{ &quot;nav&quot;: false, &quot;dots&quot;: true, &quot;margin&quot;: 30, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;576&quot;:{&quot;items&quot;:2},&quot;768&quot;:{&quot;items&quot;:3},&quot;991&quot;:{&quot;items&quot;:4},&quot;1200&quot;:{&quot;items&quot;:4}} }">
                   <!-- Product-->
+
                     {% for product in products %}
 
                   <div class="grid-item">
                     <div class="product-card">
                       <div class="product-badge text-danger">22% Off</div><a class="product-thumb" href="/product_details/{{ product.id }}"><img src={{ product|get_title_photo }} alt="Product"></a>
-                         <h3 class="product-title"><a href="/product_details">Rocket Dog</a></h3>
+                         <h3 class="product-title"><a href="/product_details">{{ product.name }} {{ request.session.name }}</a></h3>
                       <h4 class="product-price">
-                        <del>$44.95</del>$34.99
+                        <del>$44.95</del>{{ product.price }} EUR
                       </h4>
                       <div class="product-buttons">
                         <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist"><i class="icon-heart"></i></button>
-                        <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!">Add to Cart</button>
+                        <button id="{{ product.id }}" class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!">Add to Cart</button>
                       </div>
                     </div>
                   </div>

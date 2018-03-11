@@ -16,14 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
-from online_shop.views import ProductsList, OrdersCart, ProductDetails, ShowAllProducts
+from online_shop.views import Basket, ProductDetails, ShowAllProducts, RequestPostAjax
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url('index/', ProductsList.as_view(), name='index'),
-    # url('account_orders/', AccountOrders.as_view(), name='account_orders'),
-    url('cart/', OrdersCart.as_view(), name='cart'),
-    url('product_details/(?P<product_id>\d+)', ProductDetails.as_view(), name='product_details'),
+    url('main_page/', RequestPostAjax.as_view(), name='main_page'),
     url('show_all_products/', ShowAllProducts.as_view(), name='show_all_products'),
+    url('product_details/(?P<product_id>\d+)', ProductDetails.as_view(), name='product_details'),
+    url('cart/', Basket.as_view(), name='cart'),
+    # url('index/', ProductsList.as_view(), name='index'),
+    # url('account_orders/', AccountOrders.as_view(), name='account_orders'),
+
+
+
+
 
 ]
