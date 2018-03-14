@@ -56,11 +56,11 @@ $(document).ready(function() {
 
         all_product_price.text(total_price + ' EUR');
 
-        $.ajax({               //Patch nie Post
-            type: "PATCH",
-            url: "/basket/",
+        $.ajax({
+            type: "PUT",
+            url: "/basket/" + this.id,
             data: {
-                'product_id_add': this.id,
+                "product_id": this.id,
                 'product_amount': this.value
             }
         });
@@ -80,7 +80,7 @@ $(document).ready(function() {
             type: "DELETE",
             url: "/basket/" + this.id,
             data: {
-                'product_id_remove': this.id
+                "product_id": this.id
             }
         });
     });

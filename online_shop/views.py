@@ -57,7 +57,7 @@ class Basket(View):
         return render(request, 'basket.html')
 
     def delete(self, request):
-        remove_id_product = QueryDict(request.body).get('product_id_remove')
+        remove_id_product = QueryDict(request.body).get('product_id')
         for id in request.session['basket']:
             if remove_id_product == id:
                 request.session['basket'].remove(id)
@@ -66,32 +66,22 @@ class Basket(View):
 
         return render(request, 'basket.html')
 
+    def put(self, request):
+        product_amount = QueryDict(request.body).get("product_amount")
+        product_id = QueryDict(request.body).get("product_id")
 
-        #
-        # products_amount = request.session.get('products_amount', {})
-        # remove_produc = request.session.get('remove_product', [])
-        # print(remove_produc)
-        # print(request.session.items())
-        # if request.method == 'POST':
-        #     products_add_list = []
-        #     product_id_add = request.POST.get('product_id_add')
-        #     products_add_list.append(product_id_add)
-        #
-        #     remove_produc.append(request.POST.get('product_id_remove'))
-        #     print(request.POST.get('product_id_remove'))
-        #     request.session['remove_product'] = remove_produc
-        #
-        #
-        #     # for id in products_add_list:
-        #     #     product = Product.objects.get(pk=id)
-        #     #     products_amount[product.id] = request.POST.get('product_amount')
-        # print(remove_produc)
-        # print(request.session.items())
-        # request.session['products_amount'] = products_amount
-        #
-        # ctx = {
-        #     'products_amount': products_amount
-        # }
+        products_amount = request.session.get('products_amount', {})
+        products_list = []
+        products_list.append(product_id)
+
+        for id in products_list:
+            product = Product.objects.get(pk=id)
+            products_amount[product.id] = product_amount
+            request.session['products_amount'] = products_amount
+        print(products_amount)
+        print(request.session.items())
+
+        return render(request, 'basket.html')
 
 
 class ClearBasket(View):
