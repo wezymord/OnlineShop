@@ -31,6 +31,7 @@ from .models import Product, Photo
 #         pass
 #         return render(request, 'account-orders.html')
 
+
 class RequestPostAjax(View):
     def get(self, request):
         products = Product.objects.all()
@@ -49,17 +50,17 @@ class RequestPostAjax(View):
         products = request.session.get('basket', [])
 
         if request.method == 'POST':
-            products.append(request.POST.get('id'))
+            products.append(request.POST.get('product_id'))
             request.session['basket'] = products
-
-
+        print(request.session.items())
         return render(request, 'index.html')
+
 
 class Basket(View):
     def get(self, request):
+        products = []
         if request.session.items():
             products_id = request.session['basket']
-            products = []
             for id in products_id:
                 products.append(Product.objects.get(pk=id))
 
@@ -69,7 +70,30 @@ class Basket(View):
 
             return render(request, 'basket.html', ctx)
         else:
-            return render(request, 'basket.html')
+            ctx = {
+                'products': products
+            }
+
+            return render(request, 'basket.html', ctx)
+
+    def post(self, request):
+        products_amount = request.session.get('products_amount', {})
+
+        if request.method == 'POST':
+            product_id = request.POST.get('product_id')
+            products_id_list = []
+            products_id_list.append(product_id)
+
+            for id in products_id_list:
+                product = Product.objects.get(pk=id)
+                products_amount[product.id] = request.POST.get('product_amount')
+
+        request.session['products_amount'] = products_amount
+        print(products_amount)
+        ctx = {
+            'products_amount': products_amount
+        }
+        return render(request, 'basket.html', ctx)
 
 
 class ProductDetails(View):
