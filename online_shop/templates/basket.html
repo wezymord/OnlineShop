@@ -42,7 +42,7 @@
 
         {% for product in products %}
 
-              <tr>
+              <tr class="current_product" id="{{ product.id }}" >
                 <td>
                   <div class="product-item"><a class="product-thumb" href="/product_details/{{ product.id }}"><img src={{ product|get_title_photo }} alt="Product"></a>
                     <div class="product-info">
@@ -66,8 +66,8 @@
                 </td>
 
                 <td class="text-center text-lg text-medium product_price" id="{{ product.id }}">{{ product.price }} EUR</td>
-                <td class="text-center text-lg text-medium">$18.00</td>
-                <td class="text-center"><a class="remove-from-cart" href="#" data-toggle="tooltip" title="Remove item"><i class="icon-cross"></i></a></td>
+                <td class="text-center text-lg text-medium"> EUR</td>
+                <td class="text-center"><a class="remove-from-cart" id={{ product.id }} href="#" data-toggle="tooltip" title="Remove item"><i class="icon-cross"></i></a></td>
               </tr>
               <tr>
 

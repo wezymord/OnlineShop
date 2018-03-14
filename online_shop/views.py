@@ -76,20 +76,28 @@ class Basket(View):
 
             return render(request, 'basket.html', ctx)
 
-    def post(self, request):
+    def post(self, request):     # BURDEL - jestem w trakcie zmian
         products_amount = request.session.get('products_amount', {})
-
+        remove_produc = request.session.get('remove_product', [])
+        print(remove_produc)
+        print(request.session.items())
         if request.method == 'POST':
-            product_id = request.POST.get('product_id')
-            products_id_list = []
-            products_id_list.append(product_id)
+            products_add_list = []
+            product_id_add = request.POST.get('product_id_add')
+            products_add_list.append(product_id_add)
 
-            for id in products_id_list:
-                product = Product.objects.get(pk=id)
-                products_amount[product.id] = request.POST.get('product_amount')
+            remove_produc.append(request.POST.get('product_id_remove'))
+            print(request.POST.get('product_id_remove'))
+            request.session['remove_product'] = remove_produc
 
+
+            # for id in products_add_list:
+            #     product = Product.objects.get(pk=id)
+            #     products_amount[product.id] = request.POST.get('product_amount')
+        print(remove_produc)
+        print(request.session.items())
         request.session['products_amount'] = products_amount
-        print(products_amount)
+
         ctx = {
             'products_amount': products_amount
         }
@@ -117,7 +125,16 @@ class ShowAllProducts(View):
         }
         return render(request, 'shop-grid-ns.html', ctx)
 
-class ClearBasket(View):
+
+def clear_all_basket(request):
+    request.session.clear()
+    return redirect('/basket')
+
+
+class RemoveBasketProduct(View):
     def get(self, request):
-        request.session.clear()
-        return redirect('/basket')
+        pass
+        # ctx = {
+        #     'products_amount': products_amount
+        # }
+        return render(request, 'basket.html')
