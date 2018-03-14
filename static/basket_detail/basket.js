@@ -23,7 +23,7 @@ $(document).ready(function() {
             type: "POST",
             url: "/basket/",
             data: {
-                'product_id': this.id      // to class
+                'product_id': this.id
             }
         });
     });
@@ -76,9 +76,9 @@ $(document).ready(function() {
             };
         });
 
-        $.ajax({           //delete nie post
+        $.ajax({
             type: "DELETE",
-            url: "/basket/",
+            url: "/basket/" + this.id,
             data: {
                 'product_id_remove': this.id
             }

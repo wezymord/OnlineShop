@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
-from online_shop.views import MainPage, Basket, ProductDetails, ShowAllProducts, clear_all_basket,\
-    RemoveBasketProduct
+from online_shop.views import MainPage, Basket, ProductDetails, ShowAllProducts, ClearBasket
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,8 +25,8 @@ urlpatterns = [
     url('show_all_products/', ShowAllProducts.as_view(), name='show_all_products'),
     url('product_details/(?P<product_id>\d+)', ProductDetails.as_view(), name='product_details'),
     url('basket/', Basket.as_view(), name='basket'),
-    url('clear_basket_session/', clear_all_basket, name='clear_basket_session'),
-    url('remove_basket_product/', RemoveBasketProduct.as_view(), name='remove_basket_product'),
+    url('basket/(?P<product_id>\d+)', Basket.as_view(), name='basket'),
+    url('clear_basket_session/', ClearBasket.as_view(), name='clear_basket_session'),
     # url('index/', ProductsList.as_view(), name='index'),
     # url('account_orders/', AccountOrders.as_view(), name='account_orders'),
 

@@ -58,7 +58,6 @@ class Basket(View):
 
     def delete(self, request):
         remove_id_product = QueryDict(request.body).get('product_id_remove')
-
         for id in request.session['basket']:
             if remove_id_product == id:
                 request.session['basket'].remove(id)
@@ -66,10 +65,6 @@ class Basket(View):
         request.session.modified = True
 
         return render(request, 'basket.html')
-
-
-
-
 
 
         #
@@ -99,6 +94,11 @@ class Basket(View):
         # }
 
 
+class ClearBasket(View):
+    def get(self, request):
+        request.session.clear()
+        return redirect('/basket')
+
 
 class ProductDetails(View):
     def get(self, request, product_id):
@@ -122,15 +122,4 @@ class ShowAllProducts(View):
         return render(request, 'shop-grid-ns.html', ctx)
 
 
-def clear_all_basket(request):
-    request.session.clear()
-    return redirect('/basket')
 
-
-class RemoveBasketProduct(View):
-    def get(self, request):
-        pass
-        # ctx = {
-        #     'products_amount': products_amount
-        # }
-        return render(request, 'basket.html')
