@@ -42,8 +42,7 @@ $(document).ready(function() {
         $.each(product_price, function (index, value) {
             if (product_id === value.id) {
                 value.innerHTML = total_product_price + ' EUR';
-            }
-            ;
+            };
         });
 
         $.each(product_amount_selected, function (index, value) {

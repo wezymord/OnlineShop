@@ -31,20 +31,21 @@ class Basket(View):
     def get(self, request):
         products = []
         if request.session.items():
+
             products_id = request.session['basket']
             for id in products_id:
                 products.append(Product.objects.get(pk=id))
 
             ctx = {
-                'products': products
+                'products': list(set(products))
             }
+            print(products)
 
             return render(request, 'basket.html', ctx)
         else:
             ctx = {
                 'products': products
             }
-
             return render(request, 'basket.html', ctx)
 
     def post(self, request):
@@ -87,6 +88,7 @@ class Basket(View):
 class ClearBasket(View):
     def get(self, request):
         request.session.clear()
+        print(request.session.items())
         return redirect('/basket')
 
 
