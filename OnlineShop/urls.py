@@ -16,12 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
-from online_shop.views import Basket, ProductDetails, ShowAllProducts, RequestPostAjax, clear_all_basket,\
+from online_shop.views import MainPage, Basket, ProductDetails, ShowAllProducts, clear_all_basket,\
     RemoveBasketProduct
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url('main_page/', RequestPostAjax.as_view(), name='main_page'),
+    url('main_page/', MainPage.as_view(), name='main_page'),
     url('show_all_products/', ShowAllProducts.as_view(), name='show_all_products'),
     url('product_details/(?P<product_id>\d+)', ProductDetails.as_view(), name='product_details'),
     url('basket/', Basket.as_view(), name='basket'),

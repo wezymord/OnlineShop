@@ -3,36 +3,10 @@ from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import Product, Photo
+from django.http import QueryDict
 
 
-# class ProductsList(View):
-#     def get(self, request):
-#         products = Product.objects.all()
-#         photos = []
-#         for product in products:
-#             for url in product.photo.all():
-#                 photos.append(url.image_urls)
-#         ctx = {
-#             'photos': photos,
-#             'products': products
-#         }
-#
-#         return render(request, 'index.html', ctx)
-#
-#     def post(self, request):
-#         product_id = ''
-#         if request.method == 'POST':
-#             product_id += request.POST.get('id')
-#
-#         return redirect('/add_to_basket/{}'.format(product_id))
-
-# class AccountOrders(View):
-#     def get(self, request):
-#         pass
-#         return render(request, 'account-orders.html')
-
-
-class RequestPostAjax(View):
+class MainPage(View):
     def get(self, request):
         products = Product.objects.all()
         photos = []
@@ -46,14 +20,11 @@ class RequestPostAjax(View):
 
         return render(request, 'index.html', ctx)
 
-    def post(self, request):
-        products = request.session.get('basket', [])
 
-        if request.method == 'POST':
-            products.append(request.POST.get('product_id'))
-            request.session['basket'] = products
-        print(request.session.items())
-        return render(request, 'index.html')
+# class AccountOrders(View):
+#     def get(self, request):
+#         pass
+#         return render(request, 'account-orders.html')
 
 
 class Basket(View):
@@ -76,32 +47,57 @@ class Basket(View):
 
             return render(request, 'basket.html', ctx)
 
-    def post(self, request):     # BURDEL - jestem w trakcie zmian
-        products_amount = request.session.get('products_amount', {})
-        remove_produc = request.session.get('remove_product', [])
-        print(remove_produc)
-        print(request.session.items())
+    def post(self, request):
+        products = request.session.get('basket', [])
+
         if request.method == 'POST':
-            products_add_list = []
-            product_id_add = request.POST.get('product_id_add')
-            products_add_list.append(product_id_add)
+            products.append(request.POST.get('product_id'))
+            request.session['basket'] = products
 
-            remove_produc.append(request.POST.get('product_id_remove'))
-            print(request.POST.get('product_id_remove'))
-            request.session['remove_product'] = remove_produc
+        return render(request, 'basket.html')
+
+    def delete(self, request):
+        remove_id_product = QueryDict(request.body).get('product_id_remove')
+
+        for id in request.session['basket']:
+            if remove_id_product == id:
+                request.session['basket'].remove(id)
+
+        request.session.modified = True
+
+        return render(request, 'basket.html')
 
 
-            # for id in products_add_list:
-            #     product = Product.objects.get(pk=id)
-            #     products_amount[product.id] = request.POST.get('product_amount')
-        print(remove_produc)
-        print(request.session.items())
-        request.session['products_amount'] = products_amount
 
-        ctx = {
-            'products_amount': products_amount
-        }
-        return render(request, 'basket.html', ctx)
+
+
+
+        #
+        # products_amount = request.session.get('products_amount', {})
+        # remove_produc = request.session.get('remove_product', [])
+        # print(remove_produc)
+        # print(request.session.items())
+        # if request.method == 'POST':
+        #     products_add_list = []
+        #     product_id_add = request.POST.get('product_id_add')
+        #     products_add_list.append(product_id_add)
+        #
+        #     remove_produc.append(request.POST.get('product_id_remove'))
+        #     print(request.POST.get('product_id_remove'))
+        #     request.session['remove_product'] = remove_produc
+        #
+        #
+        #     # for id in products_add_list:
+        #     #     product = Product.objects.get(pk=id)
+        #     #     products_amount[product.id] = request.POST.get('product_amount')
+        # print(remove_produc)
+        # print(request.session.items())
+        # request.session['products_amount'] = products_amount
+        #
+        # ctx = {
+        #     'products_amount': products_amount
+        # }
+
 
 
 class ProductDetails(View):
