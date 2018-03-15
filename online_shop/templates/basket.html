@@ -55,11 +55,23 @@
                   <div class="count-input">
                    <select class="form-control product_amount" id="{{ product.id }}" data-inline-type="{{ product.price }}">
 
+                   {% if products_amount %}
+
+                       {% for key, value in products_amount.items %}
+
+                          <option id="{{ product.price }}">{{ value }}</option>
+
+                       {% endfor %}
+
+                   {% else %}
+
                        {% for num in product.stock|get_stock_product_to_basket %}
 
                           <option id="{{ product.price }}">{{ num }}</option>
 
                        {% endfor %}
+
+                   {% endif %}
 
                    </select>
                   </div>

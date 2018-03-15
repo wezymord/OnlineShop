@@ -31,7 +31,6 @@ class Basket(View):
     def get(self, request):
         products = []
         if request.session.items():
-
             products_id = request.session['basket']
             for id in products_id:
                 products.append(Product.objects.get(pk=id))
@@ -39,7 +38,6 @@ class Basket(View):
             ctx = {
                 'products': list(set(products))
             }
-            print(products)
 
             return render(request, 'basket.html', ctx)
         else:
@@ -49,16 +47,19 @@ class Basket(View):
             return render(request, 'basket.html', ctx)
 
     def post(self, request):
-        products = request.session.get('basket', [])
+        products = request.session.get('basket', {})
 
         if request.method == 'POST':
-            products.append(request.POST.get('product_id'))
+            product_id = request.POST.get('product_id')
+            product_amount = request.POST.get('product_amount')
+            products[product_id] = product_amount
             request.session['basket'] = products
 
         return render(request, 'basket.html')
 
     def delete(self, request):
         remove_id_product = QueryDict(request.body).get('product_id')
+
         for id in request.session['basket']:
             if remove_id_product == id:
                 request.session['basket'].remove(id)
@@ -71,24 +72,22 @@ class Basket(View):
         product_amount = QueryDict(request.body).get("product_amount")
         product_id = QueryDict(request.body).get("product_id")
 
-        products_amount = request.session.get('products_amount', {})
-        products_list = []
-        products_list.append(product_id)
+        if product_id in request.session['basket'].keys():
+            del request.session['basket'][product_id]
 
-        for id in products_list:
-            product = Product.objects.get(pk=id)
-            products_amount[product.id] = product_amount
-            request.session['products_amount'] = products_amount
-        print(products_amount)
-        print(request.session.items())
+        products_amount = request.session.get('basket', {})
+        products_amount[product_id] = product_amount
+        request.session['basket'] = products_amount
+        ctx = {
+            'products_amount': request.session['basket']
+        }
 
-        return render(request, 'basket.html')
+        return render(request, 'basket.html', ctx)
 
 
 class ClearBasket(View):
     def get(self, request):
         request.session.clear()
-        print(request.session.items())
         return redirect('/basket')
 
 

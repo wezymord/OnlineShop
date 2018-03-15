@@ -19,11 +19,13 @@ $(document).ready(function() {
     });
 
     $(".add_to_basket").click(function () {
+        console.log('fds');
         $.ajax({
             type: "POST",
             url: "/basket/",
             data: {
-                'product_id': this.id
+                'product_id': this.id,
+                'product_amount': 1
             }
         });
     });
@@ -59,7 +61,7 @@ $(document).ready(function() {
             type: "PUT",
             url: "/basket/" + this.id,
             data: {
-                "product_id": this.id,
+                'product_id': this.id,
                 'product_amount': this.value
             }
         });
