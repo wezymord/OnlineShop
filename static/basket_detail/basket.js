@@ -38,7 +38,8 @@ $(document).ready(function() {
         var price_per_product = this.dataset.inlineType;
         var product_price = $('.product_price');
         var total_product_price = parseInt(product_amount) * parseFloat(price_per_product);
-        var all_product_price = $('#total_price');
+        var all_price = $('.total_price');
+        var all_price_main = $('.total_price_main');
         var total_price = 0;
 
         $.each(product_price, function (index, value) {
@@ -55,7 +56,8 @@ $(document).ready(function() {
             }
         });
 
-        all_product_price.text(total_price + ' EUR');
+        all_price.text(total_price + ' EUR');
+        all_price_main.text(total_price + ' EUR');
 
         $.ajax({
             type: "PUT",

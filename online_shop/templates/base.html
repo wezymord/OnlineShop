@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load extras %}
 {% block head %}
 
 <!DOCTYPE html>
@@ -514,7 +514,7 @@
                 <li><a href="#"> <i class="icon-unlock"></i>Logout</a></li>
               </ul>
             </div>
-            <div class="cart"><a href="/basket"></a><i class="icon-bag"></i><span class="count">3</span><span class="subtotal">$289.68</span>
+            <div class="cart"><a href="/basket"></a><i class="icon-bag"></i><span class="count">3</span><span class="subtotal total_price_main">{{ products_amount|total_price_basket }} EUR</span>
               <div class="toolbar-dropdown">
                 <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/01.jpg' %}" alt="Product"></a>
                   <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Unionbay Park</a><span class="dropdown-product-details">1 x $43.90</span></div>
@@ -634,7 +634,7 @@
     <!-- JavaScript (jQuery) libraries, plugins and custom scripts-->
         <script src="{% static 'js/vendor.min.js' %}"></script>
         <script src="{% static 'js/scripts.min.js' %}"></script>
-        <script src="{% static 'basket_details/basket.js' %}" type="text/javascript"></script>
+        <script src="{% static 'basket_detail/basket.js' %}" type="text/javascript"></script>
   </body>
 </html>
 {% endblock head %}
