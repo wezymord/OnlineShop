@@ -36,7 +36,8 @@ class Basket(View):
                 products.append(Product.objects.get(pk=id))
 
             ctx = {
-                'products': list(set(products))
+                'products': list(set(products)),
+                'products_amount': request.session['basket']
             }
 
             return render(request, 'basket.html', ctx)
@@ -78,11 +79,8 @@ class Basket(View):
         products_amount = request.session.get('basket', {})
         products_amount[product_id] = product_amount
         request.session['basket'] = products_amount
-        ctx = {
-            'products_amount': request.session['basket']
-        }
 
-        return render(request, 'basket.html', ctx)
+        return render(request, 'basket.html')
 
 
 class ClearBasket(View):

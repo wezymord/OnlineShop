@@ -9,26 +9,30 @@ def get_title_photo(product):
     photo = []
     for url in photos:
         photo.append(url.image_urls)
-
     return photo[0]
 
 @register.filter(name='get_stock_product_to_basket')
 def get_stock_product_to_basket(product_stock):
     return range(1, product_stock+1)
 
-# @register.filter(name='amount_price_products')
-# def amount_price_products(products_amount):
-#     total_amount_price = []
-#     print(products_amount)
-#     for product_id, product_amount in products_amount.items():
-#         product = Product.objects.get(pk=product_id)
-#         total_amount_price.append(int(product.price) * product_amount)
-#     print(total_amount_price)
-#     return total_price
+@register.filter(name='get_price_amount_product')
+def get_price_amount_product(products_amount, product_id):
+    for id, amount in products_amount.items():
+        if product_id == int(id):
+            return int(products_amount[id])
+
+@register.filter(name='get_price_product')
+def get_price_product(products_amount, product_id):
+    for id in products_amount:
+        if product_id == int(id):
+            product = Product.objects.get(pk=id)
+            product_price = int(products_amount[id]) * int(product.price)
+            return product_price
 
 @register.filter(name='total_price_basket')
-def total_price_basket(products):
+def get_total_price(products_amount):
     total_price = 0
-    for product in products:
-        total_price += int(product.price)
+    for id in products_amount:
+        product = Product.objects.get(pk=id)
+        total_price += int(products_amount[id]) * int(product.price)
     return total_price
