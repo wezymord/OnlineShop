@@ -61,9 +61,9 @@ class Basket(View):
     def delete(self, request):
         remove_id_product = QueryDict(request.body).get('product_id')
 
-        for id in request.session['basket']:
+        for id in list(request.session['basket'].keys()):
             if remove_id_product == id:
-                request.session['basket'].remove(id)
+                del request.session['basket'][id]
 
         request.session.modified = True
 

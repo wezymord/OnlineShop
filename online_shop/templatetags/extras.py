@@ -36,3 +36,7 @@ def get_total_price(products_amount):
         product = Product.objects.get(pk=id)
         total_price += int(products_amount[id]) * int(product.price)
     return total_price
+
+@register.filter(name='get_products_from_basket')
+def get_products_from_basket():
+    pass
