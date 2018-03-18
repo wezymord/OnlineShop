@@ -13,12 +13,22 @@ class MainPage(View):
         for product in products:
             for url in product.photo.all():
                 photos.append(url.image_urls)
-        ctx = {
-            'photos': photos,
-            'products': products
-        }
 
-        return render(request, 'index.html', ctx)
+        if request.session.items():
+            ctx = {
+                'photos': photos,
+                'products': products,
+                'products_amount': request.session['basket']
+            }
+
+            return render(request, 'index.html', ctx)
+        else:
+            ctx = {
+                'photos': photos,
+                'products': products,
+            }
+
+            return render(request, 'index.html', ctx)
 
 
 # class AccountOrders(View):

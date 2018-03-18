@@ -152,13 +152,13 @@
                   <div class="grid-item">
                     <div class="product-card">
                       <div class="product-badge text-danger">22% Off</div><a class="product-thumb" href="/product_details/{{ product.id }}"><img src={{ product|get_title_photo }} alt="Product"></a>
-                         <h3 class="product-title"><a href="/product_details">{{ product.name }} {{ request.session.name }}</a></h3>
+                         <h3 class="product-title"><a href="/product_details">{{ product.name }}</a></h3>
                       <h4 class="product-price">
                         <del>$44.95</del>{{ product.price }} EUR
                       </h4>
                       <div class="product-buttons">
                         <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist"><i class="icon-heart"></i></button>
-                        <button id="{{ product.id }}" class="btn btn-outline-primary btn-sm add_to_basket" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!">Add to Basket</button>
+                        <button id="{{ product.id }}" name="{{ product.price }}" class="btn btn-outline-primary btn-sm add_to_basket" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!">Add to Basket</button>
                       </div>
                     </div>
                   </div>
