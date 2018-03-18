@@ -120,5 +120,9 @@ class ShowAllProducts(View):
         }
         return render(request, 'shop-grid-ns.html', ctx)
 
+class CheckoutAddress(View):
+    def get(self, request):
+        pass
+        return render(request, 'checkout-address.html')
 
 
