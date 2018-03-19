@@ -2,7 +2,7 @@
 {% load static %}
     {% block content %}
          <!-- Off-Canvas Wrapper-->
-   <div class="offcanvas-wrapper">
+    <div class="offcanvas-wrapper">
       <!-- Page Title-->
       <div class="page-title">
         <div class="container">
@@ -24,105 +24,78 @@
         <div class="row">
           <!-- Checkout Adress-->
           <div class="col-xl-9 col-lg-8">
-            <div class="checkout-steps"><a href="/checkout_review">4. Review</a><a href="/checkout_payment"><span class="angle"></span>3. Payment</a><a href="/checkout_shipping"><span class="angle"></span>2. Shipping</a><a class="active" href="/checkout_address"><span class="angle"></span>1. Address</a></div>
-            <h4>Shipping address</h4>
+            <div class="checkout-steps"><a class="active" href="/checkout_review">4. Review</a><a class="completed" href="/checkout_payment"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>3. Payment</a><a class="completed" href="/checkout_shipping"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>1. Address</a></div>
+            <h4>Review Your Order</h4>
             <hr class="padding-bottom-1x">
-            <div class="row">
+            <div class="table-responsive shopping-cart">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th class="text-center">Subtotal</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="product-item"><a class="product-thumb" href="shop-single.html"><img src="{% static 'img/shop/cart/01.jpg' %}" alt="Product"></a>
+                        <div class="product-info">
+                          <h4 class="product-title"><a href="shop-single.html">Unionbay Park<small>x 1</small></a></h4><span><em>Size:</em> 10.5</span><span><em>Color:</em> Dark Blue</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center text-lg text-medium">$43.90</td>
+                    <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/basket">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="product-item"><a class="product-thumb" href="shop-single.html"><img src="{% static 'img/shop/cart/02.jpg' %}" alt="Product"></a>
+                        <div class="product-info">
+                          <h4 class="product-title"><a href="shop-single.html">Daily Fabric Cap<small>x 2</small></a></h4><span><em>Size:</em> XL</span><span><em>Color:</em> Black</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center text-lg text-medium">$24.89</td>
+                    <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/basket">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="product-item"><a class="product-thumb" href="shop-single.html"><img src="{% static 'img/shop/cart/03.jpg' %}" alt="Product"></a>
+                        <div class="product-info">
+                          <h4 class="product-title"><a href="shop-single.html">Cole Haan Crossbody<small>x 1</small></a></h4><span><em>Size:</em> -</span><span><em>Color:</em> Turquoise</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center text-lg text-medium">$200.00</td>
+                    <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/basket">Edit</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="shopping-cart-footer">
+              <div class="column"></div>
+              <div class="column text-lg">Subtotal: <span class="text-medium">$289.68</span></div>
+            </div>
+            <div class="row padding-top-1x mt-3">
               <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-fn">First Name</label>
-                  <input class="form-control" type="text" id="checkout-fn">
-                </div>
+                <h5>Shipping to:</h5>
+                <ul class="list-unstyled">
+                  <li><span class="text-muted">Client:</span>Daniel Adams</li>
+                  <li><span class="text-muted">Address:</span>44 Shirley Ave. West Chicago, IL 60185, USA</li>
+                  <li><span class="text-muted">Phone:</span>+1(808) 764 554 330</li>
+                </ul>
               </div>
               <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-ln">Last Name</label>
-                  <input class="form-control" type="text" id="checkout-ln">
-                </div>
+                <h5>Payment method:</h5>
+                <ul class="list-unstyled">
+                  <li><span class="text-muted">Credit Card:</span>**** **** **** 5300</li>
+                </ul>
               </div>
             </div>
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-email">E-mail Address</label>
-                  <input class="form-control" type="email" id="checkout-email">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-phone">Phone Number</label>
-                  <input class="form-control" type="text" id="checkout-phone">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-company">Company</label>
-                  <input class="form-control" type="text" id="checkout-company">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-country">Country</label>
-                  <select class="form-control" id="checkout-country">
-                    <option>Choose country</option>
-                    <option>Australia</option>
-                    <option>Canada</option>
-                    <option>France</option>
-                    <option>Germany</option>
-                    <option>Switzerland</option>
-                    <option>USA</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-city">City</label>
-                  <select class="form-control" id="checkout-city">
-                    <option>Choose city</option>
-                    <option>Amsterdam</option>
-                    <option>Berlin</option>
-                    <option>Geneve</option>
-                    <option>New York</option>
-                    <option>Paris</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-zip">ZIP Code</label>
-                  <input class="form-control" type="text" id="checkout-zip">
-                </div>
-              </div>
-            </div>
-            <div class="row padding-bottom-1x">
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-address1">Address 1</label>
-                  <input class="form-control" type="text" id="checkout-address1">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-address2">Address 2</label>
-                  <input class="form-control" type="text" id="checkout-address2">
-                </div>
-              </div>
-            </div>
-{#            <h4>Shipping Address</h4>#}
-{#            <hr class="padding-bottom-1x">#}
-{#            <div class="form-group">#}
-{#              <div class="custom-control custom-checkbox">#}
-{#                <input class="custom-control-input" type="checkbox" id="same_address" checked>#}
-{#                <label class="custom-control-label" for="same_address">Same as billing address</label>#}
-{#              </div>#}
-{#            </div>#}
-            <div class="checkout-footer">
-              <div class="column"><a class="btn btn-outline-secondary" href="/basket"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back To Cart</span></a></div>
-              <div class="column"><a class="btn btn-primary" href="/checkout_shipping"><span class="hidden-xs-down">Continue&nbsp;</span><i class="icon-arrow-right"></i></a></div>
+            <div class="checkout-footer margin-top-1x">
+              <div class="column hidden-xs-down"><a class="btn btn-outline-secondary" href="/checkout_payment"><i class="icon-arrow-left"></i>&nbsp;Back</a></div>
+              <div class="column"><a class="btn btn-primary" href="/checkout_complete">Complete Order</a></div>
             </div>
           </div>
           <!-- Sidebar          -->
