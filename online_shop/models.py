@@ -31,6 +31,18 @@ class User(models.Model):
     e_mail = models.CharField(max_length=64)
 
 
+class ShippingOptions(models.Model):
+    shipping_method = models.CharField(max_length=64)
+    available_destinations = models.CharField(max_length=64)
+    delivery_time = models.CharField(max_length=64)
+    delivery_size = models.CharField(max_length=64)
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
+
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders_user')
     products = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='orders_product')
+    shipping_options = models.ForeignKey(ShippingOptions, on_delete=models.CASCADE, null=True, related_name='orders_shipping_option')
+
+
+
