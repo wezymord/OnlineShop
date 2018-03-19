@@ -132,12 +132,6 @@ class CheckoutShipping(View):
         return render(request, 'checkout-shipping.html')
 
 
-class CheckoutPayment(View):
-    def get(self, request):
-        pass
-        return render(request, 'checkout-payment.html')
-
-
 class CheckoutReview(View):
     def get(self, request):
         pass
