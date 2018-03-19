@@ -14,7 +14,7 @@ class MainPage(View):
             for url in product.photo.all():
                 photos.append(url.image_urls)
 
-        if request.session.items():
+        if 'basket' in request.session.keys():
             ctx = {
                 'photos': photos,
                 'products': products,
@@ -40,7 +40,7 @@ class MainPage(View):
 class Basket(View):
     def get(self, request):
         products = []
-        if request.session.items():
+        if 'basket' in request.session.keys():
             products_id = request.session['basket']
             for id in products_id:
                 products.append(Product.objects.get(pk=id))
@@ -134,8 +134,20 @@ class CheckoutShipping(View):
 
 class CheckoutReview(View):
     def get(self, request):
-        pass
-        return render(request, 'checkout-review.html')
+        products = []
+        if 'basket' in request.session.keys():
+            products_id = request.session['basket']
+            for id in products_id:
+                products.append(Product.objects.get(pk=id))
+            print(request.session.items())
+            ctx = {
+                'products': list(set(products)),
+                'products_amount': request.session['basket']
+            }
+
+            return render(request, 'checkout-review.html', ctx)
+        else:
+            return render(request, 'checkout-review.html')
 
     def post(self, request):
         pass

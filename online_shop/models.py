@@ -56,3 +56,6 @@ class Order(models.Model):
             shipping_options.append(option.shipping_method)
         return ' - '.join(shipping_options)
 
+    def delete(self, *args, **kwargs):
+        self.active = False
+        self.save()

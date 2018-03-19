@@ -44,7 +44,7 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.register(Order, OrderAdmin)
 
 
-class ShippingOptionsAdmin(admin.ModelAdmin):
+class ShippingOptionAdmin(admin.ModelAdmin):
     list_display = ['shipping_method', 'delivery_time', 'delivery_size', 'available_destinations', 'cost']
     list_editable = ['delivery_time', 'delivery_size', 'available_destinations', 'cost']
-admin.site.register(ShippingOption, ShippingOptionsAdmin)
+admin.site.register(ShippingOption, ShippingOptionAdmin)

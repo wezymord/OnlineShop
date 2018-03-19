@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load extras %}
     {% block content %}
          <!-- Off-Canvas Wrapper-->
     <div class="offcanvas-wrapper">
@@ -37,45 +38,51 @@
                   </tr>
                 </thead>
                 <tbody>
+
+                {% for product in products %}
+
                   <tr>
                     <td>
-                      <div class="product-item"><a class="product-thumb" href="shop-single.html"><img src="{% static 'img/shop/cart/01.jpg' %}" alt="Product"></a>
+                      <div class="product-item"><a class="product-thumb" href="/product_details/{{ product.id }}"><img src={{ product|get_title_photo }} alt="Product"></a>
                         <div class="product-info">
-                          <h4 class="product-title"><a href="shop-single.html">Unionbay Park<small>x 1</small></a></h4><span><em>Size:</em> 10.5</span><span><em>Color:</em> Dark Blue</span>
+                          <h4 class="product-title"><a href="shop-single.html">{{ product.name }}<small>x {{ products_amount|get_product_amount:product.id }}</small></a></h4><span><em>Size:</em> {{ product.description }}</span>
                         </div>
                       </div>
                     </td>
-                    <td class="text-center text-lg text-medium">$43.90</td>
+                    <td class="text-center text-lg text-medium">{{ products_amount|get_price_product:product.id }} EUR</td>
                     <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/basket">Edit</a></td>
                   </tr>
-                  <tr>
-                    <td>
-                      <div class="product-item"><a class="product-thumb" href="shop-single.html"><img src="{% static 'img/shop/cart/02.jpg' %}" alt="Product"></a>
-                        <div class="product-info">
-                          <h4 class="product-title"><a href="shop-single.html">Daily Fabric Cap<small>x 2</small></a></h4><span><em>Size:</em> XL</span><span><em>Color:</em> Black</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-center text-lg text-medium">$24.89</td>
-                    <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/basket">Edit</a></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="product-item"><a class="product-thumb" href="shop-single.html"><img src="{% static 'img/shop/cart/03.jpg' %}" alt="Product"></a>
-                        <div class="product-info">
-                          <h4 class="product-title"><a href="shop-single.html">Cole Haan Crossbody<small>x 1</small></a></h4><span><em>Size:</em> -</span><span><em>Color:</em> Turquoise</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-center text-lg text-medium">$200.00</td>
-                    <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/basket">Edit</a></td>
-                  </tr>
+
+                {% endfor %}
+
+{#                  <tr>#}
+{#                    <td>#}
+{#                      <div class="product-item"><a class="product-thumb" href="shop-single.html"><img src="{% static 'img/shop/cart/02.jpg' %}" alt="Product"></a>#}
+{#                        <div class="product-info">#}
+{#                          <h4 class="product-title"><a href="shop-single.html">Daily Fabric Cap<small>x 2</small></a></h4><span><em>Size:</em> XL</span><span><em>Color:</em> Black</span>#}
+{#                        </div>#}
+{#                      </div>#}
+{#                    </td>#}
+{#                    <td class="text-center text-lg text-medium">$24.89</td>#}
+{#                    <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/basket">Edit</a></td>#}
+{#                  </tr>#}
+{#                  <tr>#}
+{#                    <td>#}
+{#                      <div class="product-item"><a class="product-thumb" href="shop-single.html"><img src="{% static 'img/shop/cart/03.jpg' %}" alt="Product"></a>#}
+{#                        <div class="product-info">#}
+{#                          <h4 class="product-title"><a href="shop-single.html">Cole Haan Crossbody<small>x 1</small></a></h4><span><em>Size:</em> -</span><span><em>Color:</em> Turquoise</span>#}
+{#                        </div>#}
+{#                      </div>#}
+{#                    </td>#}
+{#                    <td class="text-center text-lg text-medium">$200.00</td>#}
+{#                    <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/basket">Edit</a></td>#}
+{#                  </tr>#}
                 </tbody>
               </table>
             </div>
             <div class="shopping-cart-footer">
               <div class="column"></div>
-              <div class="column text-lg">Subtotal: <span class="text-medium">$289.68</span></div>
+              <div class="column text-lg">Subtotal: <span class="text-medium">{{ products_amount|total_price_basket }} EUR</span></div>
             </div>
             <div class="row padding-top-1x mt-3">
               <div class="col-sm-6">
