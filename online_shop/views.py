@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .models import Product, Photo
+from .models import Product, ShippingOption
 from django.http import QueryDict
 
 
@@ -128,8 +128,13 @@ class CheckoutAddress(View):
 
 class CheckoutShipping(View):
     def get(self, request):
-        pass
-        return render(request, 'checkout-shipping.html')
+        shipping_options = ShippingOption.objects.all()
+
+        ctx = {
+            'shipping_options': shipping_options
+        }
+
+        return render(request, 'checkout-shipping.html', ctx)
 
 
 class CheckoutReview(View):
@@ -139,7 +144,7 @@ class CheckoutReview(View):
             products_id = request.session['basket']
             for id in products_id:
                 products.append(Product.objects.get(pk=id))
-            print(request.session.items())
+
             ctx = {
                 'products': list(set(products)),
                 'products_amount': request.session['basket']
