@@ -25,6 +25,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='order',
             name='shipping_options',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='orders_shipping_option', to='online_shop.ShippingOptions'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='orders_shipping_option', to='context_processor.ShippingOption'),
         ),
     ]

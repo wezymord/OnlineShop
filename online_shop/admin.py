@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, User, Order, Photo
+from .models import Product, User, Order, Photo, ShippingOption
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -24,11 +24,27 @@ admin.site.register(Photo, PhotoAdmin)
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'phone_number', 'e_mail']
-    list_filter = ['first_name', 'last_name', 'phone_number', 'e_mail']
 admin.site.register(User, UserAdmin)
 
 
+def shipping_methods(obj):
+    shipping_options = []
+    for option in obj.shipping_options.all():
+        shipping_options.append(option.shipping_method)
+    return ' - '.join(shipping_options)
+
+def product_name(obj):
+    products = []
+    for product in obj.products.all():
+        products.append(product.name)
+    return ' - '.join(products)
+
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['user', 'products']
-    list_filter = ['user', 'products']
+    list_display = ['user', product_name, shipping_methods]
 admin.site.register(Order, OrderAdmin)
+
+
+class ShippingOptionsAdmin(admin.ModelAdmin):
+    list_display = ['shipping_method', 'delivery_time', 'delivery_size', 'available_destinations', 'cost']
+    list_editable = ['delivery_time', 'delivery_size', 'available_destinations', 'cost']
+admin.site.register(ShippingOption, ShippingOptionsAdmin)

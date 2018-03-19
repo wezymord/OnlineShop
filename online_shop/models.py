@@ -10,7 +10,7 @@ class Product(models.Model):
     description = models.CharField(max_length=256, null=True)
 
     def __str__(self):
-        return '{}/{} sth.'.format(self.name, self.stock)
+        return '{}'.format(self.name)
 
 
 class Photo(models.Model):
@@ -30,19 +30,29 @@ class User(models.Model):
     phone_number = models.CharField(max_length=15)          # validation
     e_mail = models.CharField(max_length=64)
 
+    def __str__(self):
+        return '{} {}'.format(self.first_name, self.last_name)
 
-class ShippingOptions(models.Model):
+
+class ShippingOption(models.Model):
     shipping_method = models.CharField(max_length=64)
     available_destinations = models.CharField(max_length=64)
     delivery_time = models.CharField(max_length=64)
     delivery_size = models.CharField(max_length=64)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def __str__(self):
+        return '{}'.format(self.shipping_method)
+
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders_user')
-    products = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='orders_product')
-    shipping_options = models.ForeignKey(ShippingOptions, on_delete=models.CASCADE, null=True, related_name='orders_shipping_option')
+    products = models.ManyToManyField(Product, related_name='orders_product')
+    shipping_options = models.ManyToManyField(ShippingOption, related_name='orders_shipping_option')
 
-
+    def __str__(self):
+        shipping_options = []
+        for option in self.shipping_options.all():
+            shipping_options.append(option.shipping_method)
+        return ' - '.join(shipping_options)
 
