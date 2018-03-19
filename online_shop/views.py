@@ -126,3 +126,7 @@ class CheckoutAddress(View):
         return render(request, 'checkout-address.html')
 
 
+class CheckoutShipping(View):
+    def get(self, request):
+        pass
+        return render(request, 'checkout-shipping.html')
