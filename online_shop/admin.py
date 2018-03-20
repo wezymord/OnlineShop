@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, User, Order, Photo, ShippingOption
+from .models import Product, User, Order, Photo, ShippingOption, OrderProducts
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -42,3 +42,11 @@ class ShippingOptionAdmin(admin.ModelAdmin):
     list_display = ['shipping_method', 'delivery_time', 'delivery_size', 'available_destinations', 'cost']
     list_editable = ['delivery_time', 'delivery_size', 'available_destinations', 'cost']
 admin.site.register(ShippingOption, ShippingOptionAdmin)
+
+
+def order_id(obj):
+    return obj.order.id
+
+class OrderProductsAdmin(admin.ModelAdmin):
+    list_display = [order_id, 'product', 'quantity_product']
+admin.site.register(OrderProducts, OrderProductsAdmin)

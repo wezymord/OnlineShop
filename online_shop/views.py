@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .models import Product, ShippingOption, Order, User
+from .models import Product, ShippingOption, Order, User, OrderProducts
 from django.http import QueryDict
 
 
@@ -184,6 +184,8 @@ class CheckoutComplete(View):
         for id in product_ids:
             for product in Product.objects.filter(pk=id):
                 make_order.products.add(product)
+                order_products = OrderProducts(product=product, order=make_order, quantity_product=request.session['basket'][id])
+                order_products.save()
 
         make_order.shipping_options.add(shipping_method)
 

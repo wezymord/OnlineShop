@@ -61,3 +61,8 @@ class Order(models.Model):
     def delete(self, *args, **kwargs):
         self.active = False
         self.save()
+
+class OrderProducts(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    quantity_product = models.CharField(max_length=4)
