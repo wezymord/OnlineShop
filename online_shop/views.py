@@ -124,7 +124,7 @@ class CheckoutAddress(View):
         return render(request, 'checkout-address.html')
 
     def post(self, request):
-        orders = request.session.get('order', {})
+        order = request.session.get('order', {})
 
         if request.method == 'POST':
             first_name = request.POST.get('first_name')
@@ -138,18 +138,18 @@ class CheckoutAddress(View):
             address1 = request.POST.get('address1')
             address2 = request.POST.get('address2')
 
-            orders['first_name'] = first_name
-            orders['last_name'] = last_name
-            orders['email'] = email
-            orders['phone_number'] = phone
-            orders['company'] = company
-            orders['country'] = country
-            orders['city'] = city
-            orders['postal_code'] = zip
-            orders['address1'] = address1
-            orders['address2'] = address2
+            order['first_name'] = first_name
+            order['last_name'] = last_name
+            order['email'] = email
+            order['phone_number'] = phone
+            order['company'] = company
+            order['country'] = country
+            order['city'] = city
+            order['postal_code'] = zip
+            order['address1'] = address1
+            order['address2'] = address2
 
-            request.session['order'] = orders
+            request.session['order'] = order
 
         return render(request, 'checkout-address.html')
 
@@ -163,6 +163,17 @@ class CheckoutShipping(View):
         }
 
         return render(request, 'checkout-shipping.html', ctx)
+
+    def post(self, request):
+        shipping_method = request.session.get('shipping_method', {})
+
+        if request.method == 'POST':
+            shipping_method_id = request.POST.get('shipping_method_id')
+            shipping_method['shipping_method_id'] = shipping_method_id
+
+            request.session['shipping_method'] = shipping_method
+
+        return render(request, 'checkout-shipping.html')
 
 
 class CheckoutReview(View):

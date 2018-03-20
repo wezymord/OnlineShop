@@ -44,8 +44,8 @@
                   <tr>
                     <td class="align-middle">
                       <div class="custom-control custom-radio mb-0">
-                        <input class="custom-control-input" type="radio" id="courier" name="shipping-method" checked>
-                        <label class="custom-control-label" for="courier"></label>
+                        <input class="custom-control-input shipping-method" type="radio" id="{{ option.id }}" name="shipping-method" checked>
+                        <label class="custom-control-label" for="{{ option.id }}"></label>
                       </div>
                     </td>
                     <td class="align-middle"><span class="text-medium">{{ option.shipping_method }}</span><br><span class="text-muted text-sm">{{ option.available_destinations }}</span></td>
