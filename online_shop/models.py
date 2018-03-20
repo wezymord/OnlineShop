@@ -18,9 +18,7 @@ class Photo(models.Model):
     products = models.ManyToManyField(Product, related_name='photo')
 
     def __str__(self):
-        products = []
-        for product in self.products.all():
-            products.append(product.name)
+        products = [product.name for product in self.products.all()]
         return ' - '.join(products)
 
 
@@ -51,9 +49,7 @@ class Order(models.Model):
     shipping_options = models.ManyToManyField(ShippingOption, related_name='orders_shipping_option')
 
     def __str__(self):
-        shipping_options = []
-        for option in self.shipping_options.all():
-            shipping_options.append(option.shipping_method)
+        shipping_options = [option.shipping_method for option in self.shipping_options.all()]
         return ' - '.join(shipping_options)
 
     def delete(self, *args, **kwargs):

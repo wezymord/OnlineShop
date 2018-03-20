@@ -10,9 +10,7 @@ admin.site.register(Product, ProductAdmin)
 
 
 def products_name(obj):
-    products = []
-    for product in obj.products.all():
-        products.append(product.name)
+    products = [product.name for product in obj.products.all()]
     return ' - '.join(products)
 
 
@@ -28,15 +26,11 @@ admin.site.register(User, UserAdmin)
 
 
 def shipping_methods(obj):
-    shipping_options = []
-    for option in obj.shipping_options.all():
-        shipping_options.append(option.shipping_method)
+    shipping_options = [option.shipping_method for option in obj.shipping_options.all()]
     return ' - '.join(shipping_options)
 
 def product_name(obj):
-    products = []
-    for product in obj.products.all():
-        products.append(product.name)
+    products = [product.name for product in obj.products.all()]
     return ' - '.join(products)
 
 class OrderAdmin(admin.ModelAdmin):

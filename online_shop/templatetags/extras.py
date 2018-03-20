@@ -15,8 +15,8 @@ def get_title_photo(product):
 def get_stock_product_to_basket(product_stock):
     return range(1, product_stock+1)
 
-@register.filter(name='get_product_amount')
-def get_product_amount(products_amount, product_id):
+@register.filter(name='get_product_quantity')
+def get_product_quantity(products_amount, product_id):
     for id, amount in products_amount.items():
         if product_id == int(id):
             return int(products_amount[id])
