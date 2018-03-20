@@ -124,32 +124,8 @@ class CheckoutAddress(View):
         return render(request, 'checkout-address.html')
 
     def post(self, request):
-        order = request.session.get('order', {})
-
         if request.method == 'POST':
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            email = request.POST.get('email')
-            phone = request.POST.get('phone_number')
-            company = request.POST.get('company')
-            country = request.POST.get('country')
-            city = request.POST.get('city')
-            postal_code = request.POST.get('postal_code')
-            address1 = request.POST.get('address1')
-            address2 = request.POST.get('address2')
-
-            order['first_name'] = first_name
-            order['last_name'] = last_name
-            order['email'] = email
-            order['phone_number'] = phone
-            order['company'] = company
-            order['country'] = country
-            order['city'] = city
-            order['postal_code'] = postal_code
-            order['address1'] = address1
-            order['address2'] = address2
-
-            request.session['order'] = order
+            request.session['order'] = dict(request.POST.items())
 
         return render(request, 'checkout-address.html')
 
@@ -165,13 +141,8 @@ class CheckoutShipping(View):
         return render(request, 'checkout-shipping.html', ctx)
 
     def post(self, request):
-        shipping_method = request.session.get('shipping_method', {})
-
         if request.method == 'POST':
-            shipping_method_id = request.POST.get('shipping_method_id')
-            shipping_method['shipping_method_id'] = shipping_method_id
-
-            request.session['shipping_method'] = shipping_method
+            request.session['shipping_method'] = dict(request.POST.items())
 
         return render(request, 'checkout-shipping.html')
 
@@ -198,7 +169,8 @@ class CheckoutComplete(View):
     def get(self, request):
         product_ids = request.session['basket'].keys()
         order = request.session['order']
-        shipping_option = ShippingOption.objects.get(pk=request.session['shipping_method']['shipping_method_id'])
+        shipping_method_id = request.session['shipping_method']['shipping_method_id']
+        shipping_method = ShippingOption.objects.get(pk=shipping_method_id)
 
         user = User(first_name=order['first_name'], last_name=order['last_name'], e_mail=order['email'],
                     phone_number=order['phone_number'], company=order['company'], country=order['country'],
@@ -213,6 +185,6 @@ class CheckoutComplete(View):
             for product in Product.objects.filter(pk=id):
                 make_order.products.add(product)
 
-        make_order.shipping_options.add(shipping_option)
+        make_order.shipping_options.add(shipping_method)
 
         return render(request, 'checkout-complete.html')

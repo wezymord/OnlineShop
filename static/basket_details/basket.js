@@ -112,7 +112,8 @@ $(document).ready(function() {
     });
 
 
-    $(".form-group input").blur(function() {
+
+    $(".user_forms").click(function() {
 
         $.ajax({
             type: "POST",
