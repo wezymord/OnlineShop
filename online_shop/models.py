@@ -25,8 +25,14 @@ class Photo(models.Model):
 class User(models.Model):
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
-    phone_number = models.CharField(max_length=15)          # validation
     e_mail = models.CharField(max_length=64)
+    phone_number = models.CharField(max_length=15)
+    company = models.CharField(max_length=64, default=None)
+    country = models.CharField(max_length=64, default=None)
+    city = models.CharField(max_length=64, default=None)
+    postal_code = models.CharField(max_length=64, default=None)
+    address1 = models.CharField(max_length=64, default=None)
+    address2 = models.CharField(max_length=64, default=None)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
