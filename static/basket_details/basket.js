@@ -112,19 +112,23 @@ $(document).ready(function() {
     });
 
 
-    $(".button_continue").click(function(event) {
-        event.stopPropagation();
-        console.log(this);
+    $(".form-group input").blur(function() {
 
-
-        // $("#myForm").submit();
         $.ajax({
             type: "POST",
-            url: "/basket/",
+            url: "/checkout_address/",
             data: {
-
+                'first_name': $('#checkout-fn').val(),
+                'last_name': $('#checkout-ln').val(),
+                'email': $('#checkout-email').val(),
+                'phone_number': $('#checkout-phone').val(),
+                'company': $('#checkout-company').val(),
+                'country': $('#checkout-country').val(),
+                'city': $('#checkout-city').val(),
+                'postal_code': $('#checkout-zip').val(),
+                'address1': $('#checkout-address1').val(),
+                'address2': $('#checkout-address2').val()
             }
         });
     });
-
 });

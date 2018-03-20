@@ -40,7 +40,7 @@ class MainPage(View):
 class Basket(View):
     def get(self, request):
         products = []
-        if 'basket' in request.session.keys():
+        if 'basket' in request.session.keys():                       # zapisać products_amount w context processor (cena się wyświetla w buttonie koszyka)
             products_id = request.session['basket']
             for id in products_id:
                 products.append(Product.objects.get(pk=id))
@@ -49,7 +49,6 @@ class Basket(View):
                 'products': list(set(products)),
                 'products_amount': request.session['basket']
             }
-
             return render(request, 'basket.html', ctx)
         else:
             ctx = {
@@ -122,7 +121,36 @@ class ShowAllProducts(View):
 
 class CheckoutAddress(View):
     def get(self, request):
-        pass
+        return render(request, 'checkout-address.html')
+
+    def post(self, request):
+        orders = request.session.get('order', {})
+
+        if request.method == 'POST':
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            email = request.POST.get('email')
+            phone = request.POST.get('phone_number')
+            company = request.POST.get('company')
+            country = request.POST.get('country')
+            city = request.POST.get('city')
+            zip = request.POST.get('postal_code')
+            address1 = request.POST.get('address1')
+            address2 = request.POST.get('address2')
+
+            orders['first_name'] = first_name
+            orders['last_name'] = last_name
+            orders['email'] = email
+            orders['phone_number'] = phone
+            orders['company'] = company
+            orders['country'] = country
+            orders['city'] = city
+            orders['postal_code'] = zip
+            orders['address1'] = address1
+            orders['address2'] = address2
+
+            request.session['order'] = orders
+
         return render(request, 'checkout-address.html')
 
 
@@ -141,8 +169,8 @@ class CheckoutReview(View):
     def get(self, request):
         products = []
         if 'basket' in request.session.keys():
-            products_id = request.session['basket']
-            for id in products_id:
+            product_ids = request.session['basket']
+            for id in product_ids:
                 products.append(Product.objects.get(pk=id))
 
             ctx = {
@@ -155,11 +183,9 @@ class CheckoutReview(View):
             return render(request, 'checkout-review.html')
 
     def post(self, request):
-        pass
         return render(request, 'checkout-review.html')
 
 
 class CheckoutComplete(View):
     def get(self, request):
-        pass
         return render(request, 'checkout-complete.html')
