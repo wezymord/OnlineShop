@@ -125,9 +125,11 @@ class CheckoutAddress(View):
 
     def post(self, request):
         if request.method == 'POST':
-            request.session['order'] = dict(request.POST.items())
+            user_data = dict(request.POST.items())
+            del user_data['csrfmiddlewaretoken']
+            request.session['order'] = user_data
 
-        return render(request, 'checkout-address.html')
+        return redirect('/checkout_shipping')
 
 
 class CheckoutShipping(View):
