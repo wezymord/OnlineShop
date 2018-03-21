@@ -190,3 +190,8 @@ class CheckoutComplete(View):
         make_order.shipping_options.add(shipping_method)
 
         return render(request, 'checkout-complete.html')
+
+
+class AccountLogin(View):
+    def get(self, request):
+        return render(request, 'account-login.html')
