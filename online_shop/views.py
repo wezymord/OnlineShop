@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from .models import Product, ShippingOption, Order, OrderProduct, Profile
 from django.http import QueryDict
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 
 class MainPage(View):
@@ -193,7 +194,6 @@ class CheckoutComplete(View):                       # for refactoring
             user.profile.address2 = order['address2']
             user.save()
 
-
         make_order = Order(user=user)
         make_order.save()
 
@@ -211,3 +211,55 @@ class CheckoutComplete(View):                       # for refactoring
         }
         return render(request, 'checkout-complete.html', ctx)
 
+
+class AccountRegistration(View):                                     # for refactoring
+    def get(self, request):
+        ctx = {
+            'products_amount': request.session['basket']
+        }
+        return render(request, 'account-login.html', ctx)
+
+    def post(self, request):
+        user_data = dict(request.POST.items())
+        request.session['new_user'] = user_data
+        users = User.objects.all()
+        user_form = request.session['new_user']
+
+        user = User.objects.create_user(username=user_form['first_name'], first_name=user_form['first_name'],
+                                        last_name=user_form['last_name'], email=user_form['email'],
+                                        password=user_form['password1'])
+
+        user.save()
+
+        for user in users:
+            user.profile.phone_number = user_form['phone_number']
+            user.profile.company = user_form['company']
+            user.profile.country = user_form['country']
+            user.profile.city = user_form['city']
+            user.profile.postal_code = user_form['postal_code']
+            user.profile.address1 = user_form['address1']
+            user.profile.address2 = user_form['address2']
+            user.save()
+
+        return render(request, 'account-login.html')
+
+
+class AccountLogin(View):                                               # for refactoring
+    def get(self, request):
+        ctx = {
+            'products_amount': request.session['basket']
+        }
+        return render(request, 'account-login.html', ctx)
+
+    def post(self, request):
+        user_data = dict(request.POST.items())
+        request.session['user'] = user_data
+        user_form = request.session['user']
+
+        user = authenticate(username=user_form['email'], password=user_form['password'])   #   should be username not email
+
+        if user:
+            login(request, user)
+            return redirect('/main_page')
+        else:
+            return redirect('/basket')
