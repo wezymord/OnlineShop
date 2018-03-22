@@ -26,75 +26,142 @@
       <div class="container padding-bottom-3x mb-2">
         <div class="row">
           <div class="col-md-6">
-            <form class="login-box" method="post">
-              <div class="row margin-bottom-1x">
-                <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block facebook-btn" href="#"><i class="socicon-facebook"></i>&nbsp;Facebook login</a></div>
-                <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block twitter-btn" href="#"><i class="socicon-twitter"></i>&nbsp;Twitter login</a></div>
-                <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block google-btn" href="#"><i class="socicon-googleplus"></i>&nbsp;Google+ login</a></div>
-              </div>
-              <h4 class="margin-bottom-1x">Or using form below</h4>
-              <div class="form-group input-group">
-                <input class="form-control" type="email" placeholder="Email" required><span class="input-group-addon"><i class="icon-mail"></i></span>
-              </div>
-              <div class="form-group input-group">
-                <input class="form-control" type="password" placeholder="Password" required><span class="input-group-addon"><i class="icon-lock"></i></span>
-              </div>
-              <div class="d-flex flex-wrap justify-content-between padding-bottom-1x">
-                <div class="custom-control custom-checkbox">
-                  <input class="custom-control-input" type="checkbox" id="remember_me" checked>
-                  <label class="custom-control-label" for="remember_me">Remember me</label>
-                </div><a class="navi-link" href="account-password-recovery.html">Forgot password?</a>
-              </div>
-              <div class="text-center text-sm-right">
-                <button class="btn btn-primary margin-bottom-none" type="submit">Login</button>
-              </div>
+
+
+            <form action="/account_login/" class="login-box" method="post">
+                {% csrf_token	%}
+
+                  <div class="row margin-bottom-3x">
+                    <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block facebook-btn" href="#"><i class="socicon-facebook"></i>&nbsp;Facebook login</a></div>
+                    <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block twitter-btn" href="#"><i class="socicon-twitter"></i>&nbsp;Twitter login</a></div>
+                    <div class="col-xl-4 col-md-6 col-sm-4"><a class="btn btn-sm btn-block google-btn" href="#"><i class="socicon-googleplus"></i>&nbsp;Google+ login</a></div>
+                  </div>
+                  <h4 class="margin-bottom-1x">Or using form below</h4>
+                  <div class="form-group input-group">
+                    <input class="form-control" type="email" name="email" placeholder="Email" required><span class="input-group-addon"><i class="icon-mail"></i></span>
+                  </div>
+                  <div class="form-group input-group">
+                    <input class="form-control" type="password" name="password" placeholder="Password" required><span class="input-group-addon"><i class="icon-lock"></i></span>
+                  </div>
+                  <div class="d-flex flex-wrap justify-content-between padding-bottom-10x">
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" type="checkbox" id="remember_me" checked>
+                      <label class="custom-control-label" for="remember_me">Remember me</label>
+                    </div><a class="navi-link" href="account-password-recovery.html">Forgot password?</a>
+                  </div>
+                  <div class="text-center text-sm-right">
+                    <button class="btn btn-primary margin-bottom-none" name="Login" type="submit">Login</button>
+                  </div>
             </form>
+
+
           </div>
           <div class="col-md-6">
             <div class="padding-top-3x hidden-md-up"></div>
             <h3 class="margin-bottom-1x">No Account? Register</h3>
-            <p>Registration takes less than a minute but gives you full control over your orders.</p>
-            <form class="row" method="post">
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="reg-fn">First Name</label>
-                  <input class="form-control" type="text" id="reg-fn" required>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="reg-ln">Last Name</label>
-                  <input class="form-control" type="text" id="reg-ln" required>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="reg-email">E-mail Address</label>
-                  <input class="form-control" type="email" id="reg-email" required>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="reg-phone">Phone Number</label>
-                  <input class="form-control" type="text" id="reg-phone" required>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="reg-pass">Password</label>
-                  <input class="form-control" type="password" id="reg-pass" required>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="reg-pass-confirm">Confirm Password</label>
-                  <input class="form-control" type="password" id="reg-pass-confirm" required>
-                </div>
-              </div>
-              <div class="col-12 text-center text-sm-right">
-                <button class="btn btn-primary margin-bottom-none" type="submit">Register</button>
-              </div>
+
+            <form action="/account_login/" class="row" method="post">
+                {% csrf_token %}
+
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="reg-fn">First Name</label>
+                      <input class="form-control" name="first_name" type="text" id="reg-fn" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="reg-ln">Last Name</label>
+                      <input class="form-control" name="last_name" type="text" id="reg-ln" required>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="reg-email">E-mail Address</label>
+                      <input class="form-control" name="email" type="email" id="reg-email" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="reg-phone">Phone Number</label>
+                      <input class="form-control" name="phone_number" type="text" id="reg-phone" required>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="checkout-company">Company</label>
+                      <input class="form-control" name="company" type="text" id="reg-company">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="checkout-country">Country</label>
+                      <select class="form-control" name="country" id="reg-country">
+                        <option>Choose country</option>
+                        <option>Australia</option>
+                        <option>Canada</option>
+                        <option>France</option>
+                        <option>Germany</option>
+                        <option>Switzerland</option>
+                        <option>USA</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="checkout-city">City</label>
+                      <select class="form-control" name="city" id="reg-city">
+                        <option>Choose city</option>
+                        <option>Amsterdam</option>
+                        <option>Berlin</option>
+                        <option>Geneve</option>
+                        <option>New York</option>
+                        <option>Paris</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="checkout-zip">Postal Code</label>
+                      <input class="form-control" name="postal_code" type="text" id="reg-zip">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="checkout-address1">Address 1</label>
+                      <input class="form-control" name="address1" type="text" id="reg-address1">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="checkout-address2">Address 2</label>
+                      <input class="form-control" name="address2" type="text" id="reg-address2">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="reg-pass">Password</label>
+                      <input class="form-control" name="password1" type="password" id="reg-pass" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="reg-pass-confirm">Confirm Password</label>
+                      <input class="form-control" name="password2" type="password" id="reg-pass-confirm" required>
+                    </div>
+                  </div>
+
+                  <div class="col-12 text-center text-sm-right">
+                    <button class="btn btn-primary margin-bottom-none" name="Register" type="submit">Register</button>
+                  </div>
+
             </form>
+
           </div>
         </div>
       </div>
