@@ -110,15 +110,4 @@ $(document).ready(function() {
             }
         });
     });
-
-    $(".shipping-method").focus(function() {
-
-        $.ajax({
-            type: "POST",
-            url: "/checkout_shipping/",
-            data: {
-                'shipping_method_id': this.id
-            }
-        });
-    });
 });

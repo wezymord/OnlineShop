@@ -23,13 +23,23 @@
       <div class="container padding-bottom-3x mb-2">
         <div class="row">
           <!-- Checkout Adress-->
+
           <div class="col-xl-9 col-lg-8">
             <div class="checkout-steps"><a href="/checkout_review">3. Review</a><a href="/checkout_shipping"><span class="angle"></span>2. Shipping</a><a class="active" href="/checkout_address"><span class="angle"></span>1. Address</a></div>
-            <h4>Shipping address</h4>
+
+
+            <div class="checkout-footer">
+              <div class="column">If you already have an account</div>
+              <div class="column"><a class="btn btn-primary" href="/account_login"><span class="hidden-xs-down button_continue">Login&nbsp;</span><i class="icon-arrow-right"></i></a></div>
+            </div>
+
+            <hr class="padding-bottom-1x">
+              <h4>Shipping address</h4>
             <hr class="padding-bottom-1x">
 
         <form action="/checkout_address/" method="post">
           {% csrf_token	%}
+
             <div class="row">
               <div class="col-sm-6">
                 <div class="form-group">
@@ -124,10 +134,12 @@
 {#                <label class="custom-control-label" for="same_address">Same as billing address</label>#}
 {#              </div>#}
 {#            </div>#}
+
             <div class="checkout-footer">
               <div class="column"><a class="btn btn-outline-secondary" href="/basket"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back To Cart</span></a></div>
-              <div class="column"><button type="submit" class="btn btn-primary"><span class="hidden-xs-down button_continue">Continue&nbsp;</span><i class="icon-arrow-right"></i></button></div>
+              <div class="column"><button type="submit" class="btn btn-primary"><span class="hidden-xs-down button_continue">Register</span><i class="icon-arrow-right"></i></button></div>
             </div>
+
         </form>
 
           </div>
