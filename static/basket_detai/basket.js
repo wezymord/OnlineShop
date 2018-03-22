@@ -18,6 +18,7 @@ $(document).ready(function() {
         headers: {"X-CSRFToken": getCookie("csrftoken")}
     });
 
+
     var product_in_basket = [];
     $(".add_to_basket").click(function () {
         var product_amount_basket = $('.count');
@@ -40,6 +41,7 @@ $(document).ready(function() {
             }
         });
     });
+
 
     var sum = 0;
     $('.product_amount').change(function () {
@@ -79,6 +81,7 @@ $(document).ready(function() {
             }
         });
     });
+
 
     $('.remove-from-cart').click(function () {
         var product = $('.current_product');

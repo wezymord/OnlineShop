@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .models import Product, Photo
+from .models import Product, ShippingOption, Order, NewUser, OrderProduct
 from django.http import QueryDict
 
 
@@ -14,7 +14,7 @@ class MainPage(View):
             for url in product.photo.all():
                 photos.append(url.image_urls)
 
-        if request.session.items():
+        if 'basket' in request.session.keys():
             ctx = {
                 'photos': photos,
                 'products': products,
@@ -40,7 +40,7 @@ class MainPage(View):
 class Basket(View):
     def get(self, request):
         products = []
-        if request.session.items():
+        if 'basket' in request.session.keys():                       # zapisać products_amount w context processor (cena się wyświetla w buttonie koszyka)
             products_id = request.session['basket']
             for id in products_id:
                 products.append(Product.objects.get(pk=id))
@@ -49,7 +49,6 @@ class Basket(View):
                 'products': list(set(products)),
                 'products_amount': request.session['basket']
             }
-
             return render(request, 'basket.html', ctx)
         else:
             ctx = {
@@ -60,11 +59,10 @@ class Basket(View):
     def post(self, request):
         products = request.session.get('basket', {})
 
-        if request.method == 'POST':
-            product_id = request.POST.get('product_id')
-            product_amount = request.POST.get('product_amount')
-            products[product_id] = product_amount
-            request.session['basket'] = products
+        product_id = request.POST.get('product_id')
+        product_amount = request.POST.get('product_amount')
+        products[product_id] = product_amount
+        request.session['basket'] = products
 
         return render(request, 'basket.html')
 
@@ -96,6 +94,7 @@ class Basket(View):
 class ClearBasket(View):
     def get(self, request):
         request.session.clear()
+
         return redirect('/basket')
 
 
@@ -120,5 +119,78 @@ class ShowAllProducts(View):
         }
         return render(request, 'shop-grid-ns.html', ctx)
 
+class CheckoutAddress(View):
+    def get(self, request):
+        ctx = {
+            'products_amount': request.session['basket']
+        }
+        return render(request, 'checkout-address.html', ctx)
+
+    def post(self, request):
+        user_data = dict(request.POST.items())
+        request.session['order'] = user_data
+
+        return redirect('/checkout_shipping')
 
 
+class CheckoutShipping(View):
+    def get(self, request):
+        shipping_options = ShippingOption.objects.all()
+
+        ctx = {
+            'shipping_options': shipping_options,
+            'products_amount': request.session['basket']
+        }
+
+        return render(request, 'checkout-shipping.html', ctx)
+
+    def post(self, request):
+        shipping_method = dict(request.POST.items())
+        request.session['shipping_method'] = shipping_method
+
+        return redirect('/checkout_review')
+
+
+class CheckoutReview(View):
+    def get(self, request):
+        products = []
+        if 'basket' in request.session.keys():
+            product_ids = request.session['basket']
+            for id in product_ids:
+                products.append(Product.objects.get(pk=id))
+
+            ctx = {
+                'products': list(set(products)),
+                'products_amount': request.session['basket']
+            }
+
+            return render(request, 'checkout-review.html', ctx)
+        else:
+            return render(request, 'checkout-review.html')
+
+
+class CheckoutComplete(View):                   # for refactoring
+    def get(self, request):
+        product_ids = request.session['basket'].keys()
+        order = request.session['order']
+        shipping_method_id = request.session['shipping_method']['shipping_method_id']
+        shipping_method = ShippingOption.objects.get(pk=shipping_method_id)
+
+        user = NewUser(first_name=order['first_name'], last_name=order['last_name'], e_mail=order['email'],
+                       phone_number=order['phone_number'], company=order['company'], country=order['country'],
+                       city=order['city'], postal_code=order['postal_code'], address1=order['address1'],
+                       address2=order['address2'])
+        user.save()
+
+        make_order = Order(user=user)
+        make_order.save()
+
+        for id in product_ids:
+            for product in Product.objects.filter(pk=id):
+                make_order.products.add(product)
+                order_products = OrderProduct(product=product, order=make_order, quantity_product=request.session['basket'][id])
+                order_products.save()
+
+        make_order.shipping_options.add(shipping_method)
+
+        return render(request, 'checkout-complete.html')
