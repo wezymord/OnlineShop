@@ -28,6 +28,10 @@
             <div class="checkout-steps"><a class="active" href="/checkout_review">3. Review</a><a class="completed" href="/checkout_shipping"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>1. Address</a></div>
             <h4>Review Your Order</h4>
             <hr class="padding-bottom-1x">
+
+           <form action="/checkout_review/{{ user_id }}/{{ shipping_id }}" method="post">
+              {% csrf_token	%}
+
             <div class="table-responsive shopping-cart">
               <table class="table">
                 <thead>
@@ -102,8 +106,9 @@
             </div>
             <div class="checkout-footer margin-top-1x">
               <div class="column hidden-xs-down"><a class="btn btn-outline-secondary" href="/checkout_shipping"><i class="icon-arrow-left"></i>&nbsp;Back</a></div>
-              <div class="column"><a class="btn btn-primary" href="/checkout_complete">Complete Order</a></div>
+              <div class="column"><button type="submit" class="btn btn-primary">Complete Order</button></div>
             </div>
+           </form>
           </div>
           <!-- Sidebar          -->
           <div class="col-xl-3 col-lg-4">

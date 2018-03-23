@@ -24,11 +24,11 @@
         <div class="row">
           <!-- Checkout Adress-->
           <div class="col-xl-9 col-lg-8">
-            <div class="checkout-steps"><a href="/checkout_review">3. Review</a><a class="active" href="/checkout_shipping"><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address"><span class="angle"></span><span class="step-indicator icon-circle-check"></span>1. Address</a></div>
+            <div class="checkout-steps"><a href="/checkout_review">3. Review</a><a class="active" href="/checkout_shipping/{{ user }}"><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address"><span class="angle"></span><span class="step-indicator icon-circle-check"></span>1. Address</a></div>
             <h4>Choose Shipping Method</h4>
             <hr class="padding-bottom-1x">
 
-          <form action="/checkout_shipping/" method="post">
+          <form action="/checkout_shipping/{{ user_id }}" method="post">
               {% csrf_token	%}
 
             <div class="table-responsive">

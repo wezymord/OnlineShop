@@ -129,32 +129,48 @@ class CheckoutAddress(View):
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request):
-        user_data = dict(request.POST.items())
-        request.session['order'] = user_data
+        request.session['address_data'] = dict(request.POST.items())
+        address_data = request.session['address_data']
 
-        return redirect('/checkout_shipping')
+        user = User(username=address_data['first_name'], first_name=address_data['first_name'],
+                    last_name=address_data['last_name'], email=address_data['email'])
+        user.save()
+
+        user = User.objects.get(username=address_data['first_name'])
+        user.profile.phone_number = address_data['phone_number']
+        user.profile.company = address_data['company']
+        user.profile.country = address_data['country']
+        user.profile.city = address_data['city']
+        user.profile.postal_code = address_data['postal_code']
+        user.profile.address1 = address_data['address1']
+        user.profile.address2 = address_data['address2']
+        user.save()
+
+        return redirect('/checkout_shipping/{}'.format(user.id))
 
 
 class CheckoutShipping(View):
-    def get(self, request):
+    def get(self, request, user_id):
         shipping_options = ShippingOption.objects.all()
 
         ctx = {
             'shipping_options': shipping_options,
-            'products_amount': request.session['basket']
+            'products_amount': request.session['basket'],
+            'user_id': user_id
         }
 
         return render(request, 'checkout-shipping.html', ctx)
 
-    def post(self, request):
-        shipping_method = dict(request.POST.items())
-        request.session['shipping_method'] = shipping_method
+    def post(self, request, user_id):
+        request.session['shipping_method'] = dict(request.POST.items())
+        shipping = request.session['shipping_method']
+        shipping_id = shipping['shipping_method_id']
 
-        return redirect('/checkout_review')
+        return redirect('/checkout_review/{}/{}'.format(user_id, shipping_id))
 
 
 class CheckoutReview(View):
-    def get(self, request):
+    def get(self, request, user_id, shipping_id):
         products = []
         if 'basket' in request.session.keys():
             product_ids = request.session['basket']
@@ -163,36 +179,19 @@ class CheckoutReview(View):
 
             ctx = {
                 'products': list(set(products)),
-                'products_amount': request.session['basket']
+                'products_amount': request.session['basket'],
+                'user_id': user_id,
+                'shipping_id': shipping_id
             }
 
             return render(request, 'checkout-review.html', ctx)
         else:
             return render(request, 'checkout-review.html')
 
-
-class CheckoutComplete(View):                       # for refactoring
-    def get(self, request):
-        users = User.objects.all()
+    def post(self, request, user_id, shipping_id):
         product_ids = request.session['basket'].keys()
-        order = request.session['order']
-        shipping_method_id = request.session['shipping_method']['shipping_method_id']
-        shipping_method = ShippingOption.objects.get(pk=shipping_method_id)
-
-        user = User(username=order['first_name'], first_name=order['first_name'],
-                    last_name=order['last_name'], email=order['email'])
-
-        user.save()
-
-        for user in users:
-            user.profile.phone_number = order['phone_number']
-            user.profile.company = order['company']
-            user.profile.country = order['country']
-            user.profile.city = order['city']
-            user.profile.postal_code = order['postal_code']
-            user.profile.address1 = order['address1']
-            user.profile.address2 = order['address2']
-            user.save()
+        user = User.objects.get(pk=user_id)
+        shipping = ShippingOption.objects.get(pk=shipping_id)
 
         make_order = Order(user=user)
         make_order.save()
@@ -204,20 +203,23 @@ class CheckoutComplete(View):                       # for refactoring
                                               quantity_product=request.session['basket'][id])
                 order_products.save()
 
-        make_order.shipping_options.add(shipping_method)
+        make_order.shipping_options.add(shipping)
 
-        ctx = {
-            'products_amount': request.session['basket']
-        }
-        return render(request, 'checkout-complete.html', ctx)
+        return redirect('/checkout_complete')
 
 
-class AccountRegistration(View):                                     # for refactoring
+class CheckoutComplete(View):
+    def get(self, request):
+        request.session.clear()
+        return render(request, 'checkout-complete.html')
+
+
+class AccountRegistration(View):
     def get(self, request):
         ctx = {
             'products_amount': request.session['basket']
         }
-        return render(request, 'account-login.html', ctx)
+        return render(request, 'account-registration.html', ctx)
 
     def post(self, request):
         user_data = dict(request.POST.items())
@@ -241,7 +243,7 @@ class AccountRegistration(View):                                     # for refac
             user.profile.address2 = user_form['address2']
             user.save()
 
-        return render(request, 'account-login.html')
+        return redirect('/account_login')
 
 
 class AccountLogin(View):                                               # for refactoring
@@ -260,6 +262,7 @@ class AccountLogin(View):                                               # for re
 
         if user:
             login(request, user)
-            return redirect('/main_page')
+            return redirect('/checkout_shipping')
         else:
             return redirect('/basket')
+
