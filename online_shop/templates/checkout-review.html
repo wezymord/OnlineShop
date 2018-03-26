@@ -29,7 +29,7 @@
             <h4>Review Your Order</h4>
             <hr class="padding-bottom-1x">
 
-           <form action="/checkout_review/{{ user_id }}/{{ shipping_id }}" method="post">
+           <form action="/checkout_review/{{ user.id }}/{{ shipping_id }}" method="post">
               {% csrf_token	%}
 
             <div class="table-responsive shopping-cart">
@@ -92,9 +92,9 @@
               <div class="col-sm-6">
                 <h5>Shipping to:</h5>
                 <ul class="list-unstyled">
-                  <li><span class="text-muted">Client:</span>Daniel Adams</li>
-                  <li><span class="text-muted">Address:</span>44 Shirley Ave. West Chicago, IL 60185, USA</li>
-                  <li><span class="text-muted">Phone:</span>+1(808) 764 554 330</li>
+                  <li><span class="text-muted">Client:</span>{{ user.first_name }} {{ user.last_name }}</li>
+                  <li><span class="text-muted">Address:</span>{{ user.profile.address1 }} {{ user.profile.city }}, {{ user.profile.postal_code }}, {{ user.profile.country }}</li>
+                  <li><span class="text-muted">Phone:</span>{{ user.profile.phone_number }}</li>
                 </ul>
               </div>
               <div class="col-sm-6">

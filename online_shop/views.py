@@ -193,23 +193,21 @@ class CheckoutShipping(View):
 class CheckoutReview(View):
     def get(self, request, user_id, shipping_id):
         products = []
+        user = User.objects.get(pk=user_id)
+        product_ids = request.session['basket']
+        for id in product_ids:
+            products.append(Product.objects.get(pk=id))
 
-        if 'basket' in request.session.keys():
-            product_ids = request.session['basket']
-            for id in product_ids:
-                products.append(Product.objects.get(pk=id))
+        ctx = {
+            'products': list(set(products)),
+            'products_amount': request.session['basket'],
+            'user': user,
+            'shipping_id': shipping_id,
+            'shipping_cost': ShippingOption.objects.get(pk=shipping_id).cost,
+        }
 
-            ctx = {
-                'products': list(set(products)),
-                'products_amount': request.session['basket'],
-                'user_id': user_id,
-                'shipping_id': shipping_id,
-                'shipping_cost': ShippingOption.objects.get(pk=shipping_id).cost,
-            }
+        return render(request, 'checkout-review.html', ctx)
 
-            return render(request, 'checkout-review.html', ctx)
-        else:
-            return render(request, 'checkout-review.html')
 
     def post(self, request, user_id, shipping_id):
         product_ids = request.session['basket'].keys()
