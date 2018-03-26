@@ -86,7 +86,7 @@
             </div>
             <div class="shopping-cart-footer">
               <div class="column"></div>
-              <div class="column text-lg">Subtotal: <span class="text-medium">{{ products_amount|total_price_basket }} EUR</span></div>
+              <div class="column text-lg">Subtotal(basket + shipping): <span class="text-medium">{{ products_amount|total_shipping_price:shipping_cost }} EUR</span></div>
             </div>
             <div class="row padding-top-1x mt-3">
               <div class="col-sm-6">
@@ -120,19 +120,19 @@
                 <table class="table">
                   <tr>
                     <td>Cart Subtotal:</td>
-                    <td class="text-medium">$289.68</td>
+                    <td class="text-medium products-cost">{{ products_amount|total_price_basket }} EUR</td>
                   </tr>
                   <tr>
                     <td>Shipping:</td>
-                    <td class="text-medium">$22.50</td>
+                    <td class="text-medium shipping-cost">{{ shipping_cost }} EUR</td>
                   </tr>
+{#                  <tr>#}
+{#                    <td>Estimated tax:</td>#}
+{#                    <td class="text-medium">$3.42</td>#}
+{#                  </tr>#}
                   <tr>
-                    <td>Estimated tax:</td>
-                    <td class="text-medium">$3.42</td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td class="text-lg text-medium">$315.60</td>
+                    <td>Total price</td>
+                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_cost }} EUR</td>
                   </tr>
                 </table>
               </section>

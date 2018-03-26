@@ -123,9 +123,19 @@ class ShowAllProducts(View):
 
 class CheckoutAddress(View):
     def get(self, request):
-        ctx = {
-            'products_amount': request.session['basket']
-        }
+        if 'shipping' in request.session.keys():
+            shipping_id = request.session['shipping']['shipping_method_id']
+            shipping = ShippingOption.objects.get(pk=shipping_id)
+
+            ctx = {
+                'shipping_cost': shipping.cost,
+                'products_amount': request.session['basket']
+            }
+        else:
+
+            ctx = {
+                'products_amount': request.session['basket']
+            }
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request):
@@ -152,17 +162,29 @@ class CheckoutAddress(View):
 class CheckoutShipping(View):
     def get(self, request, user_id):
         shipping_options = ShippingOption.objects.all()
+        if 'shipping' in request.session.keys():
+            shipping_id = request.session['shipping']['shipping_method_id']
+            shipping = ShippingOption.objects.get(pk=shipping_id)
 
-        ctx = {
-            'shipping_options': shipping_options,
-            'products_amount': request.session['basket'],
-            'user_id': user_id
-        }
+            ctx = {
+                'shipping_cost': shipping.cost,
+                'shipping_options': shipping_options,
+                'user_id': user_id,
+                'products_amount': request.session['basket']
+            }
+        else:
+
+            ctx = {
+                'shipping_options': shipping_options,
+                'products_amount': request.session['basket'],
+                'user_id': user_id
+            }
 
         return render(request, 'checkout-shipping.html', ctx)
 
     def post(self, request, user_id):
-        shipping = dict(request.POST.items())
+        request.session['shipping'] = dict(request.POST.items())
+        shipping = request.session['shipping']
         shipping_id = shipping['shipping_method_id']
 
         return redirect('/checkout_review/{}/{}'.format(user_id, shipping_id))
@@ -171,6 +193,7 @@ class CheckoutShipping(View):
 class CheckoutReview(View):
     def get(self, request, user_id, shipping_id):
         products = []
+
         if 'basket' in request.session.keys():
             product_ids = request.session['basket']
             for id in product_ids:
@@ -180,7 +203,8 @@ class CheckoutReview(View):
                 'products': list(set(products)),
                 'products_amount': request.session['basket'],
                 'user_id': user_id,
-                'shipping_id': shipping_id
+                'shipping_id': shipping_id,
+                'shipping_cost': ShippingOption.objects.get(pk=shipping_id).cost,
             }
 
             return render(request, 'checkout-review.html', ctx)

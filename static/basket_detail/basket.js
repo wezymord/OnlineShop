@@ -91,7 +91,7 @@ $(document).ready(function() {
         var all_price_main = $('.total_price_main');
         var product_amount_basket = $('.count');
 
-        $.each( product, function( index, value) {
+        $.each( product, function(index, value) {
             if (product_id === value.id) {
                 total_price += parseInt(all_price_main.text()) - parseInt(value.dataset.inlineType);
                 product_amount_basket.text(parseInt(product_amount_basket.text()) - 1);
@@ -109,5 +109,22 @@ $(document).ready(function() {
                 "product_id": this.id
             }
         });
+    });
+
+    $(".shipping-method").focus(function() {
+        var id = this.id;
+        var product_price = $("label");
+        var products_price = $('.products-cost').html();
+        var total_price = $('.shipping-total');
+        var shipping_price = 0;
+
+        $.each( product_price, function(index, value) {
+            if (parseInt(id) === index+1) {
+                shipping_price += parseInt(value.id);
+                $('.shipping-cost').html(value.id + ' EUR');
+            }
+        });
+
+        total_price.html(parseInt(products_price) + shipping_price + ' EUR')
     });
 });
