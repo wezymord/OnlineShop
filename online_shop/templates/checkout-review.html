@@ -28,6 +28,10 @@
             <div class="checkout-steps"><a class="active" href="/checkout_review">3. Review</a><a class="completed" href="/checkout_shipping"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>1. Address</a></div>
             <h4>Review Your Order</h4>
             <hr class="padding-bottom-1x">
+
+           <form action="/checkout_review/{{ user.id }}/{{ shipping_id }}" method="post">
+              {% csrf_token	%}
+
             <div class="table-responsive shopping-cart">
               <table class="table">
                 <thead>
@@ -82,15 +86,15 @@
             </div>
             <div class="shopping-cart-footer">
               <div class="column"></div>
-              <div class="column text-lg">Subtotal: <span class="text-medium">{{ products_amount|total_price_basket }} EUR</span></div>
+              <div class="column text-lg">Subtotal(basket + shipping): <span class="text-medium">{{ products_amount|total_shipping_price:shipping_cost }} EUR</span></div>
             </div>
             <div class="row padding-top-1x mt-3">
               <div class="col-sm-6">
                 <h5>Shipping to:</h5>
                 <ul class="list-unstyled">
-                  <li><span class="text-muted">Client:</span>Daniel Adams</li>
-                  <li><span class="text-muted">Address:</span>44 Shirley Ave. West Chicago, IL 60185, USA</li>
-                  <li><span class="text-muted">Phone:</span>+1(808) 764 554 330</li>
+                  <li><span class="text-muted">Client:</span>{{ user.first_name }} {{ user.last_name }}</li>
+                  <li><span class="text-muted">Address:</span>{{ user.profile.address1 }} {{ user.profile.city }}, {{ user.profile.postal_code }}, {{ user.profile.country }}</li>
+                  <li><span class="text-muted">Phone:</span>{{ user.profile.phone_number }}</li>
                 </ul>
               </div>
               <div class="col-sm-6">
@@ -102,8 +106,9 @@
             </div>
             <div class="checkout-footer margin-top-1x">
               <div class="column hidden-xs-down"><a class="btn btn-outline-secondary" href="/checkout_shipping"><i class="icon-arrow-left"></i>&nbsp;Back</a></div>
-              <div class="column"><a class="btn btn-primary" href="/checkout_complete">Complete Order</a></div>
+              <div class="column"><button type="submit" class="btn btn-primary">Complete Order</button></div>
             </div>
+           </form>
           </div>
           <!-- Sidebar          -->
           <div class="col-xl-3 col-lg-4">
@@ -115,19 +120,19 @@
                 <table class="table">
                   <tr>
                     <td>Cart Subtotal:</td>
-                    <td class="text-medium">$289.68</td>
+                    <td class="text-medium products-cost">{{ products_amount|total_price_basket }} EUR</td>
                   </tr>
                   <tr>
                     <td>Shipping:</td>
-                    <td class="text-medium">$22.50</td>
+                    <td class="text-medium shipping-cost">{{ shipping_cost }} EUR</td>
                   </tr>
+{#                  <tr>#}
+{#                    <td>Estimated tax:</td>#}
+{#                    <td class="text-medium">$3.42</td>#}
+{#                  </tr>#}
                   <tr>
-                    <td>Estimated tax:</td>
-                    <td class="text-medium">$3.42</td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td class="text-lg text-medium">$315.60</td>
+                    <td>Total price</td>
+                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_cost }} EUR</td>
                   </tr>
                 </table>
               </section>

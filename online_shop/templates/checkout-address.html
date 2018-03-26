@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load extras %}
     {% block content %}
          <!-- Off-Canvas Wrapper-->
    <div class="offcanvas-wrapper">
@@ -137,7 +138,7 @@
 
             <div class="checkout-footer">
               <div class="column"><a class="btn btn-outline-secondary" href="/basket"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back To Cart</span></a></div>
-              <div class="column"><button type="submit" class="btn btn-primary"><span class="hidden-xs-down button_continue">Register</span><i class="icon-arrow-right"></i></button></div>
+              <div class="column"><button type="submit" class="btn btn-primary"><span class="hidden-xs-down button_continue">Continue</span><i class="icon-arrow-right"></i></button></div>
             </div>
 
         </form>
@@ -153,20 +154,33 @@
                 <table class="table">
                   <tr>
                     <td>Cart Subtotal:</td>
-                    <td class="text-medium">$289.68</td>
+                    <td class="text-medium products-cost">{{ products_amount|total_price_basket }} EUR</td>
                   </tr>
                   <tr>
                     <td>Shipping:</td>
-                    <td class="text-medium">$22.50</td>
+                    <td class="text-medium shipping-cost">{{ shipping_cost }} EUR</td>
                   </tr>
+{#                  <tr>#}
+{#                    <td>Estimated tax:</td>#}
+{#                    <td class="text-medium">$3.42</td>#}
+{#                  </tr>#}
+
+                {% if shipping_cost %}
+
                   <tr>
-                    <td>Estimated tax:</td>
-                    <td class="text-medium">$3.42</td>
+                    <td>Total price</td>
+                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_cost }} EUR</td>
                   </tr>
+
+                {% else %}
+
                   <tr>
-                    <td></td>
-                    <td class="text-lg text-medium">$315.60</td>
+                    <td>Total price</td>
+                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_price_basket }} EUR</td>
                   </tr>
+
+                {% endif %}
+
                 </table>
               </section>
               <!-- Featured Products Widget-->

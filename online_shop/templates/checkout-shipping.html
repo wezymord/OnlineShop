@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load extras %}
     {% block content %}
          <!-- Off-Canvas Wrapper-->
     <div class="offcanvas-wrapper">
@@ -24,11 +25,11 @@
         <div class="row">
           <!-- Checkout Adress-->
           <div class="col-xl-9 col-lg-8">
-            <div class="checkout-steps"><a href="/checkout_review">3. Review</a><a class="active" href="/checkout_shipping"><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address"><span class="angle"></span><span class="step-indicator icon-circle-check"></span>1. Address</a></div>
+            <div class="checkout-steps"><a href="/checkout_review">3. Review</a><a class="active" href="/checkout_shipping/{{ user }}"><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address"><span class="angle"></span><span class="step-indicator icon-circle-check"></span>1. Address</a></div>
             <h4>Choose Shipping Method</h4>
             <hr class="padding-bottom-1x">
 
-          <form action="/checkout_shipping/" method="post">
+          <form action="/checkout_shipping/{{ user_id }}" method="post">
               {% csrf_token	%}
 
             <div class="table-responsive">
@@ -49,7 +50,7 @@
                     <td class="align-middle">
                       <div class="custom-control custom-radio mb-0">
                         <input class="custom-control-input shipping-method" type="radio" id="{{ option.id }}" name="shipping_method_id" value="{{ option.id }}">
-                        <label class="custom-control-label" for="{{ option.id }}"></label>
+                        <label id="{{ option.cost }}" class="custom-control-label" for="{{ option.id }}"></label>
                       </div>
                     </td>
                     <td class="align-middle"><span class="text-medium">{{ option.shipping_method }}</span><br><span class="text-muted text-sm">{{ option.available_destinations }}</span></td>
@@ -144,20 +145,33 @@
                 <table class="table">
                   <tr>
                     <td>Cart Subtotal:</td>
-                    <td class="text-medium">$289.68</td>
+                    <td class="text-medium products-cost">{{ products_amount|total_price_basket }} EUR</td>
                   </tr>
                   <tr>
                     <td>Shipping:</td>
-                    <td class="text-medium">$22.50</td>
+                    <td class="text-medium shipping-cost">{{ shipping_cost }} EUR</td>
                   </tr>
+{#                  <tr>#}
+{#                    <td>Estimated tax:</td>#}
+{#                    <td class="text-medium">$3.42</td>#}
+{#                  </tr>#}
+
+                {% if shipping_cost %}
+
                   <tr>
-                    <td>Estimated tax:</td>
-                    <td class="text-medium">$3.42</td>
+                    <td>Total price</td>
+                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_cost }} EUR</td>
                   </tr>
+
+                {% else %}
+
                   <tr>
-                    <td></td>
-                    <td class="text-lg text-medium">$315.60</td>
+                    <td>Total price</td>
+                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_price_basket }} EUR</td>
                   </tr>
+
+                {% endif %}
+
                 </table>
               </section>
               <!-- Featured Products Widget-->

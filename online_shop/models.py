@@ -1,5 +1,8 @@
 from django.db import models
 from django.core.validators import URLValidator
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Product(models.Model):
@@ -22,21 +25,28 @@ class Photo(models.Model):
         return ' - '.join(products)
 
 
-class User(models.Model):
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
-    e_mail = models.CharField(max_length=64)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', default=None)
     phone_number = models.CharField(max_length=15)
-    company = models.CharField(max_length=64, default=None)
-    country = models.CharField(max_length=64, default=None)
-    city = models.CharField(max_length=64, default=None)
-    postal_code = models.CharField(max_length=64, default=None)
-    address1 = models.CharField(max_length=64, default=None)
-    address2 = models.CharField(max_length=64, default=None)
+    company = models.CharField(max_length=64, null=True)
+    country = models.CharField(max_length=64, null=True)
+    city = models.CharField(max_length=64, null=True)
+    postal_code = models.CharField(max_length=64, null=True)
+    address1 = models.CharField(max_length=64, null=True)
+    address2 = models.CharField(max_length=64, null=True)
 
-    def __str__(self):
-        return '{} {}'.format(self.first_name, self.last_name)
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
 
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
+
+    def update_profile(request, user_id):
+        user = User.objects.get(pk=user_id)
+        user.save()
 
 class ShippingOption(models.Model):
     shipping_method = models.CharField(max_length=64)
@@ -62,7 +72,7 @@ class Order(models.Model):
         self.active = False
         self.save()
 
-class OrderProducts(models.Model):
+class OrderProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     quantity_product = models.CharField(max_length=4)

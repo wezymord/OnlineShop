@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
 from online_shop.views import MainPage, Basket, ProductDetails, ShowAllProducts, ClearBasket, CheckoutAddress, \
-    CheckoutShipping, CheckoutReview, CheckoutComplete, AccountLogin
+    CheckoutShipping, CheckoutReview, CheckoutComplete, AccountLogin, AccountRegistration
 
 
 urlpatterns = [
@@ -29,11 +29,11 @@ urlpatterns = [
     url('basket/(?P<product_id>\d+)', Basket.as_view(), name='basket'),
     url('clear_basket_session/', ClearBasket.as_view(), name='clear_basket_session'),
     url('checkout_address/', CheckoutAddress.as_view(), name='checkout_address'),
-    url('checkout_shipping/', CheckoutShipping.as_view(), name='checkout_shipping'),
-    url('checkout_review/', CheckoutReview.as_view(), name='checkout_review'),
+    url('checkout_shipping/(?P<user_id>(\d)+)', CheckoutShipping.as_view(), name='checkout_shipping'),
+    url('checkout_review/(?P<user_id>\d+)/(?P<shipping_id>\d+)', CheckoutReview.as_view(), name='checkout_review'),
     url('checkout_complete/', CheckoutComplete.as_view(), name='checkout_complete'),
+    url('registration_account/', AccountRegistration.as_view(), name='registration_account'),
     url('account_login/', AccountLogin.as_view(), name='account_login'),
-    # url('index/', ProductsList.as_view(), name='index'),
     # url('account_orders/', AccountOrders.as_view(), name='account_orders'),
 
 

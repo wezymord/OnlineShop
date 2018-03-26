@@ -2,8 +2,10 @@ from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .models import Product, ShippingOption, Order, NewUser, OrderProduct
+from .models import Product, ShippingOption, Order, OrderProduct, Profile
 from django.http import QueryDict
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 
 class MainPage(View):
@@ -121,66 +123,96 @@ class ShowAllProducts(View):
 
 class CheckoutAddress(View):
     def get(self, request):
-        ctx = {
-            'products_amount': request.session['basket']
-        }
+        if 'shipping' in request.session.keys():
+            shipping_id = request.session['shipping']['shipping_method_id']
+            shipping = ShippingOption.objects.get(pk=shipping_id)
+
+            ctx = {
+                'shipping_cost': shipping.cost,
+                'products_amount': request.session['basket']
+            }
+        else:
+
+            ctx = {
+                'products_amount': request.session['basket']
+            }
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request):
-        user_data = dict(request.POST.items())
-        request.session['order'] = user_data
+        request.session['address_data'] = dict(request.POST.items())
+        address_data = request.session['address_data']
 
-        return redirect('/checkout_shipping')
+        user = User(username=address_data['first_name'], first_name=address_data['first_name'],
+                    last_name=address_data['last_name'], email=address_data['email'])
+        user.save()
+
+        user = User.objects.get(username=address_data['first_name'])
+        user.profile.phone_number = address_data['phone_number']
+        user.profile.company = address_data['company']
+        user.profile.country = address_data['country']
+        user.profile.city = address_data['city']
+        user.profile.postal_code = address_data['postal_code']
+        user.profile.address1 = address_data['address1']
+        user.profile.address2 = address_data['address2']
+        user.save()
+
+        return redirect('/checkout_shipping/{}'.format(user.id))
 
 
 class CheckoutShipping(View):
-    def get(self, request):
+    def get(self, request, user_id):
         shipping_options = ShippingOption.objects.all()
+        if 'shipping' in request.session.keys():
+            shipping_id = request.session['shipping']['shipping_method_id']
+            shipping = ShippingOption.objects.get(pk=shipping_id)
 
-        ctx = {
-            'shipping_options': shipping_options,
-            'products_amount': request.session['basket']
-        }
+            ctx = {
+                'shipping_cost': shipping.cost,
+                'shipping_options': shipping_options,
+                'user_id': user_id,
+                'products_amount': request.session['basket']
+            }
+        else:
+
+            ctx = {
+                'shipping_options': shipping_options,
+                'products_amount': request.session['basket'],
+                'user_id': user_id
+            }
 
         return render(request, 'checkout-shipping.html', ctx)
 
-    def post(self, request):
-        shipping_method = dict(request.POST.items())
-        request.session['shipping_method'] = shipping_method
+    def post(self, request, user_id):
+        request.session['shipping'] = dict(request.POST.items())
+        shipping = request.session['shipping']
+        shipping_id = shipping['shipping_method_id']
 
-        return redirect('/checkout_review')
+        return redirect('/checkout_review/{}/{}'.format(user_id, shipping_id))
 
 
 class CheckoutReview(View):
-    def get(self, request):
+    def get(self, request, user_id, shipping_id):
         products = []
-        if 'basket' in request.session.keys():
-            product_ids = request.session['basket']
-            for id in product_ids:
-                products.append(Product.objects.get(pk=id))
+        user = User.objects.get(pk=user_id)
+        product_ids = request.session['basket']
+        for id in product_ids:
+            products.append(Product.objects.get(pk=id))
 
-            ctx = {
-                'products': list(set(products)),
-                'products_amount': request.session['basket']
-            }
+        ctx = {
+            'products': list(set(products)),
+            'products_amount': request.session['basket'],
+            'user': user,
+            'shipping_id': shipping_id,
+            'shipping_cost': ShippingOption.objects.get(pk=shipping_id).cost,
+        }
 
-            return render(request, 'checkout-review.html', ctx)
-        else:
-            return render(request, 'checkout-review.html')
+        return render(request, 'checkout-review.html', ctx)
 
 
-class CheckoutComplete(View):                   # for refactoring
-    def get(self, request):
+    def post(self, request, user_id, shipping_id):
         product_ids = request.session['basket'].keys()
-        order = request.session['order']
-        shipping_method_id = request.session['shipping_method']['shipping_method_id']
-        shipping_method = ShippingOption.objects.get(pk=shipping_method_id)
-
-        user = NewUser(first_name=order['first_name'], last_name=order['last_name'], e_mail=order['email'],
-                       phone_number=order['phone_number'], company=order['company'], country=order['country'],
-                       city=order['city'], postal_code=order['postal_code'], address1=order['address1'],
-                       address2=order['address2'])
-        user.save()
+        user = User.objects.get(pk=user_id)
+        shipping = ShippingOption.objects.get(pk=shipping_id)
 
         make_order = Order(user=user)
         make_order.save()
@@ -188,9 +220,62 @@ class CheckoutComplete(View):                   # for refactoring
         for id in product_ids:
             for product in Product.objects.filter(pk=id):
                 make_order.products.add(product)
-                order_products = OrderProduct(product=product, order=make_order, quantity_product=request.session['basket'][id])
+                order_products = OrderProduct(product=product, order=make_order,
+                                              quantity_product=request.session['basket'][id])
                 order_products.save()
 
-        make_order.shipping_options.add(shipping_method)
+        make_order.shipping_options.add(shipping)
 
+        return redirect('/checkout_complete')
+
+
+class CheckoutComplete(View):
+    def get(self, request):
+        request.session.clear()
         return render(request, 'checkout-complete.html')
+
+
+class AccountRegistration(View):
+    def get(self, request):
+        ctx = {
+            'products_amount': request.session['basket']
+        }
+        return render(request, 'account-registration.html', ctx)
+
+    def post(self, request):
+        user_data = dict(request.POST.items())
+        user = User.objects.create_user(username=user_data['first_name'], first_name=user_data['first_name'],
+                                        last_name=user_data['last_name'], email=user_data['email'],
+                                        password=user_data['password1'])
+        user.save()
+
+        user = User.objects.get(username=user_data['first_name'])
+        user.profile.phone_number = user_data['phone_number']
+        user.profile.company = user_data['company']
+        user.profile.country = user_data['country']
+        user.profile.city = user_data['city']
+        user.profile.postal_code = user_data['postal_code']
+        user.profile.address1 = user_data['address1']
+        user.profile.address2 = user_data['address2']
+        user.save()
+
+        return redirect('/account_login')
+
+
+class AccountLogin(View):
+    def get(self, request):
+        ctx = {
+            'products_amount': request.session['basket']
+        }
+        return render(request, 'account-login.html', ctx)
+
+    def post(self, request):
+        user_data = dict(request.POST.items())
+        user = authenticate(username=user_data['email'], password=user_data['password'])   # should be username not email
+
+        if user:
+            login(request, user)
+            return redirect('/checkout_shipping')
+        else:
+            return redirect('/basket')
+
