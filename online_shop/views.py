@@ -123,9 +123,19 @@ class ShowAllProducts(View):
 
 class CheckoutAddress(View):
     def get(self, request):
-        ctx = {
-            'products_amount': request.session['basket']
-        }
+        if 'shipping' in request.session.keys():
+            shipping_id = request.session['shipping']['shipping_method_id']
+            shipping = ShippingOption.objects.get(pk=shipping_id)
+
+            ctx = {
+                'shipping_cost': shipping.cost,
+                'products_amount': request.session['basket']
+            }
+        else:
+
+            ctx = {
+                'products_amount': request.session['basket']
+            }
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request):
@@ -152,18 +162,29 @@ class CheckoutAddress(View):
 class CheckoutShipping(View):
     def get(self, request, user_id):
         shipping_options = ShippingOption.objects.all()
+        if 'shipping' in request.session.keys():
+            shipping_id = request.session['shipping']['shipping_method_id']
+            shipping = ShippingOption.objects.get(pk=shipping_id)
 
-        ctx = {
-            'shipping_options': shipping_options,
-            'products_amount': request.session['basket'],
-            'user_id': user_id
-        }
+            ctx = {
+                'shipping_cost': shipping.cost,
+                'shipping_options': shipping_options,
+                'user_id': user_id,
+                'products_amount': request.session['basket']
+            }
+        else:
+
+            ctx = {
+                'shipping_options': shipping_options,
+                'products_amount': request.session['basket'],
+                'user_id': user_id
+            }
 
         return render(request, 'checkout-shipping.html', ctx)
 
     def post(self, request, user_id):
-        request.session['shipping_method'] = dict(request.POST.items())
-        shipping = request.session['shipping_method']
+        request.session['shipping'] = dict(request.POST.items())
+        shipping = request.session['shipping']
         shipping_id = shipping['shipping_method_id']
 
         return redirect('/checkout_review/{}/{}'.format(user_id, shipping_id))
@@ -172,21 +193,21 @@ class CheckoutShipping(View):
 class CheckoutReview(View):
     def get(self, request, user_id, shipping_id):
         products = []
-        if 'basket' in request.session.keys():
-            product_ids = request.session['basket']
-            for id in product_ids:
-                products.append(Product.objects.get(pk=id))
+        user = User.objects.get(pk=user_id)
+        product_ids = request.session['basket']
+        for id in product_ids:
+            products.append(Product.objects.get(pk=id))
 
-            ctx = {
-                'products': list(set(products)),
-                'products_amount': request.session['basket'],
-                'user_id': user_id,
-                'shipping_id': shipping_id
-            }
+        ctx = {
+            'products': list(set(products)),
+            'products_amount': request.session['basket'],
+            'user': user,
+            'shipping_id': shipping_id,
+            'shipping_cost': ShippingOption.objects.get(pk=shipping_id).cost,
+        }
 
-            return render(request, 'checkout-review.html', ctx)
-        else:
-            return render(request, 'checkout-review.html')
+        return render(request, 'checkout-review.html', ctx)
+
 
     def post(self, request, user_id, shipping_id):
         product_ids = request.session['basket'].keys()
@@ -223,30 +244,25 @@ class AccountRegistration(View):
 
     def post(self, request):
         user_data = dict(request.POST.items())
-        request.session['new_user'] = user_data
-        users = User.objects.all()
-        user_form = request.session['new_user']
-
-        user = User.objects.create_user(username=user_form['first_name'], first_name=user_form['first_name'],
-                                        last_name=user_form['last_name'], email=user_form['email'],
-                                        password=user_form['password1'])
-
+        user = User.objects.create_user(username=user_data['first_name'], first_name=user_data['first_name'],
+                                        last_name=user_data['last_name'], email=user_data['email'],
+                                        password=user_data['password1'])
         user.save()
 
-        for user in users:
-            user.profile.phone_number = user_form['phone_number']
-            user.profile.company = user_form['company']
-            user.profile.country = user_form['country']
-            user.profile.city = user_form['city']
-            user.profile.postal_code = user_form['postal_code']
-            user.profile.address1 = user_form['address1']
-            user.profile.address2 = user_form['address2']
-            user.save()
+        user = User.objects.get(username=user_data['first_name'])
+        user.profile.phone_number = user_data['phone_number']
+        user.profile.company = user_data['company']
+        user.profile.country = user_data['country']
+        user.profile.city = user_data['city']
+        user.profile.postal_code = user_data['postal_code']
+        user.profile.address1 = user_data['address1']
+        user.profile.address2 = user_data['address2']
+        user.save()
 
         return redirect('/account_login')
 
 
-class AccountLogin(View):                                               # for refactoring
+class AccountLogin(View):
     def get(self, request):
         ctx = {
             'products_amount': request.session['basket']
@@ -255,10 +271,7 @@ class AccountLogin(View):                                               # for re
 
     def post(self, request):
         user_data = dict(request.POST.items())
-        request.session['user'] = user_data
-        user_form = request.session['user']
-
-        user = authenticate(username=user_form['email'], password=user_form['password'])   #   should be username not email
+        user = authenticate(username=user_data['email'], password=user_data['password'])   # should be username not email
 
         if user:
             login(request, user)
