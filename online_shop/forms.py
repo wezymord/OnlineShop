@@ -1,7 +1,5 @@
 from django import forms
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
-from django.core.validators import validate_email
+from django.forms import ModelForm
 
 
 class UserForm(forms.ModelForm):
@@ -14,8 +12,8 @@ class UserForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise ValidationError("E-mail: {} already exist!".format(email))
-        elif email and validate_email(email):
+        if email and validate_email(email):
             raise ValidationError("Enter a valid email address.")
+        elif User.objects.filter(email=email).exists():
+            raise ValidationError("E-mail: {} already exist!".format(email))
         return email
