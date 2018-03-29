@@ -2,7 +2,8 @@ from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .models import Product, ShippingOption, Order, OrderProduct, Profile
+from .models import Product, ShippingOption, Order, OrderProduct
+from .forms import UserForm
 from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -123,40 +124,52 @@ class ShowAllProducts(View):
 
 class CheckoutAddress(View):
     def get(self, request):
+        form = UserForm(request.POST)
         if 'shipping' in request.session.keys():
             shipping_id = request.session['shipping']['shipping_method_id']
             shipping = ShippingOption.objects.get(pk=shipping_id)
 
             ctx = {
                 'shipping_cost': shipping.cost,
-                'products_amount': request.session['basket']
+                'products_amount': request.session['basket'],
+                'form': form,
             }
         else:
 
             ctx = {
-                'products_amount': request.session['basket']
+                'products_amount': request.session['basket'],
+                'form': form,
             }
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request):
-        request.session['address_data'] = dict(request.POST.items())
-        address_data = request.session['address_data']
+        form = UserForm(request.POST)
 
-        user = User(username=address_data['first_name'], first_name=address_data['first_name'],
-                    last_name=address_data['last_name'], email=address_data['email'])
-        user.save()
+        if form.is_valid():
+            request.session['address_data'] = dict(request.POST.items())
+            address_data = request.session['address_data']
 
-        user = User.objects.get(username=address_data['first_name'])
-        user.profile.phone_number = address_data['phone_number']
-        user.profile.company = address_data['company']
-        user.profile.country = address_data['country']
-        user.profile.city = address_data['city']
-        user.profile.postal_code = address_data['postal_code']
-        user.profile.address1 = address_data['address1']
-        user.profile.address2 = address_data['address2']
-        user.save()
+            user = User(first_name=address_data['first_name'], last_name=address_data['last_name'],
+                        email=form.cleaned_data['email'])
+            user.save()
 
-        return redirect('/checkout_shipping/{}'.format(user.id))
+            user = User.objects.get(email=form.cleaned_data['email'])
+            user.profile.phone_number = address_data['phone_number']
+            user.profile.company = address_data['company']
+            user.profile.country = address_data['country']
+            user.profile.city = address_data['city']
+            user.profile.postal_code = address_data['postal_code']
+            user.profile.address1 = address_data['address1']
+            user.profile.address2 = address_data['address2']
+            user.save()
+
+            return redirect('/checkout_shipping/{}'.format(user.id))
+        else:
+            ctx = {
+                'products_amount': request.session['basket'],
+                'form': form,
+            }
+            return render(request, 'checkout-address.html', ctx)
 
 
 class CheckoutShipping(View):
@@ -243,21 +256,22 @@ class AccountRegistration(View):
         return render(request, 'account-registration.html', ctx)
 
     def post(self, request):
-        user_data = dict(request.POST.items())
-        user = User.objects.create_user(username=user_data['first_name'], first_name=user_data['first_name'],
-                                        last_name=user_data['last_name'], email=user_data['email'],
-                                        password=user_data['password1'])
-        user.save()
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user_data = dict(request.POST.items())
+            user = User.objects.create_user(first_name=user_data['first_name'], last_name=user_data['last_name'],
+                                            email=user_data['email'], password=user_data['password1'])
+            user.save()
 
-        user = User.objects.get(username=user_data['first_name'])
-        user.profile.phone_number = user_data['phone_number']
-        user.profile.company = user_data['company']
-        user.profile.country = user_data['country']
-        user.profile.city = user_data['city']
-        user.profile.postal_code = user_data['postal_code']
-        user.profile.address1 = user_data['address1']
-        user.profile.address2 = user_data['address2']
-        user.save()
+            user = User.objects.get(email=form.cleaned_data['email'])
+            user.profile.phone_number = user_data['phone_number']
+            user.profile.company = user_data['company']
+            user.profile.country = user_data['country']
+            user.profile.city = user_data['city']
+            user.profile.postal_code = user_data['postal_code']
+            user.profile.address1 = user_data['address1']
+            user.profile.address2 = user_data['address2']
+            user.save()
 
         return redirect('/account_login')
 
