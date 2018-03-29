@@ -17,3 +17,4 @@ class UserForm(forms.ModelForm):
         elif User.objects.filter(email=email).exists():
             raise ValidationError("E-mail: {} already exist!".format(email))
         return email
+
