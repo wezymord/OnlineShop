@@ -14,6 +14,8 @@ class UserForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists() and not validate_email(email):
+        if User.objects.filter(email=email).exists():
             raise ValidationError("E-mail: {} already exist!".format(email))
+        elif email and not validate_email(email):
+            raise ValidationError("Enter a valid email address.")
         return email
