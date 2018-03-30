@@ -1,17 +1,16 @@
 from django import forms
-from django.contrib.auth.models import User
 from .models import Profile
-from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django_countries import countries
-
-
+from .validators.postal_code import postal_code_validate
+from .validators.e_mail import clean_email
+import re
 
 
 class ProfileUserForm(forms.ModelForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-fn'}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-ln'}))
-    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'email', 'id': 'checkout-email'}))
+    email = forms.EmailField(validators=[clean_email], widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'email', 'id': 'checkout-email'}))
     company = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-company'}))
     city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-city'}))
     postal_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-zip'}))
@@ -27,11 +26,9 @@ class ProfileUserForm(forms.ModelForm):
             'country': forms.Select(choices=countries, attrs={'class': 'form-control', 'id': 'checkout-country'}),
         }
 
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if email and validate_email(email):
-            raise ValidationError("Enter a valid email address.")
-        elif User.objects.filter(email=email).exists():
-            raise ValidationError("E-mail: {} already exist!".format(email))
-        return email
+    def clean_postal_code(self):
+        country_code = self.cleaned_data['country']
+        postal_code = self.cleaned_data['postal_code']
+        if not re.match(postal_code_validate(country_code), postal_code):
+            raise ValidationError("Enter postal code appropriate for your country.")
+        return country_code
