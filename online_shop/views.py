@@ -255,23 +255,32 @@ class AccountRegistration(View):
         return render(request, 'account-registration.html', ctx)
 
     def post(self, request):
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = User.objects.create_user(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'],
-                                            email=form.cleaned_data['email'], password=user_data['password1'])                      # make password validation, and change template
-            user.save()
+        if request.method == 'POST':
+            form = UserForm(request.POST)
+            if form.is_valid():
+                user = User.objects.create_user(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'],
+                                                email=form.cleaned_data['email'], password=user_data['password1'])                      # make password validation, and change template
+                user.save()
 
-            user = User.objects.get(email=form.cleaned_data['email'])
-            user.profile.phone_number = form.cleaned_data['phone_number']
-            user.profile.company = form.cleaned_data['company']
-            user.profile.country = form.cleaned_data['country']
-            user.profile.city = form.cleaned_data['city']
-            user.profile.postal_code = form.cleaned_data['postal_code']
-            user.profile.address1 = form.cleaned_data['address1']
-            user.profile.address2 = form.cleaned_data['address2']
-            user.save()
+                user = User.objects.get(email=form.cleaned_data['email'])
+                user.profile.phone_number = form.cleaned_data['phone_number']
+                user.profile.company = form.cleaned_data['company']
+                user.profile.country = form.cleaned_data['country']
+                user.profile.city = form.cleaned_data['city']
+                user.profile.postal_code = form.cleaned_data['postal_code']
+                user.profile.address1 = form.cleaned_data['address1']
+                user.profile.address2 = form.cleaned_data['address2']
+                user.save()
 
-        return redirect('/account_login')
+                return redirect('/account_login')
+        else:
+            form = UserForm()
+
+        ctx = {
+            'products_amount': request.session['basket'],
+            'form': form
+        }
+        return render(request, 'account-registration.html', ctx)
 
 
 class AccountLogin(View):
