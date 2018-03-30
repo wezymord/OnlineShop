@@ -9,7 +9,7 @@ from .validators.city import clean_city
 import re
 
 
-class ProfileUserForm(forms.ModelForm):
+class UserForm(forms.ModelForm):
     first_name = forms.CharField(validators=[clean_first_name], widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-fn'}))
     last_name = forms.CharField(validators=[clean_last_name], widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-ln'}))
     email = forms.EmailField(validators=[clean_email], widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'email', 'id': 'checkout-email'}))

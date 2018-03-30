@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
 from django_countries.fields import CountryField
 
+
 class Product(models.Model):
     name = models.CharField(max_length=64)
     price = models.DecimalField(max_digits=10, decimal_places=2)

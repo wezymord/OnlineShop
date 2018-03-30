@@ -3,11 +3,11 @@ from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import Product, ShippingOption, Order, OrderProduct
-from .forms import ProfileUserForm
+from .forms import UserForm
 from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
+
 
 
 class MainPage(View):
@@ -133,23 +133,19 @@ class CheckoutAddress(View):
             ctx = {
                 'shipping_cost': shipping.cost,
                 'products_amount': request.session['basket'],
-                'form': ProfileUserForm(),
+                'form': UserForm(),
             }
         else:
-
             ctx = {
                 'products_amount': request.session['basket'],
-                'form': ProfileUserForm(),
+                'form': UserForm(),
             }
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request):
-
         if request.method == 'POST':
-            form = ProfileUserForm(request.POST)
+            form = UserForm(request.POST)
             if form.is_valid():
-                # request.session['address_data'] = dict(request.POST.items())
-                # address_data = request.session['address_data']
                 user = User(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'],
                             email=form.cleaned_data['email'])
                 user.save()
@@ -166,7 +162,7 @@ class CheckoutAddress(View):
 
                 return redirect('/checkout_shipping/{}'.format(user.id))
         else:
-            form = ProfileUserForm()
+            form = UserForm()
 
         ctx = {
             'products_amount': request.session['basket'],
@@ -253,26 +249,26 @@ class CheckoutComplete(View):
 class AccountRegistration(View):
     def get(self, request):
         ctx = {
-            'products_amount': request.session['basket']
+            'products_amount': request.session['basket'],
+            'form': UserForm()
         }
         return render(request, 'account-registration.html', ctx)
 
     def post(self, request):
         form = UserForm(request.POST)
         if form.is_valid():
-            user_data = dict(request.POST.items())
-            user = User.objects.create_user(first_name=user_data['first_name'], last_name=user_data['last_name'],
-                                            email=user_data['email'], password=user_data['password1'])
+            user = User.objects.create_user(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'],
+                                            email=form.cleaned_data['email'], password=user_data['password1'])                      # make password validation, and change template
             user.save()
 
             user = User.objects.get(email=form.cleaned_data['email'])
-            user.profile.phone_number = user_data['phone_number']
-            user.profile.company = user_data['company']
-            user.profile.country = user_data['country']
-            user.profile.city = user_data['city']
-            user.profile.postal_code = user_data['postal_code']
-            user.profile.address1 = user_data['address1']
-            user.profile.address2 = user_data['address2']
+            user.profile.phone_number = form.cleaned_data['phone_number']
+            user.profile.company = form.cleaned_data['company']
+            user.profile.country = form.cleaned_data['country']
+            user.profile.city = form.cleaned_data['city']
+            user.profile.postal_code = form.cleaned_data['postal_code']
+            user.profile.address1 = form.cleaned_data['address1']
+            user.profile.address2 = form.cleaned_data['address2']
             user.save()
 
         return redirect('/account_login')
