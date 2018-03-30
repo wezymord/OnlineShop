@@ -4,12 +4,13 @@ from django.core.exceptions import ValidationError
 from django_countries import countries
 from .validators.postal_code import postal_code_validate
 from .validators.e_mail import clean_email
+from .validators.first_last_name import clean_first_name, clean_last_name
 import re
 
 
 class ProfileUserForm(forms.ModelForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-fn'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-ln'}))
+    first_name = forms.CharField(validators=[clean_first_name], widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-fn'}))
+    last_name = forms.CharField(validators=[clean_last_name], widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-ln'}))
     email = forms.EmailField(validators=[clean_email], widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'email', 'id': 'checkout-email'}))
     company = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-company'}))
     city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-city'}))
