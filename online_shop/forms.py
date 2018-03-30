@@ -5,6 +5,7 @@ from django_countries import countries
 from .validators.postal_code import postal_code_validate
 from .validators.e_mail import clean_email
 from .validators.first_last_name import clean_first_name, clean_last_name
+from .validators.city import clean_city
 import re
 
 
@@ -13,7 +14,7 @@ class ProfileUserForm(forms.ModelForm):
     last_name = forms.CharField(validators=[clean_last_name], widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-ln'}))
     email = forms.EmailField(validators=[clean_email], widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'email', 'id': 'checkout-email'}))
     company = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-company'}))
-    city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-city'}))
+    city = forms.CharField(validators=[clean_city], widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-city'}))
     postal_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-zip'}))
     address1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-address1'}))
     address2 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-address2'}))
