@@ -2,11 +2,11 @@ from django import forms
 from .models import Profile
 from django.core.exceptions import ValidationError
 from django_countries import countries
-from .validators.postal_code import postal_code_validate
+from .validators.postal_code import PostalCodeValidator
 from .validators.e_mail import clean_email
 from .validators.first_last_name import clean_first_name, clean_last_name
 from .validators.city import clean_city
-import re
+
 
 
 class UserForm(forms.ModelForm):
@@ -31,6 +31,6 @@ class UserForm(forms.ModelForm):
     def clean_postal_code(self):
         country_code = self.cleaned_data['country']
         postal_code = self.cleaned_data['postal_code']
-        if not re.match(postal_code_validate(country_code), postal_code):
+        if not PostalCodeValidator().is_valid(country_code, postal_code):
             raise ValidationError("Enter postal code appropriate for your country.")
         return country_code
