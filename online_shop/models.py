@@ -3,7 +3,7 @@ from django.core.validators import URLValidator
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from phonenumber_field.modelfields import PhoneNumberField
 
 class Product(models.Model):
     name = models.CharField(max_length=64)
@@ -27,7 +27,7 @@ class Photo(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', default=None)
-    phone_number = models.CharField(max_length=15)
+    phone_number = PhoneNumberField()
     company = models.CharField(max_length=64, null=True)
     country = models.CharField(max_length=64, null=True)
     city = models.CharField(max_length=64, null=True)
