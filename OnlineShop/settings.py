@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'online_shop.context_processor',
     'online_shop.apps.OnlineShopConfig',
+    'phonenumber_field',
 
 
 ]

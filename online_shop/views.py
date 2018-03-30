@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 
+
 class MainPage(View):
     def get(self, request):
         products = Product.objects.all()
@@ -43,7 +44,7 @@ class MainPage(View):
 class Basket(View):
     def get(self, request):
         products = []
-        if 'basket' in request.session.keys():                       # zapisać products_amount w context processor (cena się wyświetla w buttonie koszyka)
+        if 'basket' in request.session.keys():  # zapisać products_amount w context processor (cena się wyświetla w buttonie koszyka)
             products_id = request.session['basket']
             for id in products_id:
                 products.append(Product.objects.get(pk=id))
@@ -122,9 +123,9 @@ class ShowAllProducts(View):
         }
         return render(request, 'shop-grid-ns.html', ctx)
 
+
 class CheckoutAddress(View):
     def get(self, request):
-        form = UserForm(request.POST)
         if 'shipping' in request.session.keys():
             shipping_id = request.session['shipping']['shipping_method_id']
             shipping = ShippingOption.objects.get(pk=shipping_id)
@@ -132,44 +133,42 @@ class CheckoutAddress(View):
             ctx = {
                 'shipping_cost': shipping.cost,
                 'products_amount': request.session['basket'],
-                'form': form,
+                'form': UserForm(),
             }
         else:
-
             ctx = {
                 'products_amount': request.session['basket'],
-                'form': form,
+                'form': UserForm(),
             }
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request):
-        form = UserForm(request.POST)
+        if request.method == 'POST':
+            form = UserForm(request.POST)
+            if form.is_valid():
+                user = User(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'],
+                            email=form.cleaned_data['email'])
+                user.save()
 
-        if form.is_valid():
-            request.session['address_data'] = dict(request.POST.items())
-            address_data = request.session['address_data']
+                user = User.objects.get(email=form.cleaned_data['email'])
+                user.profile.phone_number = form.cleaned_data['phone_number']
+                user.profile.company = form.cleaned_data['company']
+                user.profile.country = form.cleaned_data['country']
+                user.profile.city = form.cleaned_data['city']
+                user.profile.postal_code = form.cleaned_data['postal_code']
+                user.profile.address1 = form.cleaned_data['address1']
+                user.profile.address2 = form.cleaned_data['address2']
+                user.save()
 
-            user = User(first_name=address_data['first_name'], last_name=address_data['last_name'],
-                        email=form.cleaned_data['email'])
-            user.save()
-
-            user = User.objects.get(email=form.cleaned_data['email'])
-            user.profile.phone_number = address_data['phone_number']
-            user.profile.company = address_data['company']
-            user.profile.country = address_data['country']
-            user.profile.city = address_data['city']
-            user.profile.postal_code = address_data['postal_code']
-            user.profile.address1 = address_data['address1']
-            user.profile.address2 = address_data['address2']
-            user.save()
-
-            return redirect('/checkout_shipping/{}'.format(user.id))
+                return redirect('/checkout_shipping/{}'.format(user.id))
         else:
-            ctx = {
-                'products_amount': request.session['basket'],
-                'form': form,
-            }
-            return render(request, 'checkout-address.html', ctx)
+            form = UserForm()
+
+        ctx = {
+            'products_amount': request.session['basket'],
+            'form': form
+        }
+        return render(request, 'checkout-address.html', ctx)
 
 
 class CheckoutShipping(View):
@@ -221,7 +220,6 @@ class CheckoutReview(View):
 
         return render(request, 'checkout-review.html', ctx)
 
-
     def post(self, request, user_id, shipping_id):
         product_ids = request.session['basket'].keys()
         user = User.objects.get(pk=user_id)
@@ -251,26 +249,26 @@ class CheckoutComplete(View):
 class AccountRegistration(View):
     def get(self, request):
         ctx = {
-            'products_amount': request.session['basket']
+            'products_amount': request.session['basket'],
+            'form': UserForm()
         }
         return render(request, 'account-registration.html', ctx)
 
     def post(self, request):
         form = UserForm(request.POST)
         if form.is_valid():
-            user_data = dict(request.POST.items())
-            user = User.objects.create_user(first_name=user_data['first_name'], last_name=user_data['last_name'],
-                                            email=user_data['email'], password=user_data['password1'])
+            user = User.objects.create_user(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'],
+                                            email=form.cleaned_data['email'], password=user_data['password1'])                      # make password validation, and change template
             user.save()
 
             user = User.objects.get(email=form.cleaned_data['email'])
-            user.profile.phone_number = user_data['phone_number']
-            user.profile.company = user_data['company']
-            user.profile.country = user_data['country']
-            user.profile.city = user_data['city']
-            user.profile.postal_code = user_data['postal_code']
-            user.profile.address1 = user_data['address1']
-            user.profile.address2 = user_data['address2']
+            user.profile.phone_number = form.cleaned_data['phone_number']
+            user.profile.company = form.cleaned_data['company']
+            user.profile.country = form.cleaned_data['country']
+            user.profile.city = form.cleaned_data['city']
+            user.profile.postal_code = form.cleaned_data['postal_code']
+            user.profile.address1 = form.cleaned_data['address1']
+            user.profile.address2 = form.cleaned_data['address2']
             user.save()
 
         return redirect('/account_login')
@@ -285,11 +283,10 @@ class AccountLogin(View):
 
     def post(self, request):
         user_data = dict(request.POST.items())
-        user = authenticate(username=user_data['email'], password=user_data['password'])   # should be username not email
+        user = authenticate(username=user_data['email'], password=user_data['password'])  # should be username not email
 
         if user:
             login(request, user)
             return redirect('/checkout_shipping')
         else:
             return redirect('/basket')
-
