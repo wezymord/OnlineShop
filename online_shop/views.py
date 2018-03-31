@@ -125,21 +125,44 @@ class ShowAllProducts(View):
 
 
 class CheckoutAddress(View):
-    def get(self, request):
+    def get(self, request, logged_user_id):
         if 'shipping' in request.session.keys():
             shipping_id = request.session['shipping']['shipping_method_id']
             shipping = ShippingOption.objects.get(pk=shipping_id)
 
             ctx = {
-                'shipping_cost': shipping.cost,
                 'products_amount': request.session['basket'],
-                'form': UserForm(),
+                'shipping_cost': shipping.cost,
+                'user_form': UserForm(),
             }
+
+        elif logged_user_id:
+            logged_user = User.objects.get(pk=logged_user_id)
+            logged_user_form = UserForm(initial={
+                'first_name': logged_user.first_name,
+                'last_name': logged_user.last_name,
+                'email': logged_user.email,
+                'phone_number': logged_user.profile.phone_number,
+                'company': logged_user.profile.company,
+                'country': logged_user.profile.country,
+                'city': logged_user.profile.city,
+                'postal_code': logged_user.profile.postal_code,
+                'address1': logged_user.profile.address1,
+                'address2': logged_user.profile.address2
+            })
+
+            ctx = {
+                'products_amount': request.session['basket'],
+                'user_form': UserForm(),
+                'logged_user_form': logged_user_form
+            }
+
         else:
             ctx = {
                 'products_amount': request.session['basket'],
-                'form': UserForm(),
+                'user_form': UserForm(),
             }
+
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request):
@@ -303,27 +326,11 @@ class AccountLogin(View):
 
         if user:
             login(request, user)
-            user = User.objects.get(username=user_data['username'])
-            logged_user = UserForm(initial={
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'email': user.email,
-                'phone_number': user.profile.phone_number,
-                'company': user.profile.company,
-                'country': user.profile.country,
-                'city': user.profile.city,
-                'postal_code': user.profile.postal_code,
-                'address1': user.profile.address1,
-                'address2': user.profile.address2
-            })
+            logged_user = User.objects.get(username=user_data['username'])
 
+            return redirect('/checkout_address/{}'.format(logged_user.id))
+        else:
             ctx = {
-                'products_amount': request.session['basket'],
-                'logged_user': logged_user
+                'products_amount': request.session['basket']
             }
-            return render(request, 'checkout-address.html', ctx)
-
-        ctx = {
-            'products_amount': request.session['basket']
-        }
-        return render(request, 'account-login.html', ctx)
+            return render(request, 'account-login.html', ctx)
