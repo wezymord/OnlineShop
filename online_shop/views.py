@@ -260,7 +260,7 @@ class AccountRegistration(View):
             user_form = UserForm(request.POST)
             registration_form = RegistrationForm(request.POST)
             if user_form.is_valid() and registration_form.is_valid():
-                user = User.objects.create_user(username=user_form.cleaned_data['first_name'],
+                user = User.objects.create_user(username=user_form.cleaned_data['email'],
                                                 first_name=user_form.cleaned_data['first_name'],
                                                 last_name=user_form.cleaned_data['last_name'],
                                                 email=user_form.cleaned_data['email'],
@@ -299,10 +299,14 @@ class AccountLogin(View):
 
     def post(self, request):
         user_data = dict(request.POST.items())
-        user = authenticate(username=user_data['email'], password=user_data['password'])  # should be username not email
+        print(user_data)
+        user = authenticate(username=user_data['username'], password=user_data['password'])
 
         if user:
             login(request, user)
-            return redirect('/checkout_shipping')
-        else:
-            return redirect('/basket')
+            return redirect('/main_page')
+
+        ctx = {
+            'products_amount': request.session['basket']
+        }
+        return render(request, 'account-login.html', ctx)
