@@ -37,41 +37,46 @@
               <h4>Shipping address</h4>
             <hr class="padding-bottom-1x">
 
-        <form action="/checkout_address/" method="post">
-          {% csrf_token	%}
 
-            <div class="row">
+                <form action="/checkout_address/{{ logged_user }}" method="post">
+                  {% csrf_token	%}
 
-            {% if logged_user_form %}
+                    <div class="row">
+                     {% if logged_user_form %}                        {#  NARAZIE DRUT, ALE DZIAŁA :P  #}
+                            {% for field in logged_user_form %}
 
-                {% for field in logged_user_form %}
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        {{ field }}
+                                    </div>
+                                  </div>
 
-                      <div class="col-sm-6">
-                        <div class="form-group">
-                          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                        </div>
-                      </div>
+                            {% endfor %}
+                     {% else %}
+                            {% for field in user_form %}
 
-                {% endfor %}
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        {{ field }} {{ field.errors }}
+                                    </div>
+                                  </div>
 
-            {% else %}
+                            {% endfor %}
+                     {% endif %}
+                    </div>
 
-                {% for field in user_form %}
+                    <div class="checkout-footer">
+                      <div class="column"><a class="btn btn-outline-secondary" href="/basket"><i class="icon-arrow-left"></i><span class="hidden-xs-down">Back To Cart</span></a></div>
+                      <div class="column"><button type="submit" class="btn btn-primary"><span class="hidden-xs-down button_continue">Continue</span><i class="icon-arrow-right"></i></button></div>
+                    </div>
 
-                      <div class="col-sm-6">
-                        <div class="form-group">
-                          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }} {{ field.errors }}
-                        </div>
-                      </div>
+                </form>
 
-                {% endfor %}
 
-            {% endif %}
 
-            </div>
-
+          </div>
 {#              <div class="col-sm-6">#}
 {#                <div class="form-group">#}
 {#                  <label for="checkout-ln">Last Name</label>#}
@@ -145,14 +150,7 @@
 {#              </div>#}
 {#            </div>#}
 
-            <div class="checkout-footer">
-              <div class="column"><a class="btn btn-outline-secondary" href="/basket"><i class="icon-arrow-left"></i><span class="hidden-xs-down">Back To Cart</span></a></div>
-              <div class="column"><button type="submit" class="btn btn-primary"><span class="hidden-xs-down button_continue">Continue</span><i class="icon-arrow-right"></i></button></div>
-            </div>
 
-        </form>
-
-          </div>
           <!-- Sidebar          -->
           <div class="col-xl-3 col-lg-4">
             <aside class="sidebar">

@@ -124,7 +124,7 @@ class ShowAllProducts(View):
         return render(request, 'shop-grid-ns.html', ctx)
 
 
-class CheckoutAddress(View):
+class CheckoutAddress(View):                                          # NARAZIE DRUT, ALE DZIAŁA :P
     def get(self, request, logged_user_id):
         if 'shipping' in request.session.keys():
             shipping_id = request.session['shipping']['shipping_method_id']
@@ -154,6 +154,7 @@ class CheckoutAddress(View):
             ctx = {
                 'products_amount': request.session['basket'],
                 'user_form': UserForm(),
+                'logged_user': logged_user.id,
                 'logged_user_form': logged_user_form
             }
 
@@ -165,12 +166,12 @@ class CheckoutAddress(View):
 
         return render(request, 'checkout-address.html', ctx)
 
-    def post(self, request):
+    def post(self, request, logged_user_id):
         if request.method == 'POST':
             user_form = UserForm(request.POST)
             if user_form.is_valid():
-                user = User(first_name=user_form.cleaned_data['first_name'], last_name=user_form.cleaned_data['last_name'],
-                            email=user_form.cleaned_data['email'])
+                user = User(username=user_form.cleaned_data['email'], first_name=user_form.cleaned_data['first_name'],
+                            last_name=user_form.cleaned_data['last_name'], email=user_form.cleaned_data['email'])
                 user.save()
 
                 user = User.objects.get(email=user_form.cleaned_data['email'])
@@ -183,13 +184,26 @@ class CheckoutAddress(View):
                 user.profile.address2 = user_form.cleaned_data['address2']
                 user.save()
 
-                return redirect('/checkout_shipping/{}'.format(user.id))
+            elif logged_user_id:
+                user = User.objects.get(pk=logged_user_id)
+
+                user.first_name=user_form.cleaned_data['first_name']
+                user.last_name=user_form.cleaned_data['last_name']
+                user.profile.phone_number = user_form.cleaned_data['phone_number']
+                user.profile.company = user_form.cleaned_data['company']
+                user.profile.country = user_form.cleaned_data['country']
+                user.profile.city = user_form.cleaned_data['city']
+                user.profile.postal_code = user_form.cleaned_data['postal_code']
+                user.profile.address1 = user_form.cleaned_data['address1']
+                user.profile.address2 = user_form.cleaned_data['address2']
+                user.save()
+
+            return redirect('/checkout_shipping/{}'.format(user.id))
         else:
             user_form = UserForm()
-
         ctx = {
             'products_amount': request.session['basket'],
-            'form': user_form
+            'user_form': user_form
         }
         return render(request, 'checkout-address.html', ctx)
 
