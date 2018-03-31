@@ -42,7 +42,22 @@
 
             <div class="row">
 
-                {% for field in form %}
+            {% if logged_user %}
+
+                {% for field in logged_user %}
+
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                      </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                {% for field in user_form %}
 
                       <div class="col-sm-6">
                         <div class="form-group">
@@ -52,6 +67,8 @@
                       </div>
 
                 {% endfor %}
+
+            {% endif %}
 
             </div>
 
