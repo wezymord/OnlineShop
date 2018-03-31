@@ -33,4 +33,16 @@ class UserForm(forms.ModelForm):
         postal_code = self.cleaned_data['postal_code']
         if not PostalCodeValidator().is_valid(country_code, postal_code):
             raise ValidationError("Enter postal code appropriate for your country.")
-        return country_code
+        return postal_code
+
+
+class RegistrationForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'id': 'reg-pass'}))
+    repeat_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'id': 'reg-pass-confirm'}))
+
+    def clean_repeat_password(self):
+        password1 = self.cleaned_data['password']
+        password2 = self.cleaned_data['repeat_password']
+        if password1 != password2:
+            raise forms.ValidationError("Passwords should be identical.")
+        return password1

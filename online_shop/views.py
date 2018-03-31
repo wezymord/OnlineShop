@@ -3,7 +3,7 @@ from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import Product, ShippingOption, Order, OrderProduct
-from .forms import UserForm
+from .forms import UserForm, RegistrationForm
 from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -250,35 +250,42 @@ class AccountRegistration(View):
     def get(self, request):
         ctx = {
             'products_amount': request.session['basket'],
-            'form': UserForm()
+            'user_form': UserForm(),
+            'registration_form': RegistrationForm()
         }
         return render(request, 'account-registration.html', ctx)
 
     def post(self, request):
         if request.method == 'POST':
-            form = UserForm(request.POST)
-            if form.is_valid():
-                user = User.objects.create_user(first_name=form.cleaned_data['first_name'], last_name=form.cleaned_data['last_name'],
-                                                email=form.cleaned_data['email'], password=user_data['password1'])                      # make password validation, and change template
+            user_form = UserForm(request.POST)
+            registration_form = RegistrationForm(request.POST)
+            if user_form.is_valid() and registration_form.is_valid():
+                user = User.objects.create_user(username=user_form.cleaned_data['first_name'],
+                                                first_name=user_form.cleaned_data['first_name'],
+                                                last_name=user_form.cleaned_data['last_name'],
+                                                email=user_form.cleaned_data['email'],
+                                                password=registration_form.cleaned_data['password'])
                 user.save()
 
-                user = User.objects.get(email=form.cleaned_data['email'])
-                user.profile.phone_number = form.cleaned_data['phone_number']
-                user.profile.company = form.cleaned_data['company']
-                user.profile.country = form.cleaned_data['country']
-                user.profile.city = form.cleaned_data['city']
-                user.profile.postal_code = form.cleaned_data['postal_code']
-                user.profile.address1 = form.cleaned_data['address1']
-                user.profile.address2 = form.cleaned_data['address2']
+                user = User.objects.get(email=user_form.cleaned_data['email'])
+                user.profile.phone_number = user_form.cleaned_data['phone_number']
+                user.profile.company = user_form.cleaned_data['company']
+                user.profile.country = user_form.cleaned_data['country']
+                user.profile.city = user_form.cleaned_data['city']
+                user.profile.postal_code = user_form.cleaned_data['postal_code']
+                user.profile.address1 = user_form.cleaned_data['address1']
+                user.profile.address2 = user_form.cleaned_data['address2']
                 user.save()
 
                 return redirect('/account_login')
         else:
-            form = UserForm()
+            user_form = UserForm()
+            registration_form = RegistrationForm()
 
         ctx = {
             'products_amount': request.session['basket'],
-            'form': form
+            'user_form': user_form,
+            'registration_form': registration_form
         }
         return render(request, 'account-registration.html', ctx)
 
