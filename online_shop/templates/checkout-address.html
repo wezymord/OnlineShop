@@ -42,29 +42,16 @@
                   {% csrf_token	%}
 
                     <div class="row">
-                     {% if logged_user_form %}                        {#  NARAZIE DRUT, ALE DZIAŁA :P  #}
-                            {% for field in logged_user_form %}
+                        {% for field in user_form %}
 
-                                  <div class="col-sm-6">
-                                    <div class="form-group">
-                                      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                        {{ field }}
-                                    </div>
-                                  </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field }} {{ field.errors }}
+                                </div>
+                              </div>
 
-                            {% endfor %}
-                     {% else %}
-                            {% for field in user_form %}
-
-                                  <div class="col-sm-6">
-                                    <div class="form-group">
-                                      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                        {{ field }} {{ field.errors }}
-                                    </div>
-                                  </div>
-
-                            {% endfor %}
-                     {% endif %}
+                        {% endfor %}
                     </div>
 
                     <div class="checkout-footer">

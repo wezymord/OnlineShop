@@ -153,9 +153,8 @@ class CheckoutAddress(View):                                          # NARAZIE 
 
             ctx = {
                 'products_amount': request.session['basket'],
-                'user_form': UserForm(),
                 'logged_user': logged_user.id,
-                'logged_user_form': logged_user_form
+                'user_form': logged_user_form
             }
 
         else:
@@ -184,6 +183,7 @@ class CheckoutAddress(View):                                          # NARAZIE 
                 user.profile.address2 = user_form.cleaned_data['address2']
                 user.save()
 
+                return redirect('/checkout_shipping/{}'.format(user.id))
             elif logged_user_id:
                 user = User.objects.get(pk=logged_user_id)
 
@@ -198,7 +198,7 @@ class CheckoutAddress(View):                                          # NARAZIE 
                 user.profile.address2 = user_form.cleaned_data['address2']
                 user.save()
 
-            return redirect('/checkout_shipping/{}'.format(user.id))
+                return redirect('/checkout_shipping/{}'.format(user.id))
         else:
             user_form = UserForm()
         ctx = {
