@@ -126,19 +126,9 @@ class ShowAllProducts(View):
 
 
 class CheckoutAddress(View):                                          # NARAZIE DRUT, ALE DZIAŁA :P
-    def get(self, request, logged_user_id):
-        if 'shipping' in request.session.keys():
-            shipping_id = request.session['shipping']['shipping_method_id']
-            shipping = ShippingOption.objects.get(pk=shipping_id)
-
-            ctx = {
-                'products_amount': request.session['basket'],
-                'shipping_cost': shipping.cost,
-                'user_form': UserForm(),
-            }
-
-        elif logged_user_id:
-            logged_user = User.objects.get(pk=logged_user_id)
+    def get(self, request, user_id):
+        if user_id:
+            logged_user = User.objects.get(pk=user_id)
             logged_user_form = UserForm(initial={
                 'first_name': logged_user.first_name,
                 'last_name': logged_user.last_name,
@@ -152,21 +142,29 @@ class CheckoutAddress(View):                                          # NARAZIE 
                 'address2': logged_user.profile.address2
             })
 
+            shipping_cost = 0
+            for key in request.session.keys():
+                if key == 'shipping':
+                    shipping_id = request.session['shipping']['shipping_method_id']
+                    shipping = ShippingOption.objects.get(pk=shipping_id)
+                    shipping_cost += float(shipping.cost)
+
             ctx = {
                 'products_amount': request.session['basket'],
                 'logged_user': logged_user.id,
-                'user_form': logged_user_form
+                'user_form': logged_user_form,
+                'shipping_cost': shipping_cost
             }
 
         else:
             ctx = {
                 'products_amount': request.session['basket'],
                 'user_form': UserForm(),
+                'shipping_cost': 0
             }
-
         return render(request, 'checkout-address.html', ctx)
 
-    def post(self, request, logged_user_id):
+    def post(self, request, user_id):
         if request.method == 'POST':
             user_form = UserForm(request.POST)
             if user_form.is_valid():
@@ -185,20 +183,20 @@ class CheckoutAddress(View):                                          # NARAZIE 
                 user.save()
 
                 return redirect('/checkout_shipping/{}'.format(user.id))
-            elif logged_user_id:
-                user = User.objects.get(pk=logged_user_id)
-                user.first_name=user_form.cleaned_data['first_name']
-                user.last_name=user_form.cleaned_data['last_name']
-                user.profile.phone_number = user_form.cleaned_data['phone_number']
-                user.profile.company = user_form.cleaned_data['company']
-                user.profile.country = user_form.cleaned_data['country']
-                user.profile.city = user_form.cleaned_data['city']
-                user.profile.postal_code = user_form.cleaned_data['postal_code']
-                user.profile.address1 = user_form.cleaned_data['address1']
-                user.profile.address2 = user_form.cleaned_data['address2']
-                user.save()
+            elif user_id:
+                logged_user = User.objects.get(pk=user_id)
+                logged_user.first_name=user_form.cleaned_data['first_name']
+                logged_user.last_name=user_form.cleaned_data['last_name']
+                logged_user.profile.phone_number = user_form.cleaned_data['phone_number']
+                logged_user.profile.company = user_form.cleaned_data['company']
+                logged_user.profile.country = user_form.cleaned_data['country']
+                logged_user.profile.city = user_form.cleaned_data['city']
+                logged_user.profile.postal_code = user_form.cleaned_data['postal_code']
+                logged_user.profile.address1 = user_form.cleaned_data['address1']
+                logged_user.profile.address2 = user_form.cleaned_data['address2']
+                logged_user.save()
 
-                return redirect('/checkout_shipping/{}'.format(user.id))
+                return redirect('/checkout_shipping/{}'.format(logged_user.id))
         else:
             user_form = UserForm()
         ctx = {
@@ -216,7 +214,8 @@ class CheckoutShipping(View):
             shipping = ShippingOption.objects.get(pk=shipping_id)
 
             ctx = {
-                'shipping_cost': shipping.cost,
+                'shipping_cost': float(shipping.cost),
+                'shipping': shipping,
                 'shipping_options': shipping_options,
                 'user_id': user_id,
                 'products_amount': request.session['basket']
@@ -226,7 +225,8 @@ class CheckoutShipping(View):
             ctx = {
                 'shipping_options': shipping_options,
                 'products_amount': request.session['basket'],
-                'user_id': user_id
+                'user_id': user_id,
+                'shipping_cost': 0
             }
 
         return render(request, 'checkout-shipping.html', ctx)
@@ -252,7 +252,7 @@ class CheckoutReview(View):
             'products_amount': request.session['basket'],
             'user': user,
             'shipping_id': shipping_id,
-            'shipping_cost': ShippingOption.objects.get(pk=shipping_id).cost,
+            'shipping_cost': float(ShippingOption.objects.get(pk=shipping_id).cost),
         }
 
         return render(request, 'checkout-review.html', ctx)
