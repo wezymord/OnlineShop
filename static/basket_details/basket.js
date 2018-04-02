@@ -134,10 +134,10 @@ $(document).ready(function() {
         $.each( product_price, function(index, value) {
             if (parseInt(id) === index+1) {
                 shipping_price += parseInt(value.id);
-                $('.shipping-cost').html(value.id + ' EUR');
+                $('.shipping-cost').html((parseInt(value.id)).toFixed(1) + ' EUR');
             }
         });
-
-        total_price.html(parseInt(products_price) + shipping_price + ' EUR')
+        console.log('git');
+        total_price.html((parseInt(products_price) + shipping_price).toFixed(1) + ' EUR')
     });
 });
