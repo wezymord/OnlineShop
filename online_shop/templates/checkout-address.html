@@ -26,7 +26,7 @@
           <!-- Checkout Adress-->
 
           <div class="col-xl-9 col-lg-8">
-            <div class="checkout-steps"><a href="/checkout_review">3. Review</a><a href="/checkout_shipping"><span class="angle"></span>2. Shipping</a><a class="active" href="/checkout_address"><span class="angle"></span>1. Address</a></div>
+            <div class="checkout-steps"><a>3. Review</a><a><span class="angle"></span>2. Shipping</a><a class="active"><span class="angle"></span>1. Address</a></div>
 
             <div class="checkout-footer">
               <div class="column">If you already have an account</div>
@@ -159,21 +159,10 @@
 {#                    <td class="text-medium">$3.42</td>#}
 {#                  </tr>#}
 
-                {% if shipping_cost %}
-
                   <tr>
                     <td>Total price</td>
                     <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_cost }} EUR</td>
                   </tr>
-
-                {% else %}
-
-                  <tr>
-                    <td>Total price</td>
-                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_price_basket }} EUR</td>
-                  </tr>
-
-                {% endif %}
 
                 </table>
               </section>

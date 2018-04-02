@@ -25,7 +25,7 @@
         <div class="row">
           <!-- Checkout Adress-->
           <div class="col-xl-9 col-lg-8">
-            <div class="checkout-steps"><a href="/checkout_review">3. Review</a><a class="active" href="/checkout_shipping/{{ user }}"><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address"><span class="angle"></span><span class="step-indicator icon-circle-check"></span>1. Address</a></div>
+            <div class="checkout-steps"><a>3. Review</a><a class="active"><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address/{{ user_id }}/{{ shipping.id }}"><span class="angle"></span><span class="step-indicator icon-circle-check"></span>1. Address</a></div>
             <h4>Choose Shipping Method</h4>
             <hr class="padding-bottom-1x">
 
@@ -130,7 +130,7 @@
               </table>
             </div>
             <div class="checkout-footer margin-top-1x">
-              <div class="column"><a class="btn btn-outline-secondary" href="/checkout_address"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back</span></a></div>
+              <div class="column"><a class="btn btn-outline-secondary" href="/checkout_address/{{ user_id }}/{{ shipping.id }}"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back</span></a></div>
               <div class="column"><button type="submit" class="btn btn-primary" ><span class="hidden-xs-down">Continue&nbsp;</span><i class="icon-arrow-right"></i></button></div>
             </div>
           </form>
@@ -156,21 +156,10 @@
 {#                    <td class="text-medium">$3.42</td>#}
 {#                  </tr>#}
 
-                {% if shipping_cost %}
-
                   <tr>
                     <td>Total price</td>
                     <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_cost }} EUR</td>
                   </tr>
-
-                {% else %}
-
-                  <tr>
-                    <td>Total price</td>
-                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_price_basket }} EUR</td>
-                  </tr>
-
-                {% endif %}
 
                 </table>
               </section>
