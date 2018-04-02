@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'online_shop.context_processor',
     'online_shop.apps.OnlineShopConfig',
     'phonenumber_field',
-
+    'django_countries',
 
 ]
 
@@ -114,6 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'online_shop.backends.EmailBackend',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/

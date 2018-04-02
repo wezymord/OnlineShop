@@ -7,7 +7,7 @@ from .forms import UserForm, RegistrationForm
 from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-
+import ipdb
 
 
 class MainPage(View):
@@ -53,12 +53,13 @@ class Basket(View):
                 'products': list(set(products)),
                 'products_amount': request.session['basket']
             }
-            return render(request, 'basket.html', ctx)
+
         else:
             ctx = {
                 'products': products
             }
-            return render(request, 'basket.html', ctx)
+
+        return render(request, 'basket.html', ctx)
 
     def post(self, request):
         products = request.session.get('basket', {})
@@ -186,7 +187,6 @@ class CheckoutAddress(View):                                          # NARAZIE 
                 return redirect('/checkout_shipping/{}'.format(user.id))
             elif logged_user_id:
                 user = User.objects.get(pk=logged_user_id)
-
                 user.first_name=user_form.cleaned_data['first_name']
                 user.last_name=user_form.cleaned_data['last_name']
                 user.profile.phone_number = user_form.cleaned_data['phone_number']
@@ -336,11 +336,11 @@ class AccountLogin(View):
 
     def post(self, request):
         user_data = dict(request.POST.items())
-        user = authenticate(username=user_data['username'], password=user_data['password'])
+        user = authenticate(username=user_data['email'], password=user_data['password'])
 
         if user:
             login(request, user)
-            logged_user = User.objects.get(username=user_data['username'])
+            logged_user = User.objects.get(username=user_data['email'])
 
             return redirect('/checkout_address/{}'.format(logged_user.id))
         else:
