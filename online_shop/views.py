@@ -142,11 +142,10 @@ class CheckoutAddress(View):                                          # NARAZIE 
             })
 
             shipping_cost = 0
-            for key in request.session.keys():
-                if key == 'shipping':
-                    shipping_id = request.session['shipping']['shipping_method_id']
-                    shipping = ShippingOption.objects.get(pk=shipping_id)
-                    shipping_cost += float(shipping.cost)
+            if 'shipping' in request.session.keys():
+                shipping_id = request.session['shipping']['shipping_method_id']
+                shipping = ShippingOption.objects.get(pk=shipping_id)
+                shipping_cost += float(shipping.cost)
 
             ctx = {
                 'products_amount': request.session['basket'],
@@ -200,7 +199,8 @@ class CheckoutAddress(View):                                          # NARAZIE 
             user_form = UserForm()
         ctx = {
             'products_amount': request.session['basket'],
-            'user_form': user_form
+            'user_form': user_form,
+            'shipping_cost': 0
         }
         return render(request, 'checkout-address.html', ctx)
 
