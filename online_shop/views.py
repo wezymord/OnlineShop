@@ -214,10 +214,11 @@ class CheckoutShipping(View):
 
             ctx = {
                 'shipping_cost': shipping.cost,
-                'shipping': shipping,
+                'user_shipping': shipping,
                 'shipping_options': shipping_options,
                 'user_id': user_id,
                 'products_amount': request.session['basket']
+
             }
         else:
 

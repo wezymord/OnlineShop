@@ -25,7 +25,7 @@
         <div class="row">
           <!-- Checkout Adress-->
           <div class="col-xl-9 col-lg-8">
-            <div class="checkout-steps"><a>3. Review</a><a class="active"><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address/{{ user_id }}/{{ shipping.id }}"><span class="angle"></span><span class="step-indicator icon-circle-check"></span>1. Address</a></div>
+            <div class="checkout-steps"><a>3. Review</a><a class="active"><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address/{{ user_id }}/{{ user_shipping.id }}"><span class="angle"></span><span class="step-indicator icon-circle-check"></span>1. Address</a></div>
             <h4>Choose Shipping Method</h4>
             <hr class="padding-bottom-1x">
 
@@ -44,18 +44,18 @@
                 </thead>
                 <tbody>
 
-                {% for option in shipping_options %}
+                {% for shipping in shipping_options %}
 
                   <tr>
                     <td class="align-middle">
                       <div class="custom-control custom-radio mb-0">
-                        <input class="custom-control-input shipping-method" type="radio" id="{{ option.id }}" name="shipping_method_id" value="{{ option.id }}">
-                        <label id="{{ option.cost }}" class="custom-control-label" for="{{ option.id }}"></label>
+                        <input class="custom-control-input shipping-method" type="radio" id="{{ shipping.id }}" name="shipping_method_id" value="{{ shipping.id }}" {% if shipping.id == user_shipping.id %} checked {% endif %}>
+                        <label id="{{ shipping.cost }}" class="custom-control-label" for="{{ shipping.id }}"></label>
                       </div>
                     </td>
-                    <td class="align-middle"><span class="text-medium">{{ option.shipping_method }}</span><br><span class="text-muted text-sm">{{ option.available_destinations }}</span></td>
-                    <td class="align-middle">{{ option.delivery_time }}</td>
-                    <td class="align-middle">{{ option.cost }}</td>
+                    <td class="align-middle"><span class="text-medium">{{ shipping.shipping_method }}</span><br><span class="text-muted text-sm">{{ shipping.available_destinations }}</span></td>
+                    <td class="align-middle">{{ shipping.delivery_time }}</td>
+                    <td class="align-middle">{{ shipping.cost }}</td>
                   </tr>
 
                 {% endfor %}
@@ -130,7 +130,7 @@
               </table>
             </div>
             <div class="checkout-footer margin-top-1x">
-              <div class="column"><a class="btn btn-outline-secondary" href="/checkout_address/{{ user_id }}/{{ shipping.id }}"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back</span></a></div>
+              <div class="column"><a class="btn btn-outline-secondary" href="/checkout_address/{{ user_id }}/{{ user_shipping.id }}"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;Back</span></a></div>
               <div class="column"><button type="submit" class="btn btn-primary" ><span class="hidden-xs-down">Continue&nbsp;</span><i class="icon-arrow-right"></i></button></div>
             </div>
           </form>
