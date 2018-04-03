@@ -145,20 +145,20 @@ class CheckoutAddress(View):                                          # NARAZIE 
             if 'shipping' in request.session.keys():
                 shipping_id = request.session['shipping']['shipping_method_id']
                 shipping = ShippingOption.objects.get(pk=shipping_id)
-                shipping_cost += float(shipping.cost)
+                shipping_cost += shipping.cost
 
             ctx = {
                 'products_amount': request.session['basket'],
                 'logged_user': logged_user.id,
                 'user_form': logged_user_form,
-                'shipping_cost': shipping_cost
+                'shipping_cost': format(shipping_cost, '.2f')
             }
 
         else:
             ctx = {
                 'products_amount': request.session['basket'],
                 'user_form': UserForm(),
-                'shipping_cost': 0
+                'shipping_cost': format(0, '.2f')
             }
         return render(request, 'checkout-address.html', ctx)
 
@@ -200,7 +200,7 @@ class CheckoutAddress(View):                                          # NARAZIE 
         ctx = {
             'products_amount': request.session['basket'],
             'user_form': user_form,
-            'shipping_cost': 0
+            'shipping_cost': format(0, '.2f')
         }
         return render(request, 'checkout-address.html', ctx)
 
@@ -213,7 +213,7 @@ class CheckoutShipping(View):
             shipping = ShippingOption.objects.get(pk=shipping_id)
 
             ctx = {
-                'shipping_cost': float(shipping.cost),
+                'shipping_cost': shipping.cost,
                 'shipping': shipping,
                 'shipping_options': shipping_options,
                 'user_id': user_id,
@@ -225,7 +225,7 @@ class CheckoutShipping(View):
                 'shipping_options': shipping_options,
                 'products_amount': request.session['basket'],
                 'user_id': user_id,
-                'shipping_cost': 0
+                'shipping_cost': format(0, '.2f')
             }
 
         return render(request, 'checkout-shipping.html', ctx)
@@ -251,7 +251,7 @@ class CheckoutReview(View):
             'products_amount': request.session['basket'],
             'user': user,
             'shipping_id': shipping_id,
-            'shipping_cost': float(ShippingOption.objects.get(pk=shipping_id).cost),
+            'shipping_cost': ShippingOption.objects.get(pk=shipping_id).cost
         }
 
         return render(request, 'checkout-review.html', ctx)

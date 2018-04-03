@@ -40,10 +40,11 @@ $(document).ready(function() {
 
         if($.inArray(this.id, product_in_basket) === -1) {
             product_amount_basket.text(parseInt(product_amount_basket.text()) + 1);
-            total_price += parseInt(this.name);
+            total_price += parseFloat(this.name);
         }
+
         product_in_basket.push(this.id);
-        all_price_main.text(parseFloat(all_price_main.text()) + total_price + ' EUR');
+        all_price_main.text((parseFloat(all_price_main.text()) + parseFloat(total_price)).toFixed(2) + ' EUR');
 
         $.ajax({
             type: "POST",
@@ -56,14 +57,13 @@ $(document).ready(function() {
     });
 
 
-    var sum = 0;
     $('.product_amount').change(function () {
         var product_amount = this.value;
         var product_amount_selected = $('.product_amount option:selected');
         var product_id = this.id;
         var price_per_product = this.dataset.inlineType;
         var product_price = $('.product_price');
-        var total_product_price = parseInt(product_amount) * parseFloat(price_per_product);
+        var total_product_price = (parseFloat(product_amount) * parseFloat(price_per_product)).toFixed(2);
         var all_price = $('.total_price');
         var all_price_main = $('.total_price_main');
         var total_price = 0;
@@ -82,8 +82,8 @@ $(document).ready(function() {
             }
         });
 
-        all_price.text(total_price + ' EUR');
-        all_price_main.text(total_price + ' EUR');
+        all_price.text(parseFloat(total_price).toFixed(2) + ' EUR');
+        all_price_main.text(parseFloat(total_price).toFixed(2) + ' EUR');
 
         $.ajax({
             type: "PUT",
@@ -133,11 +133,11 @@ $(document).ready(function() {
 
         $.each( product_price, function(index, value) {
             if (parseInt(id) === index+1) {
-                shipping_price += parseFloat(value.id);
-                $('.shipping-cost').html((parseFloat(value.id)).toFixed(1) + ' EUR');
+                shipping_price += parseInt(value.id);
+                $('.shipping-cost').html((parseFloat(value.id)).toFixed(2) + ' EUR');
             }
         });
 
-        total_price.html((parseFloat(products_price) + shipping_price).toFixed(1) + ' EUR')
+        total_price.html((parseFloat(products_price) + shipping_price).toFixed(2) + ' EUR')
     });
 });
