@@ -163,40 +163,28 @@ class CheckoutAddress(View):                                          # NARAZIE 
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request, user_id):
-        if request.method == 'POST':
-            user_form = UserForm(request.POST)
-            if user_form.is_valid():
-                user = User(username=user_form.cleaned_data['email'], first_name=user_form.cleaned_data['first_name'],
-                            last_name=user_form.cleaned_data['last_name'], email=user_form.cleaned_data['email'])
-                user.save()
+        user_form = UserForm(request.POST)
+        if user_form.is_valid():
+            user = User(username=user_form.cleaned_data['email'], email=user_form.cleaned_data['email'])
+            user.save()
 
+            if user_id:
+                user = User.objects.get(pk=user_id)
+            else:
                 user = User.objects.get(email=user_form.cleaned_data['email'])
-                user.profile.phone_number = user_form.cleaned_data['phone_number']
-                user.profile.company = user_form.cleaned_data['company']
-                user.profile.country = user_form.cleaned_data['country']
-                user.profile.city = user_form.cleaned_data['city']
-                user.profile.postal_code = user_form.cleaned_data['postal_code']
-                user.profile.address1 = user_form.cleaned_data['address1']
-                user.profile.address2 = user_form.cleaned_data['address2']
-                user.save()
 
-                return redirect('/checkout_shipping/{}'.format(user.id))
-            elif user_id:
-                logged_user = User.objects.get(pk=user_id)
-                logged_user.first_name=user_form.cleaned_data['first_name']
-                logged_user.last_name=user_form.cleaned_data['last_name']
-                logged_user.profile.phone_number = user_form.cleaned_data['phone_number']
-                logged_user.profile.company = user_form.cleaned_data['company']
-                logged_user.profile.country = user_form.cleaned_data['country']
-                logged_user.profile.city = user_form.cleaned_data['city']
-                logged_user.profile.postal_code = user_form.cleaned_data['postal_code']
-                logged_user.profile.address1 = user_form.cleaned_data['address1']
-                logged_user.profile.address2 = user_form.cleaned_data['address2']
-                logged_user.save()
+            user.first_name = user_form.cleaned_data['first_name']
+            user.last_name = user_form.cleaned_data['last_name']
+            user.profile.phone_number = user_form.cleaned_data['phone_number']
+            user.profile.company = user_form.cleaned_data['company']
+            user.profile.country = user_form.cleaned_data['country']
+            user.profile.city = user_form.cleaned_data['city']
+            user.profile.postal_code = user_form.cleaned_data['postal_code']
+            user.profile.address1 = user_form.cleaned_data['address1']
+            user.profile.address2 = user_form.cleaned_data['address2']
+            user.save()
 
-                return redirect('/checkout_shipping/{}'.format(logged_user.id))
-        else:
-            user_form = UserForm()
+            return redirect('/checkout_shipping/{}'.format(user.id))
         ctx = {
             'products_amount': request.session['basket'],
             'user_form': user_form,
