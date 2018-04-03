@@ -43,7 +43,7 @@ $(document).ready(function() {
             total_price += parseInt(this.name);
         }
         product_in_basket.push(this.id);
-        all_price_main.text(parseInt(all_price_main.text()) + total_price + ' EUR');
+        all_price_main.text(parseFloat(all_price_main.text()) + total_price + ' EUR');
 
         $.ajax({
             type: "POST",
@@ -133,11 +133,11 @@ $(document).ready(function() {
 
         $.each( product_price, function(index, value) {
             if (parseInt(id) === index+1) {
-                shipping_price += parseInt(value.id);
-                $('.shipping-cost').html((parseInt(value.id)).toFixed(1) + ' EUR');
+                shipping_price += parseFloat(value.id);
+                $('.shipping-cost').html((parseFloat(value.id)).toFixed(1) + ' EUR');
             }
         });
-        console.log('git');
-        total_price.html((parseInt(products_price) + shipping_price).toFixed(1) + ' EUR')
+
+        total_price.html((parseFloat(products_price) + shipping_price).toFixed(1) + ' EUR')
     });
 });
