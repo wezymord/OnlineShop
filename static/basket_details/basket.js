@@ -1,21 +1,34 @@
 $(document).ready(function() {
 
-    function getCookie(c_name) {
-
-        if (document.cookie.length > 0) {
-            c_start = document.cookie.indexOf(c_name + "=");
-            if (c_start != -1) {
-                c_start = c_start + c_name.length + 1;
-                c_end = document.cookie.indexOf(";", c_start);
-                if (c_end == -1) c_end = document.cookie.length;
-                return unescape(document.cookie.substring(c_start, c_end));
+    function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+                }
             }
         }
-        return "";
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+
+
+      function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
 
+
     $.ajaxSetup({
-        headers: {"X-CSRFToken": getCookie("csrftoken")}
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
     });
 
 
@@ -27,10 +40,11 @@ $(document).ready(function() {
 
         if($.inArray(this.id, product_in_basket) === -1) {
             product_amount_basket.text(parseInt(product_amount_basket.text()) + 1);
-            total_price += parseInt(this.name);
+            total_price += parseFloat(this.name);
         }
+
         product_in_basket.push(this.id);
-        all_price_main.text(parseInt(all_price_main.text()) + total_price + ' EUR');
+        all_price_main.text((parseFloat(all_price_main.text()) + parseFloat(total_price)).toFixed(2) + ' EUR');
 
         $.ajax({
             type: "POST",
@@ -43,14 +57,13 @@ $(document).ready(function() {
     });
 
 
-    var sum = 0;
     $('.product_amount').change(function () {
         var product_amount = this.value;
         var product_amount_selected = $('.product_amount option:selected');
         var product_id = this.id;
         var price_per_product = this.dataset.inlineType;
         var product_price = $('.product_price');
-        var total_product_price = parseInt(product_amount) * parseFloat(price_per_product);
+        var total_product_price = (parseFloat(product_amount) * parseFloat(price_per_product)).toFixed(2);
         var all_price = $('.total_price');
         var all_price_main = $('.total_price_main');
         var total_price = 0;
@@ -69,8 +82,8 @@ $(document).ready(function() {
             }
         });
 
-        all_price.text(total_price + ' EUR');
-        all_price_main.text(total_price + ' EUR');
+        all_price.text(parseFloat(total_price).toFixed(2) + ' EUR');
+        all_price_main.text(parseFloat(total_price).toFixed(2) + ' EUR');
 
         $.ajax({
             type: "PUT",
@@ -121,10 +134,10 @@ $(document).ready(function() {
         $.each( product_price, function(index, value) {
             if (parseInt(id) === index+1) {
                 shipping_price += parseInt(value.id);
-                $('.shipping-cost').html(value.id + ' EUR');
+                $('.shipping-cost').html((parseFloat(value.id)).toFixed(2) + ' EUR');
             }
         });
 
-        total_price.html(parseInt(products_price) + shipping_price + ' EUR')
+        total_price.html((parseFloat(products_price) + shipping_price).toFixed(2) + ' EUR')
     });
 });

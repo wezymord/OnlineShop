@@ -25,7 +25,7 @@
         <div class="row">
           <!-- Checkout Adress-->
           <div class="col-xl-9 col-lg-8">
-            <div class="checkout-steps"><a class="active" href="/checkout_review">3. Review</a><a class="completed" href="/checkout_shipping"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>1. Address</a></div>
+            <div class="checkout-steps"><a class="active">3. Review</a><a class="completed" href="/checkout_shipping/{{ user.id }}/{{ shipping_id }}"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>2. Shipping</a><a class="completed" href="/checkout_address/{{ user.id }}/{{ shipping_id }}"><span class="step-indicator icon-circle-check"></span><span class="angle"></span>1. Address</a></div>
             <h4>Review Your Order</h4>
             <hr class="padding-bottom-1x">
 
@@ -105,7 +105,7 @@
               </div>
             </div>
             <div class="checkout-footer margin-top-1x">
-              <div class="column hidden-xs-down"><a class="btn btn-outline-secondary" href="/checkout_shipping"><i class="icon-arrow-left"></i>&nbsp;Back</a></div>
+              <div class="column hidden-xs-down"><a class="btn btn-outline-secondary" href="/checkout_shipping/{{ user.id }}/{{ shipping_id }}"><i class="icon-arrow-left"></i>&nbsp;Back</a></div>
               <div class="column"><button type="submit" class="btn btn-primary">Complete Order</button></div>
             </div>
            </form>
