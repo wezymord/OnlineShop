@@ -166,17 +166,15 @@ class CheckoutAddress(View):
     def post(self, request, user_id):
         user_form = UserForm(request.POST or None, user_id=user_id)
         if user_form.is_valid():
-            user = User(username=user_form.cleaned_data['email'], email=user_form.cleaned_data['email'])
-            user.save()
-
             if user_id:
                 user = User.objects.get(pk=user_id)
             else:
+                user = User(username=user_form.cleaned_data['email'], email=user_form.cleaned_data['email'])
+                user.save()
                 user = User.objects.get(email=user_form.cleaned_data['email'])
 
             user.first_name = user_form.cleaned_data['first_name']
             user.last_name = user_form.cleaned_data['last_name']
-            user.email = user_form.cleaned_data['email']
             user.profile.phone_number = user_form.cleaned_data['phone_number']
             user.profile.company = user_form.cleaned_data['company']
             user.profile.country = user_form.cleaned_data['country']
@@ -277,14 +275,14 @@ class AccountRegistration(View):
     def get(self, request):
         ctx = {
             'products_amount': request.session['basket'],
-            'user_form': UserForm(),
+            'user_form': UserForm(user_id=''),
             'registration_form': RegistrationForm()
         }
         return render(request, 'account-registration.html', ctx)
 
     def post(self, request):
         if request.method == 'POST':
-            user_form = UserForm(request.POST)
+            user_form = UserForm(request.POST or None, user_id='')
             registration_form = RegistrationForm(request.POST)
             if user_form.is_valid() and registration_form.is_valid():
                 user = User.objects.create_user(username=user_form.cleaned_data['email'],
@@ -306,7 +304,7 @@ class AccountRegistration(View):
 
                 return redirect('/account_login')
         else:
-            user_form = UserForm()
+            user_form = UserForm(user_id='')
             registration_form = RegistrationForm()
 
         ctx = {
@@ -333,8 +331,8 @@ class AccountLogin(View):
             logged_user = User.objects.get(username=user_data['email'])
 
             return redirect('/checkout_address/{}'.format(logged_user.id))
-        else:
-            ctx = {
-                'products_amount': request.session['basket']
-            }
-            return render(request, 'account-login.html', ctx)
+
+        ctx = {
+            'products_amount': request.session['basket']
+        }
+        return render(request, 'account-login.html', ctx)

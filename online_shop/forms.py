@@ -35,8 +35,8 @@ class UserForm(forms.ModelForm):
             super(UserForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
+        user_email = self.cleaned_data['email']
         if self.logged_user_id:
-            user_email = self.cleaned_data['email']
             logged_email = User.objects.get(pk=self.logged_user_id).email
             return email_validator(user_email, logged_email)
         return email_validator(user_email)
