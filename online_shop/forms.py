@@ -1,9 +1,10 @@
 from django import forms
 from .models import Profile
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django_countries import countries
 from .validators.postal_code import PostalCodeValidator
-from .validators.e_mail import clean_email
+from .validators.e_mail import email_validator
 from .validators.first_last_name import clean_first_name, clean_last_name
 from .validators.city import clean_city
 
@@ -12,7 +13,7 @@ from .validators.city import clean_city
 class UserForm(forms.ModelForm):
     first_name = forms.CharField(validators=[clean_first_name], widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-fn'}))
     last_name = forms.CharField(validators=[clean_last_name], widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-ln'}))
-    email = forms.EmailField(validators=[clean_email], widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'email', 'id': 'checkout-email'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'email', 'id': 'checkout-email'}))
     company = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-company'}))
     city = forms.CharField(validators=[clean_city], widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-city'}))
     postal_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-zip'}))
@@ -27,6 +28,18 @@ class UserForm(forms.ModelForm):
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-phone'}),
             'country': forms.Select(choices=countries, attrs={'class': 'form-control', 'id': 'checkout-country'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        if 'user_id' in kwargs.keys():
+            self.logged_user_id = kwargs.pop('user_id')
+            super(UserForm, self).__init__(*args, **kwargs)
+
+    def clean_email(self):
+        if self.logged_user_id:
+            user_email = self.cleaned_data['email']
+            logged_email = User.objects.get(pk=self.logged_user_id).email
+            return email_validator(user_email, logged_email)
+        return email_validator(user_email)
 
     def clean_postal_code(self):
         country_code = self.cleaned_data['country']

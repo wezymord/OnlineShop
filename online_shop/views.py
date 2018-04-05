@@ -124,11 +124,12 @@ class ShowAllProducts(View):
         return render(request, 'shop-grid-ns.html', ctx)
 
 
-class CheckoutAddress(View):                                          # NARAZIE DRUT, ALE DZIAŁA :P
+class CheckoutAddress(View):
     def get(self, request, user_id):
         if user_id:
             logged_user = User.objects.get(pk=user_id)
-            logged_user_form = UserForm(initial={
+            logged_user_form = UserForm(user_id=user_id,
+                                        initial={
                 'first_name': logged_user.first_name,
                 'last_name': logged_user.last_name,
                 'email': logged_user.email,
@@ -157,13 +158,13 @@ class CheckoutAddress(View):                                          # NARAZIE 
         else:
             ctx = {
                 'products_amount': request.session['basket'],
-                'user_form': UserForm(),
+                'user_form': UserForm(user_id=user_id),
                 'shipping_cost': format(0, '.2f')
             }
         return render(request, 'checkout-address.html', ctx)
 
     def post(self, request, user_id):
-        user_form = UserForm(request.POST)
+        user_form = UserForm(request.POST or None, user_id=user_id)
         if user_form.is_valid():
             user = User(username=user_form.cleaned_data['email'], email=user_form.cleaned_data['email'])
             user.save()
@@ -175,6 +176,7 @@ class CheckoutAddress(View):                                          # NARAZIE 
 
             user.first_name = user_form.cleaned_data['first_name']
             user.last_name = user_form.cleaned_data['last_name']
+            user.email = user_form.cleaned_data['email']
             user.profile.phone_number = user_form.cleaned_data['phone_number']
             user.profile.company = user_form.cleaned_data['company']
             user.profile.country = user_form.cleaned_data['country']
