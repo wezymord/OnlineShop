@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -281,31 +280,27 @@ class AccountRegistration(View):
         return render(request, 'account-registration.html', ctx)
 
     def post(self, request):
-        if request.method == 'POST':
-            user_form = UserForm(request.POST or None, user_id='')
-            registration_form = RegistrationForm(request.POST)
-            if user_form.is_valid() and registration_form.is_valid():
-                user = User.objects.create_user(username=user_form.cleaned_data['email'],
-                                                first_name=user_form.cleaned_data['first_name'],
-                                                last_name=user_form.cleaned_data['last_name'],
-                                                email=user_form.cleaned_data['email'],
-                                                password=registration_form.cleaned_data['password'])
-                user.save()
+        user_form = UserForm(request.POST, user_id='')
+        registration_form = RegistrationForm(request.POST)
+        if user_form.is_valid() and registration_form.is_valid():
+            user = User.objects.create_user(username=user_form.cleaned_data['email'],
+                                            first_name=user_form.cleaned_data['first_name'],
+                                            last_name=user_form.cleaned_data['last_name'],
+                                            email=user_form.cleaned_data['email'],
+                                            password=registration_form.cleaned_data['password'])
+            user.save()
 
-                user = User.objects.get(email=user_form.cleaned_data['email'])
-                user.profile.phone_number = user_form.cleaned_data['phone_number']
-                user.profile.company = user_form.cleaned_data['company']
-                user.profile.country = user_form.cleaned_data['country']
-                user.profile.city = user_form.cleaned_data['city']
-                user.profile.postal_code = user_form.cleaned_data['postal_code']
-                user.profile.address1 = user_form.cleaned_data['address1']
-                user.profile.address2 = user_form.cleaned_data['address2']
-                user.save()
+            user = User.objects.get(email=user_form.cleaned_data['email'])
+            user.profile.phone_number = user_form.cleaned_data['phone_number']
+            user.profile.company = user_form.cleaned_data['company']
+            user.profile.country = user_form.cleaned_data['country']
+            user.profile.city = user_form.cleaned_data['city']
+            user.profile.postal_code = user_form.cleaned_data['postal_code']
+            user.profile.address1 = user_form.cleaned_data['address1']
+            user.profile.address2 = user_form.cleaned_data['address2']
+            user.save()
 
-                return redirect('/account_login')
-        else:
-            user_form = UserForm(user_id='')
-            registration_form = RegistrationForm()
+            return redirect('/account_login')
 
         ctx = {
             'products_amount': request.session['basket'],
