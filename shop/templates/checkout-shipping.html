@@ -49,7 +49,7 @@
                   <tr>
                     <td class="align-middle">
                       <div class="custom-control custom-radio mb-0">
-                        <input class="custom-control-input shipping-method" type="radio" id="{{ shipping.id }}" name="shipping_method_id" value="{{ shipping.id }}" {% if shipping.id == user_shipping.id %} checked {% endif %}>
+                        <input class="custom-control-input shipping-method" type="radio" id="{{ shipping.id }}" name="shipping_method_id" value="{{ shipping.id }}" {% if shipping.id == user_shipping.id %} checked {% endif %} required>
                         <label id="{{ shipping.cost }}" class="custom-control-label" for="{{ shipping.id }}"></label>
                       </div>
                     </td>
