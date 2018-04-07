@@ -20,7 +20,6 @@ class MainPage(View):
             ctx = {
                 'photos': photos,
                 'products': products,
-                'products_amount': request.session['basket']
             }
 
             return render(request, 'index.html', ctx)
@@ -42,7 +41,7 @@ class MainPage(View):
 class Basket(View):
     def get(self, request):
         products = []
-        if 'basket' in request.session.keys():  # zapisać products_amount w context processor (cena się wyświetla w buttonie koszyka)
+        if 'basket' in request.session.keys():
             products_id = request.session['basket']
             for id in products_id:
                 products.append(Product.objects.get(pk=id))
@@ -60,7 +59,9 @@ class Basket(View):
         return render(request, 'basket.html', ctx)
 
     def post(self, request):
-        products = request.session.get('basket', {})
+        products = request.session.get('basket')
+        if products == None:
+            products = request.session.get('basket', {})
 
         product_id = request.POST.get('product_id')
         product_amount = request.POST.get('product_amount')
@@ -273,7 +274,6 @@ class CheckoutComplete(View):
 class AccountRegistration(View):
     def get(self, request):
         ctx = {
-            'products_amount': request.session['basket'],
             'user_form': UserForm(user_id=''),
             'registration_form': RegistrationForm()
         }
@@ -303,7 +303,6 @@ class AccountRegistration(View):
             return redirect('/account_login')
 
         ctx = {
-            'products_amount': request.session['basket'],
             'user_form': user_form,
             'registration_form': registration_form
         }
@@ -312,10 +311,7 @@ class AccountRegistration(View):
 
 class AccountLogin(View):
     def get(self, request):
-        ctx = {
-            'products_amount': request.session['basket']
-        }
-        return render(request, 'account-login.html', ctx)
+        return render(request, 'account-login.html')
 
     def post(self, request):
         user_data = dict(request.POST.items())
@@ -327,7 +323,4 @@ class AccountLogin(View):
 
             return redirect('/checkout_address/{}'.format(logged_user.id))
 
-        ctx = {
-            'products_amount': request.session['basket']
-        }
-        return render(request, 'account-login.html', ctx)
+        return render(request, 'account-login.html')
