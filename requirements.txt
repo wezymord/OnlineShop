@@ -1,0 +1,17 @@
+Django # initial django
+pytz # time zone for python
+
+mysqlclient # mysql python3 compatible database driver
+
+
+django-extensions # for improve command line commands and debugging
+bpython # for shell plus
+
+Werkzeug # deploy helper, we not need this yet, provide also onsite debuger and this is nice
+
+djangorestframework # Django support for rest
+
+django-phonenumber-field
+django_countries
+
+phonenumbers
