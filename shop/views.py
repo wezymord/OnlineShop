@@ -262,13 +262,16 @@ class CheckoutReview(View):
 
         make_order.shipping_options.add(shipping)
 
-        return redirect('/checkout_complete')
+        return redirect('/checkout_complete/{}'.format(make_order.uuid))
 
 
 class CheckoutComplete(View):
-    def get(self, request):
+    def get(self, request, uuid):
         request.session.clear()
-        return render(request, 'checkout-complete.html')
+        ctx = {
+            'uuid': uuid
+        }
+        return render(request, 'checkout-complete.html', ctx)
 
 
 class AccountRegistration(View):
