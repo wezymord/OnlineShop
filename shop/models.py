@@ -1,10 +1,18 @@
 from django.db import models
-from django.core.validators import URLValidator
+import uuid
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+# validators
+from django.core.validators import URLValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from django_countries.fields import CountryField
+# signals
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+# email
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 
 class Product(models.Model):
@@ -62,6 +70,7 @@ class ShippingOption(models.Model):
 
 
 class Order(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders_user')
     products = models.ManyToManyField(Product, related_name='orders_product')
     shipping_options = models.ManyToManyField(ShippingOption, related_name='orders_shipping_option')
@@ -78,3 +87,16 @@ class OrderProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     quantity_product = models.CharField(max_length=4)
+
+    @receiver(post_save, sender=Order)
+    def save_order(sender, instance, **kwargs):
+        email = User.objects.get(pk=instance.user_id).email
+        content = render_to_string('email_checkout_complete.html', {'uuid': instance.uuid})
+        text_content = strip_tags(content)
+        msg = EmailMultiAlternatives(
+            subject="Confirmation of purchase Pawel&Marly.com",
+            body=text_content,
+            from_email="postmaster@breedersmanager.com",
+            to=[email])
+        msg.attach_alternative(content, "text/html")
+        return msg.send()

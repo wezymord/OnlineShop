@@ -43,8 +43,19 @@ INSTALLED_APPS = [
     'phonenumbers',
     'phonenumber_field',
     'django_countries',
+    'anymail'
 
 ]
+
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": "key-c264cde96b537a1da3acd2f57857e247",
+    "MAILGUN_SENDER_DOMAIN": 'breedersmanager.com',
+}
+
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+DEFAULT_FROM_EMAIL = "postmaster@breedersmanager.com"
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'online_shop.urls'
 

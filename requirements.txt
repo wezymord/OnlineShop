@@ -15,3 +15,5 @@ django-phonenumber-field
 django_countries
 
 phonenumbers
+
+django-anymail[mailgun] #sending emails
