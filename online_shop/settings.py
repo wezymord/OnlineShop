@@ -38,9 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'shop.context_processor',
-    # 'shop.apps.online_shopConfig',
-    'shop',
+    # 'shop.apps.online_shopConfig',        # możliwość konfiguracji aplikacji
+    'shop',                                 # brak możliwości konfiguracji aplikacji
     'phonenumbers',
     'phonenumber_field',
     'django_countries',

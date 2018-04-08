@@ -267,11 +267,16 @@ class CheckoutReview(View):
 
 class CheckoutComplete(View):
     def get(self, request, uuid):
-        request.session.clear()
         ctx = {
             'uuid': uuid
         }
+
         return render(request, 'checkout-complete.html', ctx)
+
+    def post(self, request, uuid):
+        request.session.clear()
+
+        return redirect('/main_page')
 
 
 class AccountRegistration(View):
