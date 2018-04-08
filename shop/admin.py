@@ -75,7 +75,7 @@ admin.site.register(ShippingOption, ShippingOptionAdmin)
 
 
 def order_id(obj):
-    return obj.order.id
+    return obj.order.uuid
 
 class OrderProductsAdmin(admin.ModelAdmin):
     list_display = [order_id, 'product', 'quantity_product']
