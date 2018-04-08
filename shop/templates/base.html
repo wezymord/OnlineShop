@@ -516,20 +516,31 @@
                 <li><a href="#"> <i class="icon-unlock"></i>Logout</a></li>
               </ul>
             </div>
+
+
+
+
             <div class="cart"><a href="/basket"></a><i class="icon-bag"></i><span class="count">{{ amount_products }}</span><span class="subtotal total_price_main">{{ total_price_basket }} EUR</span>
               <div class="toolbar-dropdown">
-                <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/01.jpg' %}" alt="Product"></a>
-                  <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Unionbay Park</a><span class="dropdown-product-details">1 x $43.90</span></div>
-                </div>
-                <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/02.jpg' %}" alt="Product"></a>
-                  <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Daily Fabric Cap</a><span class="dropdown-product-details">2 x $24.89</span></div>
-                </div>
-                <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/03.jpg' %}" alt="Product"></a>
-                  <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Haan Crossbody</a><span class="dropdown-product-details">1 x $200.00</span></div>
-                </div>
+
+                {% for product in products_order %}
+
+                    <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src={{ product|get_title_photo }} alt="Product"></a>
+                      <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">{{ product.name }}</a><span id="{{ product.id }}" class="dropdown-product-details product_quantity">{{ products_amount|get_product_quantity:product.id }}</span><span class="dropdown-product-details"> x </span><span id="{{ product.id }}" class="dropdown-product-details price_product_order">{{ products_amount|get_price_product:product.id }}</span></div>
+                    </div>
+
+                {% endfor %}
+
+{#                <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/02.jpg' %}" alt="Product"></a>#}
+{#                  <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Daily Fabric Cap</a><span class="dropdown-product-details">2 x $24.89</span></div>#}
+{#                </div>#}
+{#                <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/03.jpg' %}" alt="Product"></a>#}
+{#                  <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Haan Crossbody</a><span class="dropdown-product-details">1 x $200.00</span></div>#}
+{#                </div>#}
+
                 <div class="toolbar-dropdown-group">
                   <div class="column"><span class="text-lg">Total:</span></div>
-                  <div class="column text-right"><span class="text-lg text-medium">$289.68&nbsp;</span></div>
+                  <div class="column text-right"><span class="text-lg text-medium total_price_main">{{ total_price_basket }} EUR&nbsp;</span></div>
                 </div>
                 <div class="toolbar-dropdown-group">
                   <div class="column"><a class="btn btn-sm btn-block btn-secondary" href="/basket">View Basket</a></div>
@@ -537,6 +548,9 @@
                 </div>
               </div>
             </div>
+
+
+
           </div>
         </div>
       </div>
@@ -636,7 +650,7 @@
     <!-- JavaScript (jQuery) libraries, plugins and custom scripts-->
         <script src="{% static 'js/vendor.min.js' %}"></script>
         <script src="{% static 'js/scripts.min.js' %}"></script>
-        <script src="{% static 'basket_details/basket.js' %}" type="text/javascript"></script>
+        <script src="{% static 'basket_detai/basket.js' %}" type="text/javascript"></script>
   </body>
 </html>
 {% endblock head %}

@@ -32,10 +32,9 @@ class MainPage(View):
             return render(request, 'index.html', ctx)
 
 
-# class AccountOrders(View):
-#     def get(self, request):
-#         pass
-#         return render(request, 'account-orders.html')
+class AccountOrders(View):
+    def get(self, request):
+        return render(request, 'account-orders.html')
 
 
 class Basket(View):
