@@ -520,7 +520,7 @@
 
 
 
-            <div class="cart"><a href="/basket"></a><i class="icon-bag"></i><span class="count">{{ amount_products }}</span><span class="subtotal total_price_main">{{ total_price_basket }} EUR</span>
+            <div class="cart"><a href="/basket"></a><i class="icon-bag"></i><span class="count display_quantity_products" data-value="{{ products_in_basket }}">{{ display_quantity_products }}</span><span class="subtotal dispal_price_basket">{{ dispal_price_basket }} EUR</span>
               <div class="toolbar-dropdown">
 
                 {% for product in products_order %}
@@ -540,7 +540,7 @@
 
                 <div class="toolbar-dropdown-group">
                   <div class="column"><span class="text-lg">Total:</span></div>
-                  <div class="column text-right"><span class="text-lg text-medium total_price_main">{{ total_price_basket }} EUR&nbsp;</span></div>
+                  <div class="column text-right"><span class="text-lg text-medium dispal_price_basket">{{ dispal_price_basket }} EUR&nbsp;</span></div>
                 </div>
                 <div class="toolbar-dropdown-group">
                   <div class="column"><a class="btn btn-sm btn-block btn-secondary" href="/basket">View Basket</a></div>

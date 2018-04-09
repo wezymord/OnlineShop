@@ -9,17 +9,17 @@ def basket_summary(request):
             total_price += int(quantity_product) * int(product.price)
 
         return {
-            'amount_products': len(request.session['basket'].keys()),
-            'total_price_basket': format(total_price, '.2f')
+            'display_quantity_products': len(request.session['basket'].keys()),
+            'dispal_price_basket': format(total_price, '.2f')
         }
     else:
         return {
-            'amount_products': 0,
-            'total_price_basket': format(0, '.2f')
+            'display_quantity_products': 0,
+            'dispal_price_basket': format(0, '.2f')
         }
 
 
-def display_account_order(request):
+def display_basket(request):
     products = []
     if 'basket' in request.session.keys():
         products_id = request.session['basket']
@@ -27,6 +27,7 @@ def display_account_order(request):
             products.append(Product.objects.get(pk=product_id))
 
         return {
+            'products_in_basket': list(request.session['basket']),
             'products_amount': request.session['basket'],
             'products_order': products,
         }

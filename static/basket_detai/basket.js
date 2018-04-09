@@ -32,19 +32,19 @@ $(document).ready(function() {
     });
 
 
-    var product_in_basket = [];
     $(".add_to_basket").click(function () {
-        var product_amount_basket = $('.count');
-        var all_price_main = $('.total_price_main');
-        var total_price = 0;
+        var display_quantity_products = $('.display_quantity_products');
+        var dispal_price_basket = $('.dispal_price_basket');
+        var display_price_basket = 0;
+        var products_in_basket = display_quantity_products.data('value');
 
-        if($.inArray(this.id, product_in_basket) === -1) {
-            product_amount_basket.text(parseInt(product_amount_basket.text()) + 1);
-            total_price += parseFloat(this.name);
+
+        if($.inArray(this.id, products_in_basket) === -1) {
+            display_quantity_products.text(parseInt(display_quantity_products.text()) + 1);
+            display_price_basket += parseFloat(this.name);
         }
 
-        product_in_basket.push(this.id);
-        all_price_main.text((parseFloat(all_price_main.text()) + parseFloat(total_price)).toFixed(2) + ' EUR');
+        dispal_price_basket.text((parseFloat(dispal_price_basket.text()) + parseFloat(display_price_basket)).toFixed(2) + ' EUR');
 
         $.ajax({
             type: "POST",
@@ -67,7 +67,7 @@ $(document).ready(function() {
         var product_price = $('.product_price');
         var total_product_price = (parseFloat(product_amount) * parseFloat(price_per_product)).toFixed(2);
         var all_price = $('.total_price');
-        var all_price_main = $('.total_price_main');
+        var dispal_price_basket = $('.dispal_price_basket');
         var total_price = 0;
 
         $.each(product_price, function (index, product_price) {
@@ -97,7 +97,7 @@ $(document).ready(function() {
         });
 
         all_price.text(parseFloat(total_price).toFixed(2) + ' EUR');
-        all_price_main.text(parseFloat(total_price).toFixed(2) + ' EUR');
+        dispal_price_basket.text(parseFloat(total_price).toFixed(2) + ' EUR');
 
         $.ajax({
             type: "PUT",
@@ -115,19 +115,19 @@ $(document).ready(function() {
         var product_id = this.id;
         var total_price = 0;
         var all_price = $('.total_price');
-        var all_price_main = $('.total_price_main');
-        var product_amount_basket = $('.count');
+        var dispal_price_basket = $('.dispal_price_basket');
+        var display_quantity_products = $('.display_quantity_products');
 
         $.each( product, function(index, value) {
             if (product_id === value.id) {
-                total_price += parseInt(all_price_main.text()) - parseInt(value.dataset.inlineType);
-                product_amount_basket.text(parseInt(product_amount_basket.text()) - 1);
+                total_price += parseInt(dispal_price_basket.text()) - parseInt(value.dataset.inlineType);
+                display_quantity_products.text(parseInt(display_quantity_products.text()) - 1);
                 value.remove()
             };
         });
 
-        all_price.text(total_price + ' EUR');
-        all_price_main.text(total_price + ' EUR');
+        all_price.text((total_price).toFixed(2) + ' EUR');
+        dispal_price_basket.text((total_price).toFixed(2) + ' EUR');
 
         $.ajax({
             type: "DELETE",
