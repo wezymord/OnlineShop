@@ -37,6 +37,7 @@ $(document).ready(function() {
         var product_id = this.id;
         var display_quantity_products = $('.display-quantity-products');
         var total_basket_price = $('.total-basket-price');
+        var dropdown_basket_price = $('.dropdown-basket-price');
         var display_price_basket = 0;
         var products_in_basket = eval(display_quantity_products.data('value'));
 
@@ -49,7 +50,9 @@ $(document).ready(function() {
             }
         }
 
+        dropdown_basket_price.text((parseFloat(total_basket_price.text()) + parseFloat(display_price_basket)).toFixed(2) + ' EUR');
         total_basket_price.text((parseFloat(total_basket_price.text()) + parseFloat(display_price_basket)).toFixed(2) + ' EUR');
+
 
         $.ajax({
             type: "POST",
