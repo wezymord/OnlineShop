@@ -10,12 +10,12 @@ def basket_summary(request):
 
         return {
             'display_quantity_products': len(request.session['basket'].keys()),
-            'dispal_price_basket': format(total_price, '.2f')
+            'total_basket_price': format(total_price, '.2f')
         }
     else:
         return {
             'display_quantity_products': 0,
-            'dispal_price_basket': format(0, '.2f')
+            'total_basket_price': format(0, '.2f')
         }
 
 

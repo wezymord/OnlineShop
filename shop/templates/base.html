@@ -520,13 +520,13 @@
 
 
 
-            <div class="cart"><a href="/basket"></a><i class="icon-bag"></i><span class="count display_quantity_products" data-value="{{ products_in_basket }}">{{ display_quantity_products }}</span><span class="subtotal dispal_price_basket">{{ dispal_price_basket }} EUR</span>
+            <div class="cart"><a href="/basket"></a><i class="icon-bag"></i><span class="count display_quantity_products" data-value="{{ products_in_basket }}">{{ display_quantity_products }}</span><span class="subtotal total-basket-price">{{ total_basket_price }} EUR</span>
               <div class="toolbar-dropdown">
 
                 {% for product in products_order %}
 
                     <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src={{ product|get_title_photo }} alt="Product"></a>
-                      <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">{{ product.name }}</a><span id="{{ product.id }}" class="dropdown-product-details product_quantity">{{ products_amount|get_product_quantity:product.id }}</span><span class="dropdown-product-details"> x </span><span id="{{ product.id }}" class="dropdown-product-details price_product_order">{{ products_amount|get_price_product:product.id }}</span></div>
+                      <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">{{ product.name }}</a><span id="{{ product.id }}" class="dropdown-product-details dropdown-product-quantity">{{ products_amount|get_product_quantity:product.id }}</span><span class="dropdown-product-details"> x </span><span id="{{ product.id }}" class="dropdown-product-details dropdown-product-price">{{ products_amount|subtotal_product_price:product.id }}</span></div>
                     </div>
 
                 {% endfor %}
@@ -540,7 +540,7 @@
 
                 <div class="toolbar-dropdown-group">
                   <div class="column"><span class="text-lg">Total:</span></div>
-                  <div class="column text-right"><span class="text-lg text-medium dispal_price_basket">{{ dispal_price_basket }} EUR&nbsp;</span></div>
+                  <div class="column text-right"><span class="text-lg text-medium dropdown-basket-price">{{ total_basket_price }} EUR&nbsp;</span></div>
                 </div>
                 <div class="toolbar-dropdown-group">
                   <div class="column"><a class="btn btn-sm btn-block btn-secondary" href="/basket">View Basket</a></div>

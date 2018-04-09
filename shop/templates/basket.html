@@ -42,7 +42,7 @@
 
         {% for product in products %}
 
-              <tr class="current_product" id="{{ product.id }}" data-inline-type="{{ product.price }}">
+              <tr class="selected-product" id="{{ product.id }}" data-inline-type="{{ product.price }}">
                 <td>
                   <div class="product-item"><a class="product-thumb" href="/product_details/{{ product.id }}"><img src={{ product|get_title_photo }} alt="Product"></a>
                     <div class="product-info">
@@ -53,7 +53,7 @@
 
                 <td class="text-center">
                   <div class="count-input">
-                   <select class="form-control product_amount" id="{{ product.id }}" data-inline-type="{{ product.price }}">
+                   <select class="form-control quantity_products" id="{{ product.id }}" data-inline-type="{{ product.price }}">
 
                        {% for num in product.stock|get_stock_product_to_basket %}
 
@@ -69,7 +69,7 @@
                   </div>
                 </td>
 
-                <td class="text-center text-lg text-medium product_price" id="{{ product.id }}">{{ products_amount|get_price_product:product.id }} EUR</td>
+                <td class="text-center text-lg text-medium subtotal-product-price" id="{{ product.id }}">{{ products_amount|subtotal_product_price:product.id }} EUkR</td>
                 <td class="text-center text-lg text-medium"> EUR</td>
                 <td class="text-center"><a class="remove-from-cart" id={{ product.id }} href="#" data-toggle="tooltip" title="Remove item"><i class="icon-cross"></i></a></td>
               </tr>
@@ -88,7 +88,7 @@
                   <button class="btn btn-outline-primary btn-sm" type="submit">Apply Coupon</button>
                 </form>
               </div>
-              <div class="column text-lg">Subtotal: <span class="text-medium total_price">{{ products_amount|total_price_basket }} EUR</span></div>
+              <div class="column text-lg">Subtotal: <span class="text-medium total-basket-price">{{ products_amount|total_basket_price }} EUR</span></div>
             </div>
             <div class="shopping-cart-footer">
               <div class="column"><a class="btn btn-outline-secondary" href="/main_page"><i class="icon-arrow-left"></i>&nbsp;Back to Shopping</a></div>

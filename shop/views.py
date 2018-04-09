@@ -63,8 +63,8 @@ class Basket(View):
             products = request.session.get('basket', {})
 
         product_id = request.POST.get('product_id')
-        product_amount = request.POST.get('product_amount')
-        products[product_id] = product_amount
+        quantity_product = request.POST.get('quantity_product')
+        products[product_id] = quantity_product
         request.session['basket'] = products
 
         return render(request, 'basket.html')
@@ -81,14 +81,14 @@ class Basket(View):
         return render(request, 'basket.html')
 
     def put(self, request):
-        product_amount = QueryDict(request.body).get("product_amount")
+        quantity_product = QueryDict(request.body).get("quantity_product")
         product_id = QueryDict(request.body).get("product_id")
 
         if product_id in request.session['basket'].keys():
             del request.session['basket'][product_id]
 
         products_amount = request.session.get('basket', {})
-        products_amount[product_id] = product_amount
+        products_amount[product_id] = quantity_product
         request.session['basket'] = products_amount
 
         return render(request, 'basket.html')
