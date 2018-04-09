@@ -135,28 +135,27 @@ $(document).ready(function() {
 
         $.ajax({
             type: "DELETE",
-            url: "/basket/" + this.id,
+            url: "/basket/" + product_id,
             data: {
-                "product_id": this.id
+                "product_id": product_id
             }
         });
     });
 
-
+    // Shipping in order summary
     $(".shipping-method").focus(function() {
-        var id = this.id;
-        var product_price = $("label");
-        var products_price = $('.products-cost').html();
-        var total_price = $('.shipping-total');
-        var shipping_price = 0;
+        var shipping_id = this.value;
+        var shipping_price = $(".shipping-price");
+        var basket_price = $('.total-basket-price').html();
+        var order_summary_price = $('.total-shipping-price');
 
-        $.each( product_price, function(index, value) {
-            if (parseInt(id) === index+1) {
-                shipping_price += parseInt(value.id);
+        var selected_shippig_price = 0;
+        $.each(shipping_price, function(index, value) {
+            if (parseInt(shipping_id) === index+1) {
+                selected_shippig_price += parseInt(value.id);
                 $('.shipping-cost').html((parseFloat(value.id)).toFixed(2) + ' EUR');
             }
         });
-
-        total_price.html((parseFloat(products_price) + shipping_price).toFixed(2) + ' EUR')
+        order_summary_price.html((parseInt(basket_price) + selected_shippig_price).toFixed(2) + ' EUR')
     });
 });
