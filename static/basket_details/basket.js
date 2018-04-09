@@ -34,6 +34,7 @@ $(document).ready(function() {
 
     var product_in_basket = [];
     $(".add_to_basket").click(function () {
+        console.log('WORK4S');
         var product_amount_basket = $('.count');
         var all_price_main = $('.total_price_main');
         var total_price = 0;
@@ -59,8 +60,10 @@ $(document).ready(function() {
 
     $('.product_amount').change(function () {
         var product_amount = this.value;
+        var product_quantity = $('.product_quantity');
         var product_amount_selected = $('.product_amount option:selected');
         var product_id = this.id;
+        var price_product_order = $('.price_product_order');
         var price_per_product = this.dataset.inlineType;
         var product_price = $('.product_price');
         var total_product_price = (parseFloat(product_amount) * parseFloat(price_per_product)).toFixed(2);
@@ -68,10 +71,16 @@ $(document).ready(function() {
         var all_price_main = $('.total_price_main');
         var total_price = 0;
 
-        $.each(product_price, function (index, value) {
-            if (product_id === value.id) {
-                value.innerHTML = total_product_price + ' EUR';
-            };
+        $.each(product_price, function (index, product_price) {
+            if (product_id === product_price.id) {
+                product_price.innerHTML = total_product_price + ' EUR';
+
+                $.each(price_product_order, function (index, value) {
+                    if (product_id === value.id) {
+                        value.innerHTML = (parseFloat(price_per_product) * parseInt(product_amount)).toFixed(2);
+                    }
+                });
+            }
         });
 
         $.each(product_amount_selected, function (index, value) {
@@ -79,6 +88,12 @@ $(document).ready(function() {
                 total_price += parseFloat(value.value) * parseFloat(value.id);
             } else {
                 total_price += parseFloat(value.value) * parseFloat(value.id);
+            }
+        });
+
+        $.each(product_quantity, function (index, value) {
+            if (product_id === value.id) {
+                value.innerHTML = product_amount;
             }
         });
 
