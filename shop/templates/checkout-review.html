@@ -45,7 +45,7 @@
 
                 {% for product in products %}
 
-                  <tr>
+                  <tr id="{{ product.id }}" data-inline-type="{{ product.price }}" class="review-selected-product">
                     <td>
                       <div class="product-item"><a class="product-thumb" href="/product_details/{{ product.id }}"><img src={{ product|get_title_photo }} alt="Product"></a>
                         <div class="product-info">
@@ -86,7 +86,7 @@
             </div>
             <div class="shopping-cart-footer">
               <div class="column"></div>
-              <div class="column text-lg">Subtotal(basket + shipping): <span class="text-medium">{{ products_amount|total_shipping_price:shipping_cost }} EUR</span></div>
+              <div class="column text-lg">Subtotal(basket + shipping): <span class="text-medium review-total-cost">{{ products_amount|total_shipping_price:shipping_cost }} EUR</span></div>
             </div>
             <div class="row padding-top-1x mt-3">
               <div class="col-sm-6">
