@@ -5,11 +5,14 @@ cart==1.1.3
 certifi==2018.1.18
 chardet==3.0.4
 curtsies==0.3.0
+dj-database-url==0.5.0
+dj-static==0.0.6
 Django==2.0.2
 django-anymail==2.0
 django-countries==5.2
 django-extensions==2.0.6
 django-phonenumber-field==2.0.0
+django-toolbelt==0.0.1
 djangorestframework==3.8.2
 greenlet==0.4.13
 gunicorn==19.7.1
@@ -23,7 +26,9 @@ Pygments==2.2.0
 pytz==2018.3
 requests==2.18.4
 six==1.11.0
+static3==0.7.0
 typing==3.6.4
 urllib3==1.22
 wcwidth==0.1.7
 Werkzeug==0.14.1
+whitenoise==3.3.1
