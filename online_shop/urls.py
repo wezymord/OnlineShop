@@ -22,7 +22,7 @@ from shop.views import MainPage, Basket, ProductDetails, ShowAllProducts, ClearB
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url('main_page/', MainPage.as_view(), name='main_page'),
+    url('^$', MainPage.as_view(), name='main_page'),
     url('show_all_products/', ShowAllProducts.as_view(), name='show_all_products'),
     url('product_details/(?P<product_id>\d+)', ProductDetails.as_view(), name='product_details'),
     url('basket/', Basket.as_view(), name='basket'),
