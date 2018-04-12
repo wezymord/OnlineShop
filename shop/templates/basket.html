@@ -58,9 +58,9 @@
                        {% for num in product.stock|get_stock_product_to_basket %}
 
                            {% if num == products_amount|get_product_quantity:product.id %}
-                                <option value="{{ num }}" id="{{ product.price }}" selected>{{ num }}</option>
+                                <option value="{{ num }}" data-inline-type="{{ product.id }}" id="{{ product.price }}" selected>{{ num }}</option>
                            {% else %}
-                                <option value="{{ num }}" id="{{ product.price }}" >{{ num }}</option>
+                                <option value="{{ num }}" data-inline-type="{{ product.id }}" id="{{ product.price }}" >{{ num }}</option>
                            {% endif %}
 
                        {% endfor %}

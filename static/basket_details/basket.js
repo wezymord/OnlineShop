@@ -116,7 +116,6 @@ $(document).ready(function() {
         });
     });
 
-
     // Removing product from basket and dropdown
     $('.remove-from-cart, .dropdown-product-remove').click(function () {
         var basket_selected_product = $('.basket-selected-product');
@@ -128,12 +127,32 @@ $(document).ready(function() {
 
         var total_basket_price = $('.total-basket-price');
 
+
+        // Subtotal product price in basket and dropdown
+        var subtotal_product_price = 0;
+        var quantity_product_selected = $('.quantity_products option:selected');
+        $.each(quantity_product_selected, function (index, value) {
+            if(value.dataset.inlineType === product_id) {
+                subtotal_product_price += parseFloat(value.value * value.id);
+            }
+        });
+
+
         // Removing product from basket
         var basket_total_price = 0;
         $.each( basket_selected_product, function(index, value) {
             if (product_id === value.id) {
-                basket_total_price += parseInt(total_basket_price.text()) - parseInt(value.dataset.inlineType);
+                basket_total_price += parseInt(total_basket_price.text()) - parseInt(subtotal_product_price);
                 value.remove();
+            }
+        });
+
+        // Removing product from order review
+        var dropdown_product_price = 0;
+        var dropdown_product = $('.dropdown-product-price');
+        $.each( dropdown_product, function(index, value) {
+            if (product_id === value.id) {
+                dropdown_product_price += parseInt(value.innerHTML);
             }
         });
 
@@ -141,7 +160,7 @@ $(document).ready(function() {
         var dropdown_total_price = 0;
         $.each( dropdown_selected_product, function(index, value) {
             if (product_id === value.id) {
-                dropdown_total_price += parseInt(total_basket_price.text()) - parseInt(value.dataset.inlineType);
+                dropdown_total_price += parseInt(total_basket_price.text()) - parseInt(dropdown_product_price);
                 value.remove();
             }
         });
@@ -150,7 +169,7 @@ $(document).ready(function() {
         var review_total_price = 0;
         $.each( review_selected_product, function(index, value) {
             if (product_id === value.id) {
-                review_total_price += parseInt(total_basket_price.text()) - parseInt(value.dataset.inlineType);
+                review_total_price += parseInt(total_basket_price.text()) - parseInt(dropdown_product_price);
                 value.remove();
             }
         });
