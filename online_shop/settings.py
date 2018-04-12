@@ -109,8 +109,8 @@ DATABASES = {
         'NAME': 'onlineshop',
         'USER': os.environ['PM_SHOP_POSTGRES_USER'],
         'PASSWORD': os.environ['PM_SHOP_POSTGRES_PASSWORD'],
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
