@@ -21,8 +21,8 @@ def get_product_quantity(products_amount, product_id):
         if product_id == int(id):
             return int(products_amount[id])
 
-@register.filter(name='get_price_product')
-def get_price_product(products_amount, product_id):
+@register.filter(name='subtotal_product_price')
+def subtotal_product_price(products_amount, product_id):
     product_price = 0
     for id in products_amount:
         if product_id == int(id):
@@ -31,8 +31,8 @@ def get_price_product(products_amount, product_id):
 
     return format(product_price, '.2f')
 
-@register.filter(name='total_price_basket')
-def get_total_price(products_amount):
+@register.filter(name='total_basket_price')
+def total_basket_price(products_amount):
     total_price = 0
     for id in products_amount:
         product = Product.objects.get(pk=id)
@@ -42,6 +42,6 @@ def get_total_price(products_amount):
 
 @register.filter(name='total_shipping_price')
 def total_shipping_price(products_amount, shipping_cost):
-    total_price = float(get_total_price(products_amount)) + float(shipping_cost)
+    total_price = float(total_basket_price(products_amount)) + float(shipping_cost)
 
     return format(total_price, '.2f')

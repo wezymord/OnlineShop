@@ -12,7 +12,7 @@
           </div>
           <div class="column">
             <ul class="breadcrumbs">
-              <li><a href="/main_page">Home</a>
+              <li><a href="/ ">Home</a>
               </li>
               <li class="separator">&nbsp;</li>
               <li>Checkout</li>
@@ -49,8 +49,8 @@
                   <tr>
                     <td class="align-middle">
                       <div class="custom-control custom-radio mb-0">
-                        <input class="custom-control-input shipping-method" type="radio" id="{{ shipping.id }}" name="shipping_method_id" value="{{ shipping.id }}" {% if shipping.id == user_shipping.id %} checked {% endif %} required>
-                        <label id="{{ shipping.cost }}" class="custom-control-label" for="{{ shipping.id }}"></label>
+                        <input class="custom-control-input shipping-method" type="radio" id="{{ shipping }}" name="shipping_method_id" value="{{ shipping.id }}" {% if shipping.id == user_shipping.id %} checked {% endif %} required>
+                        <label id="{{ shipping.cost }}" class="custom-control-label shipping-price" for="{{ shipping }}"></label>
                       </div>
                     </td>
                     <td class="align-middle"><span class="text-medium">{{ shipping.shipping_method }}</span><br><span class="text-muted text-sm">{{ shipping.available_destinations }}</span></td>
@@ -145,7 +145,7 @@
                 <table class="table">
                   <tr>
                     <td>Cart Subtotal:</td>
-                    <td class="text-medium products-cost">{{ total_price_basket }} EUR</td>
+                    <td class="text-medium total-basket-price">{{ products_amount|total_basket_price }} EUR</td>
                   </tr>
                   <tr>
                     <td>Shipping:</td>

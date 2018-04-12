@@ -1,19 +1,29 @@
-Django # initial django
-pytz # time zone for python
-
-mysqlclient # mysql python3 compatible database driver
-
-
-django-extensions # for improve command line commands and debugging
-bpython # for shell plus
-
-Werkzeug # deploy helper, we not need this yet, provide also onsite debuger and this is nice
-
-djangorestframework # Django support for rest
-
-django-phonenumber-field
-django_countries
-
-phonenumbers
-
-django-anymail[mailgun] #sending emails
+Babel==2.5.3
+blessings==1.6.1
+bpython==0.17.1
+cart==1.1.3
+certifi==2018.1.18
+chardet==3.0.4
+curtsies==0.3.0
+Django==2.0.2
+django-anymail==2.0
+django-countries==5.2
+django-extensions==2.0.6
+django-phonenumber-field==2.0.0
+djangorestframework==3.8.2
+greenlet==0.4.13
+gunicorn==19.7.1
+idna==2.6
+mysqlclient==1.3.12
+phonenumbers==8.9.3
+phonenumberslite==8.9.3
+psycopg2==2.7.4
+pycryptodome==3.5.0
+Pygments==2.2.0
+pytz==2018.3
+requests==2.18.4
+six==1.11.0
+typing==3.6.4
+urllib3==1.22
+wcwidth==0.1.7
+Werkzeug==0.14.1

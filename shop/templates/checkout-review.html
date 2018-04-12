@@ -12,7 +12,7 @@
           </div>
           <div class="column">
             <ul class="breadcrumbs">
-              <li><a href="/main_page">Home</a>
+              <li><a href="/ ">Home</a>
               </li>
               <li class="separator">&nbsp;</li>
               <li>Checkout</li>
@@ -45,7 +45,7 @@
 
                 {% for product in products %}
 
-                  <tr>
+                  <tr id="{{ product.id }}" data-inline-type="{{ product.price }}" class="review-selected-product">
                     <td>
                       <div class="product-item"><a class="product-thumb" href="/product_details/{{ product.id }}"><img src={{ product|get_title_photo }} alt="Product"></a>
                         <div class="product-info">
@@ -53,7 +53,7 @@
                         </div>
                       </div>
                     </td>
-                    <td class="text-center text-lg text-medium">{{ products_amount|get_price_product:product.id }} EUR</td>
+                    <td class="text-center text-lg text-medium">{{ products_amount|subtotal_product_price:product.id }} EUR</td>
                     <td class="text-center"><a class="btn btn-outline-primary btn-sm" href="/basket">Edit</a></td>
                   </tr>
 
@@ -86,7 +86,7 @@
             </div>
             <div class="shopping-cart-footer">
               <div class="column"></div>
-              <div class="column text-lg">Subtotal(basket + shipping): <span class="text-medium">{{ products_amount|total_shipping_price:shipping_cost }} EUR</span></div>
+              <div class="column text-lg">Subtotal(basket + shipping): <span class="text-medium review-total-cost">{{ products_amount|total_shipping_price:shipping_cost }} EUR</span></div>
             </div>
             <div class="row padding-top-1x mt-3">
               <div class="col-sm-6">
@@ -120,7 +120,7 @@
                 <table class="table">
                   <tr>
                     <td>Cart Subtotal:</td>
-                    <td class="text-medium products-cost">{{ total_price_basket }} EUR</td>
+                    <td class="text-medium total-basket-price">{{ products_amount|total_basket_price }} EUR</td>
                   </tr>
                   <tr>
                     <td>Shipping:</td>
