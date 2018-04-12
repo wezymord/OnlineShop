@@ -20,11 +20,8 @@ def basket_summary(request):
 
 
 def display_basket(request):
-    products = []
     if 'basket' in request.session.keys():
-        products_id = request.session['basket']
-        for product_id in products_id:
-            products.append(Product.objects.get(pk=product_id))
+        products = [Product.objects.get(pk=product_id) for product_id in request.session['basket']]
 
         return {
             'products_in_basket': list(request.session['basket']),
