@@ -275,7 +275,7 @@ class CheckoutComplete(View):
     def post(self, request, uuid):
         request.session.clear()
 
-        return redirect('/main_page')
+        return redirect('/')
 
 
 class AccountRegistration(View):
