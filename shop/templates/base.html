@@ -1,3 +1,4 @@
+
 {% load static %}
 {% load extras %}
     {% block head %}
@@ -517,26 +518,26 @@
                             <li><a href="#"> <i class="icon-unlock"></i>Logout</a></li>
                           </ul>
                         </div>
+
                         <div class="cart"><a href="/basket"></a><i class="icon-bag"></i><span class="count display-quantity-products" data-value="{{ products_in_basket }}">{{ display_quantity_products }}</span><span class="subtotal total-basket-price">{{ total_basket_price }} EUR</span>
-                        <div class="toolbar-dropdown">
+                          <div class="toolbar-dropdown">
 
 
                             {% for product in products_order %}
 
-                                 <div id="{{ product.id }}" data-inline-type="{{ product.price }}" class="dropdown-product-item dropdown-selected-product"><span id="{{ product.id }}" class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src={{ product|get_title_photo }} alt="Product"></a>
-                                   <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">{{ product.name }}</a><span id="{{ product.id }}" class="dropdown-product-details dropdown-product-quantity">{{ products_amount|get_product_quantity:product.id }}</span><span class="dropdown-product-details"> x </span><span id="{{ product.id }}" class="dropdown-product-details dropdown-product-price">{{ products_amount|subtotal_product_price:product.id }}</span></div>
-                                 </div>
+                                <div id="{{ product.id }}" data-inline-type="{{ product.price }}" class="dropdown-product-item dropdown-selected-product"><span id="{{ product.id }}" class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src={{ product|get_title_photo }} alt="Product"></a>
+                                  <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">{{ product.name }}</a><span id="{{ product.id }}" class="dropdown-product-details dropdown-product-quantity">{{ products_amount|get_product_quantity:product.id }}</span><span class="dropdown-product-details"> x </span><span id="{{ product.id }}" class="dropdown-product-details dropdown-product-price">{{ products_amount|subtotal_product_price:product.id }}</span></div>
+                                </div>
 
                             {% endfor %}
 
 
-{#                            <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/02.jpg' %}" alt="Product"></a>#}
-{#                              <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Daily Fabric Cap</a><span class="dropdown-product-details">2 x $24.89</span></div>#}
-{#                            </div>#}
-{#                            <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/03.jpg' %}" alt="Product"></a>#}
-{#                              <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Haan Crossbody</a><span class="dropdown-product-details">1 x $200.00</span></div>#}
-{#                            </div>#}
-
+            {#                <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/02.jpg' %}" alt="Product"></a>#}
+            {#                  <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Daily Fabric Cap</a><span class="dropdown-product-details">2 x $24.89</span></div>#}
+            {#                </div>#}
+            {#                <div class="dropdown-product-item"><span class="dropdown-product-remove"><i class="icon-cross"></i></span><a class="dropdown-product-thumb" href="/product_details"><img src="{% static 'img/cart-dropdown/03.jpg' %}" alt="Product"></a>#}
+            {#                  <div class="dropdown-product-info"><a class="dropdown-product-title" href="/product_details">Haan Crossbody</a><span class="dropdown-product-details">1 x $200.00</span></div>#}
+            {#                </div>#}
 
                             <div class="toolbar-dropdown-group">
                               <div class="column"><span class="text-lg">Total:</span></div>
@@ -650,4 +651,4 @@
                     <script src="{% static 'basket_details/basket.js' %}" type="text/javascript"></script>
               </body>
             </html>
-    {% endblock head %}
+{% endblock head %}
