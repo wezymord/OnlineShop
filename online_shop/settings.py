@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import dj_database_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -102,21 +101,22 @@ WSGI_APPLICATION = 'online_shop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-try:
-    from local_settings import *
 
-    DATABASES = {'default': dj_database_url.config()}
+env = os.environ.copy()
+db_url = env.get('DATABASE_URL', False)
 
-except ImportError:
-
+if db_url != False:
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config(default=os.environ['DATABASE_URL'])}
+else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'onlineshop',
-            'USER': os.environ['PM_SHOP_POSTGRES_USER'],
-            'PASSWORD': os.environ['PM_SHOP_POSTGRES_PASSWORD'],
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'onlineshop',
+        'USER': os.environ['PM_SHOP_POSTGRES_USER'],
+        'PASSWORD': os.environ['PM_SHOP_POSTGRES_PASSWORD'],
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
         }
     }
 
