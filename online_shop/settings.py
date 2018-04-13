@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import dj_database_url
+
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -102,17 +102,32 @@ WSGI_APPLICATION = 'online_shop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+try:
+    from local_settings import *
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'onlineshop',
-        'USER': os.environ['PM_SHOP_POSTGRES_USER'],
-        'PASSWORD': os.environ['PM_SHOP_POSTGRES_PASSWORD'],
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'd3pvt59ibcss5t',
+            'USER': 'hflxggusfduwci',
+            'PASSWORD': '7207110acf6a61248a4893065f0b8bcedf133dfcfe62aa20d2ec738284f5c9c5',
+            'HOST': 'ec2-54-83-1-94.compute-1.amazonaws.com',
+            'PORT': '5432',
+        }
     }
-}
+
+except ImportError:
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'onlineshop',
+            'USER': os.environ['PM_SHOP_POSTGRES_USER'],
+            'PASSWORD': os.environ['PM_SHOP_POSTGRES_PASSWORD'],
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
+    }
 
 
 # Password validation
