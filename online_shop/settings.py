@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
+import dj_database_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
 
 
 ANYMAIL = {
-    "MAILGUN_API_KEY": "key-c264cde96b537a1da3acd2f57857e247",
+    "MAILGUN_API_KEY": os.environ['PM_SHOP_MAIL_API'],
     "MAILGUN_SENDER_DOMAIN": 'breedersmanager.com',
 }
 
@@ -105,16 +105,7 @@ WSGI_APPLICATION = 'online_shop.wsgi.application'
 try:
     from local_settings import *
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'd3pvt59ibcss5t',
-            'USER': 'hflxggusfduwci',
-            'PASSWORD': '7207110acf6a61248a4893065f0b8bcedf133dfcfe62aa20d2ec738284f5c9c5',
-            'HOST': 'ec2-54-83-1-94.compute-1.amazonaws.com',
-            'PORT': '5432',
-        }
-    }
+    DATABASES = {'default': dj_database_url.config()}
 
 except ImportError:
 
