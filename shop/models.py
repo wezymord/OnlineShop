@@ -96,7 +96,7 @@ class OrderProduct(models.Model):
         msg = EmailMultiAlternatives(
             subject="Confirmation of purchase Pawel&Marly.com",
             body=text_content,
-            from_email="postmaster@breedersmanager.com",
+            from_email="pawelmarlykizomba@gmail.com",
             to=[email])
         msg.attach_alternative(content, "text/html")
         return msg.send()
