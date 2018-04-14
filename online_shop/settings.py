@@ -40,12 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'shop.apps.online_shopConfig',        # możliwość konfiguracji aplikacji
-    'shop',                                 # brak możliwości konfiguracji aplikacji
+    # 'shop.apps.online_shopConfig',
+    'shop',
     'phonenumbers',
     'phonenumber_field',
     'django_countries',
-    'anymail'
+    'anymail',
+    'shortuuid'
 
 ]
 
