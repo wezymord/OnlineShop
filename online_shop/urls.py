@@ -32,11 +32,11 @@ urlpatterns = [
     url('checkout_address/(?P<user_id>(\d)+|)', CheckoutAddress.as_view(), name='checkout_address'),
     url('checkout_shipping/(?P<user_id>\d+|)', CheckoutShipping.as_view(), name='checkout_shipping'),
     url('checkout_review/(?P<user_id>\d+)/(?P<shipping_id>\d+)', CheckoutReview.as_view(), name='checkout_review'),
-    url('checkout_complete/(?P<uuid>[0-9a-f-]+)', CheckoutComplete.as_view(), name='checkout_complete'),
+    url('checkout_complete/(?P<uuid>[^/]+)', CheckoutComplete.as_view(), name='checkout_complete'),
     url('registration_account/', AccountRegistration.as_view(), name='registration_account'),
     url('account_login/', AccountLogin.as_view(), name='account_login'),
     url('account_orders/', AccountOrders.as_view(), name='account_orders'),
-    url('order_tracking/(?P<uuid>[0-9a-f-]+)', OrderTracking.as_view(), name='order_tracking'),
+    url('order_tracking/(?P<uuid>[^/]+)', OrderTracking.as_view(), name='order_tracking'),
 
 
 

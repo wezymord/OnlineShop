@@ -6,6 +6,7 @@ from .forms import UserForm, RegistrationForm
 from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+import shortuuid
 
 
 class MainPage(View):
@@ -261,7 +262,7 @@ class CheckoutReview(View):
 
         make_order.shipping_options.add(shipping)
 
-        return redirect('/checkout_complete/{}'.format(make_order.uuid))
+        return redirect('/checkout_complete/{}'.format(shortuuid.encode(make_order.uuid)))
 
 
 class CheckoutComplete(View):
