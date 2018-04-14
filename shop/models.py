@@ -38,12 +38,12 @@ class Photo(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', default=None)
     phone_number = PhoneNumberField()
-    company = models.CharField(max_length=64, null=True)
+    company = models.CharField(max_length=64, null=True, blank=True)
     country = CountryField(blank_label='Select country')
     city = models.CharField(max_length=64, null=True)
     postal_code = models.CharField(max_length=64, null=True)
     address1 = models.CharField(max_length=64, null=True)
-    address2 = models.CharField(max_length=64, null=True)
+    address2 = models.CharField(max_length=64, null=True, blank=True)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
