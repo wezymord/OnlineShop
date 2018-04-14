@@ -273,6 +273,28 @@ class CheckoutComplete(View):
         return render(request, 'checkout-complete.html', ctx)
 
     def post(self, request, uuid):
+        if 'home_page' in request.POST:
+            request.session.clear()
+            return redirect('/')
+
+        elif 'order_tracking' in request.POST:
+            del request.session['basket']
+            return redirect('/order_tracking/{}'.format(uuid))
+
+
+class OrderTracking(View):
+    def get(self, request, uuid):
+        shipping_id = request.session['shipping']['shipping_method_id']
+        shipping = ShippingOption.objects.get(pk=shipping_id)
+
+        ctx = {
+            'uuid': uuid,
+            'shipping': shipping
+        }
+
+        return render(request, 'order-tracking.html', ctx)
+
+    def post(self, request, uuid):
         request.session.clear()
 
         return redirect('/')

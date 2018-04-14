@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
 from shop.views import MainPage, Basket, ProductDetails, ShowAllProducts, ClearBasket, CheckoutAddress, \
-    CheckoutShipping, CheckoutReview, CheckoutComplete, AccountLogin, AccountRegistration, AccountOrders
+    CheckoutShipping, CheckoutReview, CheckoutComplete, AccountLogin, AccountRegistration, AccountOrders,\
+    OrderTracking
 
 
 urlpatterns = [
@@ -35,6 +36,7 @@ urlpatterns = [
     url('registration_account/', AccountRegistration.as_view(), name='registration_account'),
     url('account_login/', AccountLogin.as_view(), name='account_login'),
     url('account_orders/', AccountOrders.as_view(), name='account_orders'),
+    url('order_tracking/(?P<uuid>[0-9a-f-]+)', OrderTracking.as_view(), name='order_tracking'),
 
 
 
