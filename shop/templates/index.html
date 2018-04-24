@@ -152,7 +152,7 @@
 
                   <div class="grid-item">
                     <div class="product-card">
-                      <div class="product-badge text-danger">22% Off</div><a class="product-thumb" href="/product_details/{{ product.id }}"><img src={{ product|get_title_photo }} alt="Product"></a>
+                      <a class="product-thumb" href="/product_details/{{ product.id }}"><img src={{ product|get_title_photo }} alt="Product"></a>
                          <h3 class="product-title"><a href="/product_details">{{ product.name }}</a></h3>
                       <h4 class="product-price">
                         <del>$44.95</del>{{ product.price }} EUR
@@ -314,31 +314,31 @@
                 </div>
               </section>
               <!-- Popular Brands-->
-              <section class="bg-faded padding-top-3x padding-bottom-3x">
-                <div class="container">
-                  <h3 class="text-center mb-30 pb-2">Popular Brands</h3>
-                  <div class="owl-carousel" data-owl-carousel="{ &quot;nav&quot;: false, &quot;dots&quot;: false, &quot;loop&quot;: true, &quot;autoplay&quot;: true, &quot;autoplayTimeout&quot;: 4000, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:2}, &quot;470&quot;:{&quot;items&quot;:3},&quot;630&quot;:{&quot;items&quot;:4},&quot;991&quot;:{&quot;items&quot;:5},&quot;1200&quot;:{&quot;items&quot;:6}} }"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/01.png' %}" alt="Adidas"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/02.png' %}" alt="Brooks"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/03.png' %}" alt="Valentino"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/04.png' %}" alt="Nike"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/05.png' %}" alt="Puma"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/06.png' %}" alt="New Balance"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/07.png' %}" alt="Dior"></div>
-                </div>
-              </section>
+{#              <section class="bg-faded padding-top-3x padding-bottom-3x">#}
+{#                <div class="container">#}
+{#                  <h3 class="text-center mb-30 pb-2">Popular Brands</h3>#}
+{#                  <div class="owl-carousel" data-owl-carousel="{ &quot;nav&quot;: false, &quot;dots&quot;: false, &quot;loop&quot;: true, &quot;autoplay&quot;: true, &quot;autoplayTimeout&quot;: 4000, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:2}, &quot;470&quot;:{&quot;items&quot;:3},&quot;630&quot;:{&quot;items&quot;:4},&quot;991&quot;:{&quot;items&quot;:5},&quot;1200&quot;:{&quot;items&quot;:6}} }"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/01.png' %}" alt="Adidas"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/02.png' %}" alt="Brooks"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/03.png' %}" alt="Valentino"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/04.png' %}" alt="Nike"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/05.png' %}" alt="Puma"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/06.png' %}" alt="New Balance"><img class="d-block w-110 opacity-75 m-auto" src="{% static 'img/brands/07.png' %}" alt="Dior"></div>#}
+{#                </div>#}
+{#              </section>#}
               <!-- Services-->
               <section class="container padding-top-3x padding-bottom-2x">
                 <div class="row">
-                  <div class="col-md-3 col-sm-6 text-center mb-30"><img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="{% static 'img/services/01.png' %}" alt="Shipping">
-                    <h6>Free Worldwide Shipping</h6>
-                    <p class="text-muted margin-bottom-none">Free shipping for all orders over $100</p>
+                  <div class="col-md-4 col-sm- text-center mb-30"><img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="{% static 'img/services/01.png' %}" alt="Shipping">
+                    <h6>Europe-wide Shipping</h6>
+                    <p class="text-muted margin-bottom-none">Cheap Europe-wide shipping for all orders</p>
                   </div>
-                  <div class="col-md-3 col-sm-6 text-center mb-30"><img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="{% static 'img/services/02.png' %}" alt="Money Back">
+                  <div class="col-md-4 col-sm-6 text-center mb-30"><img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="{% static 'img/services/02.png' %}" alt="Money Back">
                     <h6>Money Back Guarantee</h6>
                     <p class="text-muted margin-bottom-none">We return money within 30 days</p>
                   </div>
-                  <div class="col-md-3 col-sm-6 text-center mb-30"><img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="{% static 'img/services/03.png' %}" alt="Support">
+                  <div class="col-md-4 col-sm-6 text-center mb-30"><img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="{% static 'img/services/03.png' %}" alt="Support">
                     <h6>24/7 Customer Support</h6>
                     <p class="text-muted margin-bottom-none">Friendly 24/7 customer support</p>
                   </div>
-                  <div class="col-md-3 col-sm-6 text-center mb-30"><img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="{% static 'img/services/04.png' %}" alt="Payment">
-                    <h6>Secure Online Payment</h6>
-                    <p class="text-muted margin-bottom-none">We posess SSL / Secure Certificate</p>
-                  </div>
+{#                  <div class="col-md-3 col-sm-6 text-center mb-30"><img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="{% static 'img/services/04.png' %}" alt="Payment">#}
+{#                    <h6>Secure Online Payment</h6>#}
+{#                    <p class="text-muted margin-bottom-none">We posess SSL / Secure Certificate</p>#}
+{#                  </div>#}
                 </div>
               </section>
     {% endblock content %}
