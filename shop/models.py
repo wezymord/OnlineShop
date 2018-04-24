@@ -1,5 +1,5 @@
 from django.db import models
-import uuid
+import shortuuid, uuid
 from django.contrib.auth.models import User
 # validators
 from django.core.validators import URLValidator
@@ -91,7 +91,7 @@ class OrderProduct(models.Model):
     @receiver(post_save, sender=Order)
     def save_order(sender, instance, **kwargs):
         email = User.objects.get(pk=instance.user_id).email
-        content = render_to_string('email_checkout_complete.html', {'uuid': instance.uuid})
+        content = render_to_string('email_checkout_complete.html', {'uuid': shortuuid.encode(instance.uuid)})
         text_content = strip_tags(content)
         msg = EmailMultiAlternatives(
             subject="Confirmation of purchase Pawel&Marly.com",
