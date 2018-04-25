@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'shop.apps.online_shopConfig',
+    'django.contrib.sites',
     'shop',
     'phonenumbers',
     'phonenumber_field',
@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'shortuuid'
 
 ]
+
+SITE_ID = 1
 
 
 ANYMAIL = {

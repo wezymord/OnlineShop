@@ -1,5 +1,7 @@
 from django.db import models
 import shortuuid, uuid
+import socket
+from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 # validators
 from django.core.validators import URLValidator
@@ -91,12 +93,20 @@ class OrderProduct(models.Model):
     @receiver(post_save, sender=Order)
     def save_order(sender, instance, **kwargs):
         email = User.objects.get(pk=instance.user_id).email
-        content = render_to_string('email_checkout_complete.html', {'uuid': shortuuid.encode(instance.uuid)})
+        current_site = Site.objects.get_current()
+        ctx = {
+            'uuid': shortuuid.encode(instance.uuid),
+            'current_domain': current_site.domain
+        }
+
+        content = render_to_string('email_checkout_complete.html', ctx)
         text_content = strip_tags(content)
+
         msg = EmailMultiAlternatives(
             subject="Confirmation of purchase Pawel&Marly.com",
             body=text_content,
             from_email="pawelmarlykizomba@gmail.com",
             to=[email])
+
         msg.attach_alternative(content, "text/html")
         return msg.send()
