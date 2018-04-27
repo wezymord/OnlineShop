@@ -95,7 +95,7 @@ class OrderProduct(models.Model):
 
         ctx = {
             'uuid': shortuuid.encode(instance.uuid),
-            'url': settings.BASE_URL,
+            'base_url': settings.BASE_URL,
         }
 
         content = render_to_string('email_checkout_complete.html', ctx)
