@@ -49,7 +49,7 @@ INSTALLED_APPS = [
 
 ]
 
-MEDIA_URL = 'https://pawelmarly-onlineshop.herokuapp.com/'
+BASE_URL = 'https://pawelmarly-onlineshop.herokuapp.com/'
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.environ['PM_SHOP_MAIL_API'],
