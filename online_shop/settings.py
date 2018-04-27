@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     'shop',
     'phonenumbers',
     'phonenumber_field',
@@ -50,8 +49,7 @@ INSTALLED_APPS = [
 
 ]
 
-SITE_ID = 1
-
+MEDIA_URL = 'https://pawelmarly-onlineshop.herokuapp.com/'
 
 ANYMAIL = {
     "MAILGUN_API_KEY": os.environ['PM_SHOP_MAIL_API'],
@@ -89,6 +87,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processor.basket_summary',
