@@ -1,7 +1,7 @@
 from django.views import View
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .models import Product, ShippingOption, Order, OrderProduct
+from .models import Product, ShippingOption, Order, Sale
 from .forms import UserForm, RegistrationForm
 from django.http import QueryDict
 from django.contrib.auth.models import User
@@ -256,8 +256,8 @@ class CheckoutReview(View):
         for id in product_ids:
             for product in Product.objects.filter(pk=id):
                 make_order.products.add(product)
-                order_products = OrderProduct(product=product, order=make_order,
-                                              quantity_product=request.session['basket'][id])
+                order_products = Sale(product=product, order=make_order,
+                                      quantity_product=request.session['basket'][id])
                 order_products.save()
 
         make_order.shipping_options.add(shipping)

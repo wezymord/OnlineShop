@@ -75,6 +75,9 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders_user')
     products = models.ManyToManyField(Product, related_name='orders_product')
     shipping_options = models.ManyToManyField(ShippingOption, related_name='orders_shipping_option')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    date = models.DateField(null=True)
+    status = models.CharField(max_length=30, null=True)
 
     def __str__(self):
         shipping_options = [option.shipping_method for option in self.shipping_options.all()]
@@ -84,10 +87,11 @@ class Order(models.Model):
         self.active = False
         self.save()
 
-class OrderProduct(models.Model):
+class Sale(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     quantity_product = models.CharField(max_length=4)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
     @receiver(post_save, sender=Order)
     def save_order(sender, instance, **kwargs):

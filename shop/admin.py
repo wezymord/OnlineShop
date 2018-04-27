@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Profile, Order, Photo, ShippingOption, OrderProduct
+from .models import Product, Profile, Order, Photo, ShippingOption, Sale
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
@@ -79,7 +79,7 @@ def order_id(obj):
 
 class OrderProductsAdmin(admin.ModelAdmin):
     list_display = [order_id, 'product', 'quantity_product']
-admin.site.register(OrderProduct, OrderProductsAdmin)
+admin.site.register(Sale, OrderProductsAdmin)
 
 
 
