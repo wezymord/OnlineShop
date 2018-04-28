@@ -71,6 +71,15 @@ class ShippingOption(models.Model):
         return '{}'.format(self.shipping_method)
 
 
+order_status = {
+    (0, 'Waiting for confirmation'),
+    (1, 'Confirmed order'),
+    (2, 'Processing order'),
+    (3, 'Quality check'),
+    (4, 'Product dispatched'),
+    (5, 'Product delivered'),
+}
+
 class Order(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders_user')
@@ -78,7 +87,7 @@ class Order(models.Model):
     shipping_options = models.ManyToManyField(ShippingOption, related_name='orders_shipping_option')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     date = models.DateField(default=datetime.date.today)
-    status = models.CharField(max_length=30, default='waiting_for_confirmation')
+    status = models.CharField(max_length=30, choices=order_status, default=0)
 
     def __str__(self):
         shipping_options = [option.shipping_method for option in self.shipping_options.all()]
