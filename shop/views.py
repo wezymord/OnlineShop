@@ -7,7 +7,6 @@ from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import shortuuid
-from datetime import datetime
 
 
 class MainPage(View):
@@ -207,10 +206,8 @@ class CheckoutShipping(View):
                 'shipping_options': shipping_options,
                 'user_id': user_id,
                 'products_amount': request.session['basket']
-
             }
         else:
-
             ctx = {
                 'shipping_options': shipping_options,
                 'products_amount': request.session['basket'],

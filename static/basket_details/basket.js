@@ -199,13 +199,13 @@ $(document).ready(function() {
         var basket_price = $('.total-basket-price').html();
         var order_summary_price = $('.shipping-total');
 
-        var selected_shippig_price = 0;
+        var selected_shipping_price = 0;
         $.each(shipping_price, function(index, value) {
-            if (parseInt(shipping_id) === index+1) {
-                selected_shippig_price += parseInt(value.id);
-                $('.shipping-cost').html((parseFloat(value.id)).toFixed(2) + ' EUR');
+            if (shipping_id === this.id) {
+                selected_shipping_price += parseInt(value.dataset.inlineType);
+                $('.shipping-cost').html((parseFloat(value.dataset.inlineType)).toFixed(2) + ' EUR');
             }
         });
-        order_summary_price.html((parseInt(basket_price) + selected_shippig_price).toFixed(2) + ' EUR')
+        order_summary_price.html((parseInt(basket_price) + selected_shipping_price).toFixed(2) + ' EUR')
     });
 });

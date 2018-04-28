@@ -50,7 +50,7 @@
                     <td class="align-middle">
                       <div class="custom-control custom-radio mb-0">
                         <input class="custom-control-input shipping-method" type="radio" id="{{ shipping }}" name="shipping_method_id" value="{{ shipping.id }}" {% if shipping.id == user_shipping.id %} checked {% endif %} required>
-                        <label id="{{ shipping.cost }}" class="custom-control-label shipping-price" for="{{ shipping }}"></label>
+                        <label data-inline-type="{{ shipping.cost }}" id="{{ shipping.id }}" class="custom-control-label shipping-price" for="{{ shipping }}"></label>
                       </div>
                     </td>
                     <td class="align-middle"><span class="text-medium">{{ shipping.shipping_method }}</span><br><span class="text-muted text-sm">{{ shipping.available_destinations }}</span></td>
