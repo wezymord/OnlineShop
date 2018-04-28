@@ -7,6 +7,7 @@ from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import shortuuid
+from datetime import datetime
 
 
 class MainPage(View):
@@ -250,19 +251,24 @@ class CheckoutReview(View):
         user = User.objects.get(pk=user_id)
         shipping = ShippingOption.objects.get(pk=shipping_id)
 
-        make_order = Order(user=user)
-        make_order.save()
+        user_order = Order(user=user)
+        user_order.save()
 
+        total_price = 0
         for id in product_ids:
             for product in Product.objects.filter(pk=id):
-                make_order.products.add(product)
-                order_products = Sale(product=product, order=make_order,
-                                      quantity_product=request.session['basket'][id])
-                order_products.save()
+                user_order.products.add(product)
+                user_sale = Sale(product=product, order=user_order,
+                                 quantity_product=request.session['basket'][id],
+                                 price=(int(request.session['basket'][id])*int(product.price)))
+                user_sale.save()
+                total_price += user_sale.price
 
-        make_order.shipping_options.add(shipping)
+        user_order.total_price = total_price + int(shipping.cost)
+        user_order.shipping_options.add(shipping)
+        user_order.save()
 
-        return redirect('/checkout_complete/{}'.format(shortuuid.encode(make_order.uuid)))
+        return redirect('/checkout_complete/{}'.format(shortuuid.encode(user_order.uuid)))
 
 
 class CheckoutComplete(View):

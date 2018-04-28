@@ -1,5 +1,4 @@
 from django.db import models
-import shortuuid, uuid
 from django.conf import settings
 from django.contrib.auth.models import User
 # validators
@@ -13,7 +12,9 @@ from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
+# order
+import shortuuid, uuid
+import datetime
 
 
 class Product(models.Model):
@@ -76,8 +77,8 @@ class Order(models.Model):
     products = models.ManyToManyField(Product, related_name='orders_product')
     shipping_options = models.ManyToManyField(ShippingOption, related_name='orders_shipping_option')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    date = models.DateField(null=True)
-    status = models.CharField(max_length=30, null=True)
+    date = models.DateField(default=datetime.date.today)
+    status = models.CharField(max_length=30, default='waiting_for_confirmation')
 
     def __str__(self):
         shipping_options = [option.shipping_method for option in self.shipping_options.all()]

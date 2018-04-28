@@ -64,7 +64,8 @@ def product_name(obj):
     return ' - '.join(products)
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['user', product_name, shipping_methods]
+    list_display = ['user', product_name, shipping_methods, 'date', 'status', 'total_price']
+    list_editable = ['status']
 admin.site.register(Order, OrderAdmin)
 
 
@@ -77,9 +78,9 @@ admin.site.register(ShippingOption, ShippingOptionAdmin)
 def order_id(obj):
     return obj.order.uuid
 
-class OrderProductsAdmin(admin.ModelAdmin):
-    list_display = [order_id, 'product', 'quantity_product']
-admin.site.register(Sale, OrderProductsAdmin)
+class SaleAdmin(admin.ModelAdmin):
+    list_display = [order_id, 'product', 'quantity_product', 'price']
+admin.site.register(Sale, SaleAdmin)
 
 
 
