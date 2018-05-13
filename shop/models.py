@@ -95,7 +95,11 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk != None:
-            product_total = sum([product.price for product in self.products.all()])
+            product_total = 0
+            for product in self.products.all():
+                quantity = self.order_sale.get(product_id=product.id).quantity
+                product_total += quantity * product.price
+
             shipping_price = self.shipping_option.price
             total_price = product_total + shipping_price
             self.total_price = total_price
@@ -107,8 +111,8 @@ class Order(models.Model):
 
 
 class Sale(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_sale')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_sale')
     quantity = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
