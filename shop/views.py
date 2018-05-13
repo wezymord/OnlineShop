@@ -253,7 +253,7 @@ class CheckoutReview(View):
             product = Product.objects.get(pk=id)
             user_order.products.add(product)
             user_sale = Sale(product=product, order=user_order,
-                             quantity_product=request.session['basket'][id],
+                             quantity=request.session['basket'][id],
                              price=product.price)
             user_sale.save()
         user_order.save()

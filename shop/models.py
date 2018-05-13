@@ -114,11 +114,11 @@ def order_total_price(sender, instance, **kwargs):
 class Sale(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    quantity_product = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
     def __str__(self):
-        return "quantity_product:{} price:{}".format(self.quantity_product, self.price)
+        return "quantity:{} price:{}".format(self.quantity, self.price)
 
     @receiver(post_save, sender=Order)
     def save_order(sender, instance, **kwargs):
