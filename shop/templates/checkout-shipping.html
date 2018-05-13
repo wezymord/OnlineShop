@@ -50,12 +50,12 @@
                     <td class="align-middle">
                       <div class="custom-control custom-radio mb-0">
                         <input class="custom-control-input shipping-method" type="radio" id="{{ shipping }}" name="shipping_method_id" value="{{ shipping.id }}" {% if shipping.id == user_shipping.id %} checked {% endif %} required>
-                        <label data-inline-type="{{ shipping.cost }}" id="{{ shipping.id }}" class="custom-control-label shipping-price" for="{{ shipping }}"></label>
+                        <label data-inline-type="{{ shipping.price }}" id="{{ shipping.id }}" class="custom-control-label shipping-price" for="{{ shipping }}"></label>
                       </div>
                     </td>
                     <td class="align-middle"><span class="text-medium">{{ shipping.shipping_method }}</span><br><span class="text-muted text-sm">{{ shipping.available_destinations }}</span></td>
                     <td class="align-middle">{{ shipping.delivery_time }}</td>
-                    <td class="align-middle">{{ shipping.cost }}</td>
+                    <td class="align-middle">{{ shipping.price }}</td>
                   </tr>
 
                 {% endfor %}
@@ -149,7 +149,7 @@
                   </tr>
                   <tr>
                     <td>Shipping:</td>
-                    <td class="text-medium shipping-cost">{{ shipping_cost }} EUR</td>
+                    <td class="text-medium shipping-cost">{{ shipping_price }} EUR</td>
                   </tr>
 {#                  <tr>#}
 {#                    <td>Estimated tax:</td>#}
@@ -158,7 +158,7 @@
 
                   <tr>
                     <td>Total price</td>
-                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_cost }} EUR</td>
+                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_price }} EUR</td>
                   </tr>
 
                 </table>

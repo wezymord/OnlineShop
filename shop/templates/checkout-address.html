@@ -152,7 +152,7 @@
                   </tr>
                   <tr>
                     <td>Shipping:</td>
-                    <td class="text-medium shipping-cost">{{ shipping_cost }} EUR</td>
+                    <td class="text-medium shipping-price">{{ shipping_price }} EUR</td>
                   </tr>
 
 {#                  <tr>#}
@@ -162,7 +162,7 @@
 
                   <tr>
                     <td>Total price</td>
-                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_cost }} EUR</td>
+                    <td class="text-lg text-medium shipping-total">{{ products_amount|total_shipping_price:shipping_price }} EUR</td>
                   </tr>
 
                 </table>

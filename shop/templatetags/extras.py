@@ -41,7 +41,7 @@ def total_basket_price(products_amount):
     return format(total_price, '.2f')
 
 @register.filter(name='total_shipping_price')
-def total_shipping_price(products_amount, shipping_cost):
-    total_price = float(total_basket_price(products_amount)) + float(shipping_cost)
+def total_shipping_price(products_amount, shipping_price):
+    total_price = float(total_basket_price(products_amount)) + float(shipping_price)
 
     return format(total_price, '.2f')
