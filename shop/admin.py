@@ -75,7 +75,7 @@ def product(obj):
     return obj.product.name
 
 class SaleAdmin(admin.ModelAdmin):
-    list_display = [order, product, 'quantity_product', 'price']
+    list_display = [order, product, 'quantity', 'price']
 admin.site.register(Sale, SaleAdmin)
 
 
