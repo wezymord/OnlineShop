@@ -93,22 +93,17 @@ class Order(models.Model):
     def __str__(self):
         return "uuid:{} total_price:{} date:{} status:{}".format(self.uuid, self.total_price, self.date, self.status)
 
+    def save(self, *args, **kwargs):
+        if self.pk != None:
+            product_total = sum([product.price for product in self.products.all()])
+            shipping_price = self.shipping_option.price
+            total_price = product_total + shipping_price
+            self.total_price = total_price
+        super(Order, self).save(*args, **kwargs)
+
     def delete(self, *args, **kwargs):
         self.active = False
         self.save()
-
-
-@receiver(post_save, sender=Order)
-def order_total_price(sender, instance, **kwargs):
-    post_save.disconnect(order_total_price, sender=sender)
-
-    product_total = sum([product.price for product in instance.products.all()])
-    shipping_price = instance.shipping_option.price
-    total_price = product_total + shipping_price
-    instance.total_price = total_price
-    instance.save()
-
-    post_save.connect(order_total_price, sender=sender)
 
 
 class Sale(models.Model):
