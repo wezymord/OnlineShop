@@ -115,6 +115,10 @@ class Sale(models.Model):
     def __str__(self):
         return "quantity:{} price:{}".format(self.quantity, self.price)
 
+    def save(self, *args, **kwargs):
+        self.price = self.product.price
+        super(Sale, self).save(*args, **kwargs)
+
     @receiver(post_save, sender=Order)
     def save_order(sender, instance, **kwargs):
         email = User.objects.get(pk=instance.user_id).email
