@@ -16,7 +16,6 @@ from django.utils.html import strip_tags
 import shortuuid, uuid
 import datetime
 
-
 class Product(models.Model):
     name = models.CharField(max_length=64)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -25,7 +24,8 @@ class Product(models.Model):
     description = models.CharField(max_length=256, null=True)
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return 'name:{} price:{} stock:{} available:{} description{}'\
+            .format(self.name, self.price, self.stock, self.available, self.description)
 
 
 class Photo(models.Model):
@@ -65,50 +65,67 @@ class ShippingOption(models.Model):
     available_destinations = models.CharField(max_length=64)
     delivery_time = models.CharField(max_length=64)
     delivery_size = models.CharField(max_length=64)
-    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return '{}'.format(self.shipping_method)
+        return 'shipping_method:{} available_destinations:{} delivery_time:{} delivery_size:{} price:{}'\
+            .format(self.shipping_method, self.available_destinations, self.delivery_time, self.delivery_size, self.price)
 
 
 order_status = {
-    (0, 'Waiting for confirmation'),
-    (1, 'Confirmed order'),
-    (2, 'Processing order'),
-    (3, 'Quality check'),
-    (4, 'Product dispatched'),
-    (5, 'Product delivered'),
+    (1, 'Waiting for confirmation'),
+    (2, 'Confirmed / Rejected'),
+    (3, 'Processing'),
+    (4, 'Sent'),
+    (5, 'Delivered'),
 }
 
+
 class Order(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uuid = models.CharField(editable=False, default=shortuuid.encode(uuid.uuid4()), max_length=25)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders_user')
     products = models.ManyToManyField(Product, related_name='orders_product')
-    shipping_options = models.ManyToManyField(ShippingOption, related_name='orders_shipping_option')
+    shipping_option = models.ForeignKey(ShippingOption, on_delete=models.CASCADE, related_name='orders_shipping_option', null=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     date = models.DateField(default=datetime.date.today)
-    status = models.CharField(max_length=30, choices=order_status, default=0)
+    status = models.CharField(max_length=30, choices=order_status, default=1)
 
     def __str__(self):
-        shipping_options = [option.shipping_method for option in self.shipping_options.all()]
-        return ' - '.join(shipping_options)
+        return "uuid:{} total_price:{} date:{} status:{}".format(self.uuid, self.total_price, self.date, self.status)
 
     def delete(self, *args, **kwargs):
         self.active = False
         self.save()
 
+
+@receiver(post_save, sender=Order)
+def order_total_price(sender, instance, **kwargs):
+    post_save.disconnect(order_total_price, sender=sender)
+
+    product_total = sum([product.price for product in instance.products.all()])
+    shipping_price = instance.shipping_option.price
+    total_price = product_total + shipping_price
+    instance.total_price = total_price
+    instance.save()
+
+    post_save.connect(order_total_price, sender=sender)
+
+
 class Sale(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    quantity_product = models.CharField(max_length=4)
+    quantity_product = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+
+    def __str__(self):
+        return "quantity_product:{} price:{}".format(self.quantity_product, self.price)
 
     @receiver(post_save, sender=Order)
     def save_order(sender, instance, **kwargs):
         email = User.objects.get(pk=instance.user_id).email
 
         ctx = {
-            'uuid': shortuuid.encode(instance.uuid),
+            'uuid': instance.uuid,
             'base_url': settings.BASE_URL,
         }
 

@@ -6,8 +6,6 @@ from .forms import UserForm, RegistrationForm
 from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-import shortuuid
-
 
 class MainPage(View):
     def get(self, request):
@@ -142,24 +140,24 @@ class CheckoutAddress(View):
                 'address2': logged_user.profile.address2
             })
 
-            shipping_cost = 0
+            shipping_price = 0
             if 'shipping' in request.session.keys():
                 shipping_id = request.session['shipping']['shipping_method_id']
                 shipping = ShippingOption.objects.get(pk=shipping_id)
-                shipping_cost += shipping.cost
+                shipping_price += shipping.price
 
             ctx = {
                 'products_amount': request.session['basket'],
                 'logged_user': logged_user.id,
                 'user_form': logged_user_form,
-                'shipping_cost': format(shipping_cost, '.2f')
+                'shipping_price': format(shipping_price, '.2f')
             }
 
         else:
             ctx = {
                 'products_amount': request.session['basket'],
                 'user_form': UserForm(user_id=user_id),
-                'shipping_cost': format(0, '.2f')
+                'shipping_price': format(0, '.2f')
             }
         return render(request, 'checkout-address.html', ctx)
 
@@ -188,31 +186,31 @@ class CheckoutAddress(View):
         ctx = {
             'products_amount': request.session['basket'],
             'user_form': user_form,
-            'shipping_cost': format(0, '.2f')
+            'shipping_price': format(0, '.2f')
         }
         return render(request, 'checkout-address.html', ctx)
 
 
 class CheckoutShipping(View):
     def get(self, request, user_id):
-        shipping_options = ShippingOption.objects.all()
+        shipping_option = ShippingOption.objects.all()
         if 'shipping' in request.session.keys():
             shipping_id = request.session['shipping']['shipping_method_id']
             shipping = ShippingOption.objects.get(pk=shipping_id)
 
             ctx = {
-                'shipping_cost': shipping.cost,
+                'shipping_price': shipping.price,
                 'user_shipping': shipping,
-                'shipping_options': shipping_options,
+                'shipping_options': shipping_option,
                 'user_id': user_id,
                 'products_amount': request.session['basket']
             }
         else:
             ctx = {
-                'shipping_options': shipping_options,
+                'shipping_options': shipping_option,
                 'products_amount': request.session['basket'],
                 'user_id': user_id,
-                'shipping_cost': format(0, '.2f')
+                'shipping_price': format(0, '.2f')
             }
 
         return render(request, 'checkout-shipping.html', ctx)
@@ -238,7 +236,7 @@ class CheckoutReview(View):
             'products_amount': request.session['basket'],
             'user': user,
             'shipping_id': shipping_id,
-            'shipping_cost': ShippingOption.objects.get(pk=shipping_id).cost
+            'shipping_price': ShippingOption.objects.get(pk=shipping_id).price
         }
 
         return render(request, 'checkout-review.html', ctx)
@@ -248,24 +246,19 @@ class CheckoutReview(View):
         user = User.objects.get(pk=user_id)
         shipping = ShippingOption.objects.get(pk=shipping_id)
 
-        user_order = Order(user=user)
+        user_order = Order(user=user, shipping_option=shipping)
         user_order.save()
 
-        total_price = 0
         for id in product_ids:
-            for product in Product.objects.filter(pk=id):
-                user_order.products.add(product)
-                user_sale = Sale(product=product, order=user_order,
-                                 quantity_product=request.session['basket'][id],
-                                 price=(int(request.session['basket'][id])*int(product.price)))
-                user_sale.save()
-                total_price += user_sale.price
-
-        user_order.total_price = total_price + int(shipping.cost)
-        user_order.shipping_options.add(shipping)
+            product = Product.objects.get(pk=id)
+            user_order.products.add(product)
+            user_sale = Sale(product=product, order=user_order,
+                             quantity_product=request.session['basket'][id],
+                             price=product.price)
+            user_sale.save()
         user_order.save()
 
-        return redirect('/checkout_complete/{}'.format(shortuuid.encode(user_order.uuid)))
+        return redirect('/checkout_complete/{}'.format(user_order.uuid))
 
 
 class CheckoutComplete(View):
