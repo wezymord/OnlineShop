@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Profile, Order, Photo, ShippingOption, OrderProduct
+from .models import Product, Profile, Order, Photo, ShippingOption, Sale
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
@@ -55,32 +55,34 @@ class CustomUserAdmin(UserAdmin):
         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 
-def shipping_methods(obj):
-    shipping_options = [option.shipping_method for option in obj.shipping_options.all()]
-    return ' - '.join(shipping_options)
-
 def product_name(obj):
     products = [product.name for product in obj.products.all()]
     return ' - '.join(products)
 
+def shipping_option(obj):
+    return obj.shipping_option.shipping_method
+
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['user', product_name, shipping_methods]
+    list_display = ['uuid', 'user', product_name, shipping_option, 'date', 'status', 'total_price']
+    list_editable = ['status']
 admin.site.register(Order, OrderAdmin)
 
 
-class ShippingOptionAdmin(admin.ModelAdmin):
-    list_display = ['shipping_method', 'delivery_time', 'delivery_size', 'available_destinations', 'cost']
-    list_editable = ['delivery_time', 'delivery_size', 'available_destinations', 'cost']
-admin.site.register(ShippingOption, ShippingOptionAdmin)
-
-
-def order_id(obj):
+def order(obj):
     return obj.order.uuid
 
-class OrderProductsAdmin(admin.ModelAdmin):
-    list_display = [order_id, 'product', 'quantity_product']
-admin.site.register(OrderProduct, OrderProductsAdmin)
+def product(obj):
+    return obj.product.name
 
+class SaleAdmin(admin.ModelAdmin):
+    list_display = [order, product, 'quantity', 'price']
+admin.site.register(Sale, SaleAdmin)
+
+
+class ShippingOptionAdmin(admin.ModelAdmin):
+    list_display = ['shipping_method', 'delivery_time', 'delivery_size', 'available_destinations', 'price']
+    list_editable = ['delivery_time', 'delivery_size', 'available_destinations', 'price']
+admin.site.register(ShippingOption, ShippingOptionAdmin)
 
 
 

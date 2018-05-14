@@ -114,14 +114,13 @@ else:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'onlineshop',
+        'NAME': 'OnlineShop',
         'USER': os.environ['PM_SHOP_POSTGRES_USER'],
         'PASSWORD': os.environ['PM_SHOP_POSTGRES_PASSWORD'],
         'HOST': '127.0.0.1',
         'PORT': '5432',
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

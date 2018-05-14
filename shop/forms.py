@@ -102,6 +102,7 @@ class UserForm(forms.ModelForm):
 
         if not address1:
             raise forms.ValidationError('The field can not be empty')
+        return address1
 
 
 class RegistrationForm(forms.Form):
