@@ -82,7 +82,7 @@ order_status = {
 
 
 class Order(models.Model):
-    uuid = models.CharField(editable=False, default=shortuuid.encode(uuid.uuid4()), max_length=25)
+    uuid = models.CharField(editable=False, max_length=25)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders_user')
     products = models.ManyToManyField(Product, related_name='orders_product')
     shipping_option = models.ForeignKey(ShippingOption, on_delete=models.CASCADE, related_name='orders_shipping_option', null=True)
@@ -94,6 +94,7 @@ class Order(models.Model):
         return "uuid:{} total_price:{} date:{} status:{}".format(self.uuid, self.total_price, self.date, self.status)
 
     def save(self, *args, **kwargs):
+        self.uuid = shortuuid.encode(uuid.uuid4())
         if self.pk != None:
             product_total = 0
             for product in self.products.all():
