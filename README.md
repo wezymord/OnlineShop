@@ -1,4 +1,4 @@
-#  Online shop for [Pawel&Marly.com](http://www.pawelmarly.com/)
+#  [Online shop](https://pawelmarly-onlineshop.herokuapp.com/) for [Pawel&Marly.com](http://www.pawelmarly.com/)
 
 A full online store for the purpose of selling products.
 ### Getting Started
