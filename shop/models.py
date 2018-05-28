@@ -114,7 +114,7 @@ class Order(models.Model):
 class Sale(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_sale')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_sale')
-    quantity = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
     def __str__(self):
