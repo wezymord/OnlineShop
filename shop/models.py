@@ -102,7 +102,7 @@ class Order(models.Model):
                 product_total += quantity * product.price
 
             shipping_price = self.shipping_option.price
-            total_price = product_total + shipping_price
+            total_price = float(product_total) + shipping_price
             self.total_price = total_price
         super(Order, self).save(*args, **kwargs)
 
