@@ -61,6 +61,29 @@ class TestOrders(TestCase):
         order.save()
         self.assertEqual(sale.price, self.product_2.price)
 
+    def test_order_total_price_after_changing_product_price(self):
+        order = Order.objects.create(user=self.user, shipping_option=self.shipping_1)
+
+        self.product_1 = Product.objects.create(name='Material 1', price=10.00)
+        self.product_2 = Product.objects.create(name='Material 2', price=2.00)
+        order.products.add(self.product_1, self.product_2)
+        Sale.objects.create(product=self.product_1, order=order, quantity=3)
+        Sale.objects.create(product=self.product_2, order=order, quantity=5)
+        order.save()
+        self.assertEqual(order.total_price, 47.00)
+
+    def test_order_after_adding_extra_product(self):
+        order = Order.objects.create(user=self.user, shipping_option=self.shipping_1)
+        order.products.add(self.product_1, self.product_2)
+        Sale.objects.create(product=self.product_1, order=order, quantity=2)
+        Sale.objects.create(product=self.product_2, order=order, quantity=4)
+
+        self.product_3 = Product.objects.create(name='Material 3', price=0.00)
+        order.products.add(self.product_3)
+        Sale.objects.create(product=self.product_3, order=order, quantity=2)
+
+        order.save()
+        self.assertEqual(order.products.all().count(), 3)
 
 
 
