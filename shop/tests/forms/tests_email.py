@@ -2,7 +2,7 @@ from django.test import TestCase
 from ...forms import *
 
 
-class TestValidations(TestCase):
+class TestEmailValidation(TestCase):
     def test_email_expect_to_be_valid(self):
         form = {'first_name': "Jan", 'last_name': "Kowalski",
                 'email': "hubert3423@wp.pl", 'company': "BigOne", 'city': "Florida",
