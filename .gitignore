@@ -2,4 +2,5 @@
 *.pyc
 .idea/*
 __pycache__/*
-myenv
+myenv/*
+.cache/*
