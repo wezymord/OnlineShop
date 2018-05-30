@@ -7,7 +7,6 @@ from .validators.postal_code import PostalCodeValidator
 from .validators.e_mail import email_validator
 
 
-
 class UserForm(forms.ModelForm):
     first_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-fn'}))
     last_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'checkout-ln'}))
@@ -29,9 +28,9 @@ class UserForm(forms.ModelForm):
 
 
     def __init__(self, *args, **kwargs):
-        if 'user_id' in kwargs.keys():
-            self.logged_user_id = kwargs.pop('user_id')
-            super(UserForm, self).__init__(*args, **kwargs)
+        self.logged_user_id = kwargs.pop('user_id', None)
+        super(UserForm, self).__init__(*args, **kwargs)
+
 
     def clean_first_name(self):
         first_name = self.cleaned_data['first_name']
