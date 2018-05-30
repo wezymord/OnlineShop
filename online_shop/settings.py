@@ -11,21 +11,17 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
+import sys
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '*zd&atw6f6u#52d@+4jb*9hf&prg=uyu$i+m)5t%1&)v9px6!4'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 
 
 ALLOWED_HOSTS = ['pawelmarly-onlineshop.herokuapp.com', 'localhost', '0.0.0.0', '127.0.0.1']
@@ -103,22 +99,32 @@ WSGI_APPLICATION = 'online_shop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+env = os.environ
+local = (sys.argv[1] == 'runserver')
 
-env = os.environ.copy()
-db_url = env.get('DATABASE_URL', False)
-
-if db_url != False:
-    import dj_database_url
-    DATABASES = {'default': dj_database_url.config(default=os.environ['DATABASE_URL'])}
+if not local:
+    DEBUG = False
+    DATABASES = {'default': dj_database_url.config(default=env['DATABASE_URL'])}
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #         'NAME': 'OnlineShop',
+    #         'USER': env['PM_SHOP_POSTGRES_USER'],
+    #         'PASSWORD': env['PM_SHOP_POSTGRES_PASSWORD'],
+    #         'HOST': '127.0.0.1',
+    #         'PORT': '5432',
+    #     }
+    # }
 else:
+    DEBUG = True
     DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'OnlineShop',
-        'USER': os.environ['PM_SHOP_POSTGRES_USER'],
-        'PASSWORD': os.environ['PM_SHOP_POSTGRES_PASSWORD'],
+        'USER': 'root',
+        'PASSWORD': 'coderslab',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'PORT': '3306',
         }
     }
 
