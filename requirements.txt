@@ -7,7 +7,7 @@ chardet==3.0.4
 curtsies==0.3.0
 dj-database-url==0.5.0
 dj-static==0.0.6
-Django==2.0.4
+Django==2.2.13
 django-anymail==2.0
 django-countries==5.2
 django-extensions==2.0.6
