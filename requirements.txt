@@ -13,7 +13,7 @@ django-countries==5.2
 django-extensions==2.0.6
 django-phonenumber-field==2.0.0
 django-toolbelt==0.0.1
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 greenlet==0.4.13
 gunicorn==19.7.1
 idna==2.6
